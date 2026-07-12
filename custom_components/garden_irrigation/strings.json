@@ -1,0 +1,95 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Position and weather data (FAO-56)",
+        "description": "Global parameters and the weather entities used to compute daily ET0. Wind gust is optional and is not required for ET0.",
+        "data": {
+          "altitude": "Altitude (m)",
+          "anemometer_height": "Anemometer height (m)",
+          "temperature_entity": "Outdoor temperature entity",
+          "humidity_entity": "Outdoor humidity entity",
+          "pressure_entity": "Absolute pressure entity",
+          "solar_radiation_entity": "Solar irradiance entity",
+          "wind_speed_entity": "Wind speed entity",
+          "wind_gust_entity": "Wind gust entity (optional)"
+        }
+      },
+      "rain": {
+        "title": "Rain",
+        "description": "Daily rainfall and rain rate are required. 24h rainfall and rain event are optional/diagnostic only.",
+        "data": {
+          "daily_rainfall_entity": "Daily rainfall entity",
+          "rain_rate_entity": "Rain rate entity",
+          "rain_24h_entity": "24-hour rainfall entity (optional, diagnostic)",
+          "rain_event_entity": "Rain event entity (optional, diagnostic)"
+        }
+      },
+      "soil": {
+        "title": "WH51 soil moisture (per zone)",
+        "description": "Battery and signal entities are optional.",
+        "data": {
+          "zone1_soil_moisture_entity": "Zone 1 soil moisture entity",
+          "zone1_battery_entity": "Zone 1 WH51 battery entity (optional)",
+          "zone1_signal_entity": "Zone 1 WH51 signal entity (optional)",
+          "zone2_soil_moisture_entity": "Zone 2 soil moisture entity",
+          "zone2_battery_entity": "Zone 2 WH51 battery entity (optional)",
+          "zone2_signal_entity": "Zone 2 WH51 signal entity (optional)"
+        }
+      },
+      "zones": {
+        "title": "Zones and distribution",
+        "description": "Rainwater tank mm/minute may be left empty if not yet calibrated.",
+        "data": {
+          "zone1_name": "Zone 1 name",
+          "zone1_area_m2": "Zone 1 area (m²)",
+          "zone1_mm_per_minute_mains": "Zone 1 mains water: mm per minute",
+          "zone1_mm_per_minute_tank": "Zone 1 rainwater tank: mm per minute (leave empty if not calibrated)",
+          "zone1_flow_rate_mains_lpm": "Zone 1 mains water: estimated flow rate (L/min)",
+          "zone2_name": "Zone 2 name",
+          "zone2_area_m2": "Zone 2 area (m²)",
+          "zone2_mm_per_minute_mains": "Zone 2 mains water: mm per minute",
+          "zone2_mm_per_minute_tank": "Zone 2 rainwater tank: mm per minute (leave empty if not calibrated)",
+          "zone2_flow_rate_mains_lpm": "Zone 2 mains water: estimated flow rate (L/min)"
+        }
+      },
+      "telegram": {
+        "title": "Telegram notifications (optional)",
+        "description": "Fully optional and can be skipped now: leave every field empty and submit to finish setup. You can configure or change Telegram later from this integration's options.",
+        "data": {
+          "telegram_entity_id": "Telegram notify target entity (optional)",
+          "telegram_config_entry_id": "Telegram bot config entry id (optional)",
+          "telegram_chat_id": "Telegram chat id (optional)"
+        }
+      }
+    },
+    "error": {
+      "entity_not_found": "This entity does not exist.",
+      "entity_wrong_domain": "This entity must be a sensor entity.",
+      "entity_wrong_unit": "This entity's unit of measurement is not compatible.",
+      "entity_not_numeric": "This entity's current state is not a numeric value."
+    },
+    "abort": {
+      "single_instance_allowed": "Garden Irrigation is already configured; only one instance is allowed."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Garden Irrigation options",
+        "description": "The full set of operational options (Kc, thresholds, caps, Telegram, ...) is added in later milestones."
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "data_quality": {
+        "name": "Data quality",
+        "state": {
+          "initializing": "Initializing",
+          "not_configured": "Not configured"
+        }
+      }
+    }
+  }
+}

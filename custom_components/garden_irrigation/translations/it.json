@@ -1,0 +1,95 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Posizione e dati meteo (FAO-56)",
+        "description": "Parametri globali ed entità meteo usate per calcolare l'ET0 giornaliera. La raffica di vento è opzionale e non è richiesta per il calcolo dell'ET0.",
+        "data": {
+          "altitude": "Altitudine (m)",
+          "anemometer_height": "Altezza anemometro (m)",
+          "temperature_entity": "Entità temperatura esterna",
+          "humidity_entity": "Entità umidità esterna",
+          "pressure_entity": "Entità pressione assoluta",
+          "solar_radiation_entity": "Entità radiazione solare",
+          "wind_speed_entity": "Entità velocità vento",
+          "wind_gust_entity": "Entità raffica di vento (opzionale)"
+        }
+      },
+      "rain": {
+        "title": "Pioggia",
+        "description": "Pioggia giornaliera e intensità di pioggia sono obbligatorie. Pioggia 24h ed evento pioggia sono opzionali/solo diagnostici.",
+        "data": {
+          "daily_rainfall_entity": "Entità pioggia giornaliera",
+          "rain_rate_entity": "Entità intensità di pioggia",
+          "rain_24h_entity": "Entità pioggia 24 ore (opzionale, diagnostica)",
+          "rain_event_entity": "Entità evento pioggia (opzionale, diagnostica)"
+        }
+      },
+      "soil": {
+        "title": "Umidità del suolo WH51 (per zona)",
+        "description": "Le entità di batteria e segnale sono opzionali.",
+        "data": {
+          "zone1_soil_moisture_entity": "Entità umidità suolo zona 1",
+          "zone1_battery_entity": "Entità batteria WH51 zona 1 (opzionale)",
+          "zone1_signal_entity": "Entità segnale WH51 zona 1 (opzionale)",
+          "zone2_soil_moisture_entity": "Entità umidità suolo zona 2",
+          "zone2_battery_entity": "Entità batteria WH51 zona 2 (opzionale)",
+          "zone2_signal_entity": "Entità segnale WH51 zona 2 (opzionale)"
+        }
+      },
+      "zones": {
+        "title": "Zone e distribuzione",
+        "description": "Il valore mm/minuto per la vasca può essere lasciato vuoto se non ancora calibrato.",
+        "data": {
+          "zone1_name": "Nome zona 1",
+          "zone1_area_m2": "Superficie zona 1 (m²)",
+          "zone1_mm_per_minute_mains": "Zona 1, acquedotto: mm al minuto",
+          "zone1_mm_per_minute_tank": "Zona 1, vasca: mm al minuto (lascia vuoto se non calibrato)",
+          "zone1_flow_rate_mains_lpm": "Zona 1, acquedotto: portata stimata (L/min)",
+          "zone2_name": "Nome zona 2",
+          "zone2_area_m2": "Superficie zona 2 (m²)",
+          "zone2_mm_per_minute_mains": "Zona 2, acquedotto: mm al minuto",
+          "zone2_mm_per_minute_tank": "Zona 2, vasca: mm al minuto (lascia vuoto se non calibrato)",
+          "zone2_flow_rate_mains_lpm": "Zona 2, acquedotto: portata stimata (L/min)"
+        }
+      },
+      "telegram": {
+        "title": "Notifiche Telegram (opzionale)",
+        "description": "Completamente opzionale e rinviabile: lascia tutti i campi vuoti e conferma per completare la configurazione. Potrai configurare o modificare Telegram in seguito dalle opzioni dell'integrazione.",
+        "data": {
+          "telegram_entity_id": "Entità target notify Telegram (opzionale)",
+          "telegram_config_entry_id": "ID config entry del bot Telegram (opzionale)",
+          "telegram_chat_id": "Chat ID Telegram (opzionale)"
+        }
+      }
+    },
+    "error": {
+      "entity_not_found": "Questa entità non esiste.",
+      "entity_wrong_domain": "Questa entità deve essere un'entità sensor.",
+      "entity_wrong_unit": "L'unità di misura di questa entità non è compatibile.",
+      "entity_not_numeric": "Lo stato attuale di questa entità non è un valore numerico."
+    },
+    "abort": {
+      "single_instance_allowed": "Garden Irrigation è già configurato; è consentita una sola istanza."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opzioni di Garden Irrigation",
+        "description": "L'insieme completo delle opzioni operative (Kc, soglie, tetti, Telegram, ...) viene aggiunto nelle milestone successive."
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "data_quality": {
+        "name": "Qualità dati",
+        "state": {
+          "initializing": "Inizializzazione",
+          "not_configured": "Non configurato"
+        }
+      }
+    }
+  }
+}

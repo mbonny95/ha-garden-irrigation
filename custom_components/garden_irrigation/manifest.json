@@ -1,0 +1,13 @@
+{
+  "domain": "garden_irrigation",
+  "name": "Garden Irrigation",
+  "version": "0.1.0",
+  "config_flow": true,
+  "single_config_entry": true,
+  "iot_class": "calculated",
+  "after_dependencies": ["recorder"],
+  "codeowners": ["@manuelbonato"],
+  "documentation": "https://github.com/manuelbonato/garden-irrigation",
+  "issue_tracker": "https://github.com/manuelbonato/garden-irrigation/issues",
+  "requirements": []
+}

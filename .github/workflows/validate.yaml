@@ -1,0 +1,28 @@
+name: Validate
+
+# hassfest and HACS structural validation. Milestone 1 only wires these jobs
+# up so they run in CI; full HACS publication readiness (brand assets, etc.)
+# is completed in Milestone 10 and this workflow is not a merge gate until then.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 0 * * 0"
+
+jobs:
+  hassfest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: home-assistant/actions/hassfest@master
+
+  hacs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: HACS validation
+        uses: hacs/action@main
+        with:
+          category: integration
