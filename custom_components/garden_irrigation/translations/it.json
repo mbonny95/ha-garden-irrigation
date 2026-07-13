@@ -89,6 +89,27 @@
           "initializing": "Inizializzazione",
           "not_configured": "Non configurato"
         }
+      },
+      "et0_daily": {
+        "name": "ET0 (giornaliera)"
+      },
+      "etc": {
+        "name": "ETc {zone_name}"
+      },
+      "deficit": {
+        "name": "Deficit {zone_name}"
+      },
+      "taw": {
+        "name": "TAW {zone_name}"
+      },
+      "raw": {
+        "name": "RAW {zone_name}"
+      },
+      "effective_rain": {
+        "name": "Pioggia efficace {zone_name}"
+      },
+      "irrigation_7d": {
+        "name": "Irrigazione (7g) {zone_name}"
       }
     }
   }
