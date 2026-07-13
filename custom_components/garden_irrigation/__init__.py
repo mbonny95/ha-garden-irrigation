@@ -1,9 +1,9 @@
 """The garden_irrigation integration.
 
-Milestone 1: entry setup/unload/reload wiring and a skeleton coordinator only.
-Weather aggregation, FAO-56/balance/recommendation engines, manual-cycle
-recording, notifications and scheduling are added in later milestones without
-changing this setup contract.
+Milestone 2: entry setup/unload/reload wiring, plus the weather aggregation
+listeners started/stopped alongside the coordinator. FAO-56/balance/
+recommendation engines, manual-cycle recording, notifications and scheduling
+are added in later milestones without changing this setup contract.
 """
 
 from __future__ import annotations
@@ -21,6 +21,7 @@ PLATFORMS: list[Platform] = [Platform.SENSOR]
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up garden_irrigation from a config entry."""
     coordinator = GardenIrrigationCoordinator(hass, entry)
+    await coordinator.async_setup()
     await coordinator.async_config_entry_first_refresh()
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
@@ -35,6 +36,8 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry and its platforms."""
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if unload_ok:
+        coordinator: GardenIrrigationCoordinator = hass.data[DOMAIN][entry.entry_id]
+        await coordinator.async_shutdown()
         hass.data[DOMAIN].pop(entry.entry_id)
         if not hass.data[DOMAIN]:
             hass.data.pop(DOMAIN)

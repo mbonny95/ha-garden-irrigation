@@ -38,7 +38,7 @@ def _full_entry_data() -> dict:
 
 async def test_not_configured_before_first_refresh(hass: HomeAssistant) -> None:
     """Before any coordinator refresh, the sensor reports not_configured."""
-    entry = MockConfigEntry(domain=DOMAIN, data={})
+    entry = MockConfigEntry(domain=DOMAIN, data=_full_entry_data())
     entry.add_to_hass(hass)
     coordinator = GardenIrrigationCoordinator(hass, entry)
     sensor = DataQualitySensor(coordinator, entry)
@@ -55,7 +55,7 @@ async def test_initializing_after_first_refresh(hass: HomeAssistant) -> None:
     in SETUP_IN_PROGRESS state and is exercised end-to-end by
     test_sensor_always_available_via_full_setup below.
     """
-    entry = MockConfigEntry(domain=DOMAIN, data={})
+    entry = MockConfigEntry(domain=DOMAIN, data=_full_entry_data())
     entry.add_to_hass(hass)
     coordinator = GardenIrrigationCoordinator(hass, entry)
     await coordinator.async_refresh()

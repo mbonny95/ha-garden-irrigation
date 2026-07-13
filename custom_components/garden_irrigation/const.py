@@ -1,9 +1,11 @@
 """Constants for the garden_irrigation integration.
 
-Milestone 1 scope: config-flow keys and defaults only. Agronomy/weather
-computation constants (FAO-56, balance thresholds, etc.) are declared here
-already because the config/options schema depends on them, but the engines
-that consume them are implemented in later milestones (see CLAUDE.md).
+Config-flow keys and defaults, plus the storage key shared by every engine
+that persists state (weather.py in Milestone 2; balance/irrigation_log in
+later milestones). Agronomy/weather computation constants (FAO-56, balance
+thresholds, etc.) are declared here already because the config/options
+schema depends on them, but the engines that consume them are implemented in
+later milestones (see CLAUDE.md).
 """
 
 from __future__ import annotations
@@ -19,6 +21,12 @@ from homeassistant.const import (
 )
 
 DOMAIN = "garden_irrigation"
+
+# --- Persistent storage ------------------------------------------------------
+# Single "state" Store shared by every engine (weather accumulators here in
+# Milestone 2; per-zone deficit and event-log metadata in later milestones).
+# Each engine owns its own top-level key within the stored dict.
+STORAGE_KEY_STATE = f"{DOMAIN}.state"
 
 # --- Sources -----------------------------------------------------------------
 # No automated fallback between sources exists or is planned: the user always
