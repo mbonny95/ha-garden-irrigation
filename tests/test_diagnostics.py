@@ -52,6 +52,7 @@ async def test_diagnostics_redacts_telegram_target(hass: HomeAssistant) -> None:
 
     assert diagnostics["entry"]["data"][CONF_TELEGRAM_CHAT_ID] == REDACTED
     assert diagnostics["entry"]["data"][CONF_TELEGRAM_CONFIG_ENTRY_ID] == REDACTED
-    assert diagnostics["coordinator_data"] == {
-        "data_quality": DATA_QUALITY_INITIALIZING
-    }
+    # Milestone 3 adds an "et0" key to coordinator.data (see coordinator.py);
+    # its own computation is covered by tests/test_et0.py, not re-asserted here.
+    assert diagnostics["coordinator_data"]["data_quality"] == DATA_QUALITY_INITIALIZING
+    assert "et0" in diagnostics["coordinator_data"]
