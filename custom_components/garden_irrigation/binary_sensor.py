@@ -1,22 +1,30 @@
 """Binary sensor platform for garden_irrigation.
 
-Milestone 7 scope only: `needs_irrigation_{zone}` (from recommendation.py's
+Milestone 7 added `needs_irrigation_{zone}` (from recommendation.py's
 finalized, persisted-balance-based recommendation) and
 `weekly_cap_reached_{zone}` (already exposed by balance.py's
-ZoneBalanceResult, no new logic needed). `irrigation_in_progress` (a later
-milestone's declared-cycle feature) and `data_stale` (the staleness-threshold
-monitor built alongside notify.py) are NOT added here - out of this
-milestone's scope, no data source built for them yet.
+ZoneBalanceResult, no new logic needed). Milestone 9 adds
+`irrigation_in_progress`: a single, zone-agnostic, purely declarative sensor
+reflecting `coordinator.cycle_zone` (set/cleared by button.py's start/end
+cycle buttons) - never inferred from any other sensor. `data_stale` (the
+staleness-threshold monitor built alongside notify.py in M8) has no
+dedicated binary_sensor - M8 exposed it as a repair issue instead, and adding
+one now is out of scope for M9.
 """
 
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any
 
-from homeassistant.components.binary_sensor import BinarySensorEntity
+from homeassistant.components.binary_sensor import (
+    BinarySensorDeviceClass,
+    BinarySensorEntity,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.util import dt as dt_util
 
 from .balance import ZoneBalanceResult
 from .const import (
@@ -40,7 +48,9 @@ async def async_setup_entry(
 ) -> None:
     """Set up the garden_irrigation binary_sensor platform."""
     coordinator: GardenIrrigationCoordinator = hass.data[DOMAIN][entry.entry_id]
-    entities: list[BinarySensorEntity] = []
+    entities: list[BinarySensorEntity] = [
+        IrrigationInProgressSensor(coordinator, entry)
+    ]
     for zone_id in ZONES:
         entities.extend(
             [
@@ -168,4 +178,48 @@ class WeeklyCapReachedZoneSensor(_ZoneBinarySensor):
         return {
             "irrigation_7d_mm": result.irrigation_7d_mm,
             "weekly_cap_mm": result.weekly_cap_mm,
+        }
+
+
+class IrrigationInProgressSensor(GardenIrrigationEntity, BinarySensorEntity):
+    """Whether a manual cycle has been declared active (button.py).
+
+    Purely declarative: `is_on` reflects `coordinator.cycle_zone` only, never
+    inferred from weather/soil/recommendation data. Elapsed time is exposed
+    as an attribute here rather than a separate sensor.py entity (out of
+    scope to touch in M9) - never used to prefill the record_irrigation
+    form's minutes field (CLAUDE.md), which this entity has no access to
+    anyway.
+    """
+
+    _attr_device_class = BinarySensorDeviceClass.RUNNING
+
+    def __init__(
+        self, coordinator: GardenIrrigationCoordinator, entry: ConfigEntry
+    ) -> None:
+        """Initialize with a stable unique_id derived from the config entry."""
+        super().__init__(coordinator, entry)
+        self._attr_unique_id = f"{entry.entry_id}_irrigation_in_progress"
+        self._attr_translation_key = "irrigation_in_progress"
+
+    @property
+    def is_on(self) -> bool:
+        """True while a cycle is declared active for any zone."""
+        return self.coordinator.cycle_zone is not None
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any] | None:
+        """The active zone, its start time, and elapsed minutes so far."""
+        zone_id = self.coordinator.cycle_zone
+        if zone_id is None:
+            return None
+        started_at = self.coordinator.cycle_started_at
+        elapsed_minutes: float | None = None
+        if started_at is not None:
+            now: datetime = dt_util.now()
+            elapsed_minutes = (now - started_at).total_seconds() / 60.0
+        return {
+            "zone": zone_id,
+            "started_at": started_at.isoformat() if started_at else None,
+            "elapsed_minutes": elapsed_minutes,
         }

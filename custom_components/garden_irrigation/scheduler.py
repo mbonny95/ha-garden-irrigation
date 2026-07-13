@@ -24,10 +24,17 @@ Milestone 8 adds:
     severity and only notifies/creates-or-clears a repair issue when that
     severity actually changes, never on every tick while unchanged.
 
-No rain-rate-during-declared-cycle monitor is added: that requires a
-"declared active cycle" state which does not exist yet (select/button, a
-later milestone) - adding one now would anticipate that milestone's data
-model, which the M8 brief explicitly says not to do.
+Milestone 9 adds one more check to the same periodic tick: a rain-rate
+advisory while a manual cycle is declared active (`coordinator.cycle_zone`,
+set/cleared by button.py's start/end cycle buttons - M7/M8 could not add
+this yet since that state did not exist). It follows the exact same
+notify-only, transition-deduplicated pattern as the wind/battery/signal
+checks above (no repair issue - this is a transient advisory, not a
+configuration problem) and reuses `CONF_RAIN_RATE_ENTITY`, already read
+elsewhere for the same "is it raining right now" diagnostic purpose
+(CLAUDE.md). Its message text is a small local IT/EN lookup rather than an
+addition to notify.py's `translate()` table - notify.py is out of scope to
+touch in M9.
 """
 
 from __future__ import annotations
@@ -46,6 +53,7 @@ from . import repairs
 from .const import (
     CONF_HUMIDITY_ENTITY,
     CONF_PRESSURE_ENTITY,
+    CONF_RAIN_RATE_ENTITY,
     CONF_SOLAR_RADIATION_ENTITY,
     CONF_TEMPERATURE_ENTITY,
     CONF_WIND_SPEED_ENTITY,
@@ -132,6 +140,22 @@ def _stale_level(
     if age >= warning_threshold:
         return "warning"
     return None
+
+
+def _rain_during_cycle_message(
+    hass: HomeAssistant, zone_id: str, rain_rate: float
+) -> str:
+    """Small local IT/EN lookup - notify.py's shared table is out of scope
+    to touch in M9 (see module docstring)."""
+    if hass.config.language == "it":
+        return (
+            f"Sta piovendo (intensità {rain_rate:.1f} mm/h) durante un ciclo "
+            f"dichiarato attivo per {zone_id}: valuta di interrompere l'irrigazione."
+        )
+    return (
+        f"It's raining (rate {rain_rate:.1f} mm/h) during a declared active "
+        f"cycle for {zone_id}: consider stopping irrigation."
+    )
 
 
 class Scheduler:
@@ -236,11 +260,13 @@ class Scheduler:
     # -- Periodic advisory monitor -----------------------------------------
 
     async def _handle_monitor_tick(self, now: datetime) -> None:
-        """Check WH51/weather staleness, WH51 battery/signal, and wind."""
+        """Check WH51/weather staleness, WH51 battery/signal, wind, and
+        rain-rate during a declared active cycle."""
         await self._check_wh51_stale(now)
         await self._check_weather_stale(now)
         await self._check_wh51_battery_signal()
         await self._check_wind()
+        await self._check_rain_during_cycle()
 
     async def _apply_transition(
         self, key: str, level: str | None, message: str | None
@@ -362,3 +388,28 @@ class Scheduler:
             else None
         )
         await self._apply_transition("wind", level, message)
+
+    async def _check_rain_during_cycle(self) -> None:
+        """Rain-rate "stop advisory" while a cycle is declared active.
+
+        No repair issue (see module docstring): this is a transient,
+        situational advisory, not a configuration problem - the same
+        notify-only pattern as wind/battery/signal above.
+        """
+        zone_id = self._coordinator.cycle_zone
+        if zone_id is None:
+            # No active cycle: nothing to check, and silently resolve any
+            # advisory left over from a cycle that has since ended.
+            await self._apply_transition("rain_during_cycle", None, None)
+            return
+
+        rain_rate = _numeric_state(
+            self.hass, self._coordinator.entry.data[CONF_RAIN_RATE_ENTITY]
+        )
+        level = "warning" if rain_rate is not None and rain_rate > 0 else None
+        message = (
+            _rain_during_cycle_message(self.hass, zone_id, rain_rate)
+            if level is not None and rain_rate is not None
+            else None
+        )
+        await self._apply_transition("rain_during_cycle", level, message)

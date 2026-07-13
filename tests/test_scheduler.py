@@ -26,6 +26,7 @@ from custom_components.garden_irrigation.const import (
     DEFAULT_WIND_WARNING_GUST_KMH,
     DOMAIN,
     ZONE_1,
+    ZONE_2,
 )
 from custom_components.garden_irrigation.coordinator import GardenIrrigationCoordinator
 from custom_components.garden_irrigation.weather import DailyWeatherSnapshot
@@ -33,6 +34,7 @@ from custom_components.garden_irrigation.weather import DailyWeatherSnapshot
 from .const import (
     MOCK_HUMIDITY_ENTITY,
     MOCK_PRESSURE_ENTITY,
+    MOCK_RAIN_RATE_ENTITY,
     MOCK_SOLAR_RADIATION_ENTITY,
     MOCK_TEMPERATURE_ENTITY,
     MOCK_WIND_SPEED_ENTITY,
@@ -633,3 +635,118 @@ async def test_async_shutdown_unsubscribes_monitor_tick(hass: HomeAssistant) -> 
     await scheduler.async_shutdown()
 
     assert scheduler._unsub_monitor is None
+
+
+# ---------------------------------------------------------------------------
+# Milestone 9: rain-rate "stop advisory" while a cycle is declared active
+# ---------------------------------------------------------------------------
+
+
+async def test_no_rain_check_when_no_active_cycle(hass: HomeAssistant) -> None:
+    coordinator = _coordinator(hass)
+    setup_mock_weather_states(hass)
+    hass.states.async_set(MOCK_RAIN_RATE_ENTITY, "2.0", {"unit_of_measurement": "mm/h"})
+
+    with patch.object(coordinator.notifier, "async_send", new=AsyncMock()) as mock_send:
+        await coordinator.scheduler._handle_monitor_tick(
+            datetime(2026, 6, 1, 8, 0, tzinfo=UTC)
+        )
+
+    mock_send.assert_not_awaited()
+
+
+async def test_rain_during_active_cycle_notifies(hass: HomeAssistant) -> None:
+    coordinator = _coordinator(hass)
+    setup_mock_weather_states(hass)
+    hass.states.async_set(MOCK_RAIN_RATE_ENTITY, "2.0", {"unit_of_measurement": "mm/h"})
+    coordinator.cycle_zone = ZONE_1
+
+    with patch.object(coordinator.notifier, "async_send", new=AsyncMock()) as mock_send:
+        await coordinator.scheduler._handle_monitor_tick(
+            datetime(2026, 6, 1, 8, 0, tzinfo=UTC)
+        )
+
+    mock_send.assert_awaited_once()
+    message = mock_send.await_args.args[0]
+    assert ZONE_1 in message
+
+
+async def test_dry_during_active_cycle_does_not_notify(hass: HomeAssistant) -> None:
+    coordinator = _coordinator(hass)
+    setup_mock_weather_states(hass)
+    hass.states.async_set(MOCK_RAIN_RATE_ENTITY, "0.0", {"unit_of_measurement": "mm/h"})
+    coordinator.cycle_zone = ZONE_2
+
+    with patch.object(coordinator.notifier, "async_send", new=AsyncMock()) as mock_send:
+        await coordinator.scheduler._handle_monitor_tick(
+            datetime(2026, 6, 1, 8, 0, tzinfo=UTC)
+        )
+
+    mock_send.assert_not_awaited()
+
+
+async def test_rain_during_cycle_dedup_no_repeat_while_still_raining(
+    hass: HomeAssistant,
+) -> None:
+    coordinator = _coordinator(hass)
+    setup_mock_weather_states(hass)
+    hass.states.async_set(MOCK_RAIN_RATE_ENTITY, "2.0", {"unit_of_measurement": "mm/h"})
+    coordinator.cycle_zone = ZONE_1
+
+    with patch.object(coordinator.notifier, "async_send", new=AsyncMock()) as mock_send:
+        await coordinator.scheduler._handle_monitor_tick(
+            datetime(2026, 6, 1, 8, 0, tzinfo=UTC)
+        )
+        await coordinator.scheduler._handle_monitor_tick(
+            datetime(2026, 6, 1, 8, 15, tzinfo=UTC)
+        )
+
+    mock_send.assert_awaited_once()
+
+
+async def test_rain_during_cycle_resolves_silently_and_can_retrigger(
+    hass: HomeAssistant,
+) -> None:
+    coordinator = _coordinator(hass)
+    setup_mock_weather_states(hass)
+    hass.states.async_set(MOCK_RAIN_RATE_ENTITY, "2.0", {"unit_of_measurement": "mm/h"})
+    coordinator.cycle_zone = ZONE_1
+
+    with patch.object(coordinator.notifier, "async_send", new=AsyncMock()) as mock_send:
+        await coordinator.scheduler._handle_monitor_tick(
+            datetime(2026, 6, 1, 8, 0, tzinfo=UTC)
+        )
+        assert mock_send.await_count == 1
+
+        # Cycle ends: the next tick resolves the advisory silently.
+        coordinator.cycle_zone = None
+        await coordinator.scheduler._handle_monitor_tick(
+            datetime(2026, 6, 1, 8, 15, tzinfo=UTC)
+        )
+        assert mock_send.await_count == 1
+
+        # A new declared cycle while it's still raining notifies again.
+        coordinator.cycle_zone = ZONE_2
+        await coordinator.scheduler._handle_monitor_tick(
+            datetime(2026, 6, 1, 8, 30, tzinfo=UTC)
+        )
+        assert mock_send.await_count == 2
+
+
+async def test_rain_during_cycle_message_is_localized_to_italian(
+    hass: HomeAssistant,
+) -> None:
+    hass.config.language = "it"
+    coordinator = _coordinator(hass)
+    setup_mock_weather_states(hass)
+    hass.states.async_set(MOCK_RAIN_RATE_ENTITY, "2.0", {"unit_of_measurement": "mm/h"})
+    coordinator.cycle_zone = ZONE_1
+
+    with patch.object(coordinator.notifier, "async_send", new=AsyncMock()) as mock_send:
+        await coordinator.scheduler._handle_monitor_tick(
+            datetime(2026, 6, 1, 8, 0, tzinfo=UTC)
+        )
+
+    mock_send.assert_awaited_once()
+    message = mock_send.await_args.args[0]
+    assert "piovendo" in message.lower()

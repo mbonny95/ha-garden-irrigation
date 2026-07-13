@@ -1,8 +1,8 @@
-"""Tests for the garden_irrigation binary_sensor platform (Milestone 7)."""
+"""Tests for the garden_irrigation binary_sensor platform (Milestones 7 and 9)."""
 
 from __future__ import annotations
 
-from datetime import date
+from datetime import UTC, date, datetime, timedelta
 from typing import Any
 from unittest.mock import patch
 
@@ -13,6 +13,7 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.garden_irrigation.balance import ZoneBalanceResult
 from custom_components.garden_irrigation.binary_sensor import (
+    IrrigationInProgressSensor,
     NeedsIrrigationZoneSensor,
     WeeklyCapReachedZoneSensor,
 )
@@ -99,7 +100,7 @@ async def test_all_expected_binary_sensor_entities_are_created(
     await hass.async_block_till_done()
 
     ent_reg = er.async_get(hass)
-    expected_unique_ids = [
+    expected_unique_ids = [f"{entry.entry_id}_irrigation_in_progress"] + [
         f"{entry.entry_id}_{key}_{zone_id}"
         for zone_id in ZONES
         for key in ("needs_irrigation", "weekly_cap_reached")
@@ -300,3 +301,100 @@ async def test_availability_follows_coordinator_update_success(
     assert coordinator.last_update_success is False
     assert needs_sensor.available is False
     assert cap_sensor.available is False
+
+
+# ---------------------------------------------------------------------------
+# irrigation_in_progress (Milestone 9): purely declarative, button-driven
+# ---------------------------------------------------------------------------
+
+
+async def test_irrigation_in_progress_off_by_default(hass: HomeAssistant) -> None:
+    coordinator = _coordinator(hass)
+    sensor = IrrigationInProgressSensor(coordinator, coordinator.entry)
+
+    assert sensor.is_on is False
+    assert sensor.extra_state_attributes is None
+    assert sensor.available is True
+
+
+async def test_irrigation_in_progress_on_after_start_cycle(
+    hass: HomeAssistant, freezer: Any
+) -> None:
+    now = datetime(2026, 6, 1, 8, 0, tzinfo=UTC)
+    freezer.move_to(now)
+    coordinator = _coordinator(hass)
+    coordinator.selected_cycle_zone = ZONE_2
+    sensor = IrrigationInProgressSensor(coordinator, coordinator.entry)
+
+    await coordinator.async_start_cycle()
+
+    assert sensor.is_on is True
+    attrs = sensor.extra_state_attributes
+    assert attrs is not None
+    assert attrs["zone"] == ZONE_2
+    assert datetime.fromisoformat(attrs["started_at"]) == now
+    assert attrs["elapsed_minutes"] == pytest.approx(0.0)
+
+
+async def test_irrigation_in_progress_elapsed_minutes_advances(
+    hass: HomeAssistant, freezer: Any
+) -> None:
+    now = datetime(2026, 6, 1, 8, 0, tzinfo=UTC)
+    freezer.move_to(now)
+    coordinator = _coordinator(hass)
+    sensor = IrrigationInProgressSensor(coordinator, coordinator.entry)
+    await coordinator.async_start_cycle()
+
+    freezer.move_to(now + timedelta(minutes=7, seconds=30))
+
+    attrs = sensor.extra_state_attributes
+    assert attrs is not None
+    assert attrs["elapsed_minutes"] == pytest.approx(7.5)
+
+
+async def test_irrigation_in_progress_off_after_end_cycle(hass: HomeAssistant) -> None:
+    coordinator = _coordinator(hass)
+    sensor = IrrigationInProgressSensor(coordinator, coordinator.entry)
+    await coordinator.async_start_cycle()
+    assert sensor.is_on is True
+
+    await coordinator.async_end_cycle()
+
+    assert sensor.is_on is False
+    assert sensor.extra_state_attributes is None
+
+
+async def test_irrigation_in_progress_unique_id_and_translation_key(
+    hass: HomeAssistant,
+) -> None:
+    coordinator = _coordinator(hass)
+    sensor = IrrigationInProgressSensor(coordinator, coordinator.entry)
+
+    assert sensor.unique_id == f"{coordinator.entry.entry_id}_irrigation_in_progress"
+    assert sensor.translation_key == "irrigation_in_progress"
+    assert sensor.has_entity_name is True
+    assert sensor.device_info is not None
+
+
+async def test_irrigation_in_progress_survives_setup_shutdown_roundtrip(
+    hass: HomeAssistant, freezer: Any
+) -> None:
+    now = datetime(2026, 6, 1, 8, 0, tzinfo=UTC)
+    freezer.move_to(now)
+    entry = MockConfigEntry(domain=DOMAIN, data=_full_entry_data())
+    entry.add_to_hass(hass)
+    coordinator1 = GardenIrrigationCoordinator(hass, entry)
+    await coordinator1.async_setup()
+    await coordinator1.async_start_cycle()
+    await coordinator1.async_shutdown()
+
+    coordinator2 = GardenIrrigationCoordinator(hass, entry)
+    await coordinator2.async_setup()
+    try:
+        sensor = IrrigationInProgressSensor(coordinator2, entry)
+        assert sensor.is_on is True
+        attrs = sensor.extra_state_attributes
+        assert attrs is not None
+        assert attrs["zone"] == ZONE_1
+    finally:
+        await coordinator2.async_shutdown()

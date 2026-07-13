@@ -118,6 +118,39 @@
       },
       "weekly_cap_reached": {
         "name": "Tetto settimanale raggiunto {zone_name}"
+      },
+      "irrigation_in_progress": {
+        "name": "Irrigazione in corso"
+      }
+    },
+    "select": {
+      "mode": {
+        "name": "Modalità",
+        "state": {
+          "calibration": "Calibrazione",
+          "monitoring": "Monitoraggio"
+        }
+      },
+      "active_cycle_zone": {
+        "name": "Zona ciclo attivo",
+        "state": {
+          "zone_1": "Zona 1",
+          "zone_2": "Zona 2"
+        }
+      }
+    },
+    "button": {
+      "start_cycle": {
+        "name": "Avvia ciclo"
+      },
+      "end_cycle": {
+        "name": "Termina ciclo"
+      },
+      "start_calibration": {
+        "name": "Avvia calibrazione {zone_name}"
+      },
+      "finish_calibration": {
+        "name": "Completa calibrazione {zone_name}"
       }
     }
   },

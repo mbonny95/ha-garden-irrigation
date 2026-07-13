@@ -41,6 +41,10 @@ STORAGE_KEY_EVENTS = f"{DOMAIN}.events"
 # Milestone 7's WH51 calibration baseline (first-seen timestamp + observed
 # min/max per zone) is its own store file too, for the same isolation reason.
 STORAGE_KEY_RECOMMENDATION = f"{DOMAIN}.recommendation_state"
+# Milestone 9's operational state (select.mode, the declared-cycle zone/
+# start timestamp) is its own store file too, same isolation reason - owned
+# by coordinator.py, read/written by select.py/button.py through it.
+STORAGE_KEY_OPERATIONAL = f"{DOMAIN}.operational_state"
 
 # --- Sources -----------------------------------------------------------------
 # No automated fallback between sources exists or is planned: the user always

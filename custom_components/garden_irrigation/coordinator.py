@@ -26,13 +26,22 @@ confirmation: since irrigation_log.py itself is out of scope to touch, new
 events are detected here by diffing `irrigation_log.events_for_zone()` ids
 against the set seen as of the last refresh (seeded at startup so pre-
 existing events are never re-notified) - irrigation_log.py's own semantics
-are completely unchanged.
+are completely unchanged. Milestone 9 adds the operational state
+(`coordinator.mode`, `coordinator.cycle_zone`/`cycle_started_at`/
+`selected_cycle_zone`) behind its own store (STORAGE_KEY_OPERATIONAL) -
+select.py/button.py/binary_sensor.py read and mutate it through the small
+`async_set_mode`/`async_set_selected_cycle_zone`/`async_start_cycle`/
+`async_end_cycle` methods below, and `async_update_listeners()` pushes the
+change to those entities immediately without a full data refresh. None of
+this touches balance/recommendation/irrigation_log's own state: the declared
+cycle is purely informational until the user records it for real via the
+existing `record_irrigation` service/backend.
 """
 
 from __future__ import annotations
 
 import logging
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
@@ -51,6 +60,8 @@ from .const import (
     DEFAULT_ZONE1_NAME,
     DEFAULT_ZONE2_NAME,
     DOMAIN,
+    MODE_CALIBRATION,
+    STORAGE_KEY_OPERATIONAL,
     ZONE_1,
     ZONES,
 )
@@ -59,6 +70,7 @@ from .irrigation_log import IrrigationAggregate, IrrigationEvent, IrrigationLog
 from .notify import TelegramNotifier, translate
 from .recommendation import RecommendationEngine, ZoneRecommendationBundle
 from .scheduler import Scheduler
+from .storage import GardenIrrigationStore
 from .weather import WeatherAggregator
 
 _LOGGER = logging.getLogger(__name__)
@@ -104,10 +116,18 @@ class GardenIrrigationCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             zone_id: set() for zone_id in ZONES
         }
 
+        # Milestone 9: operational state (select.mode + the declared cycle).
+        # Purely informational/UX - see async_start_cycle/async_end_cycle.
+        self._operational_store = GardenIrrigationStore(hass, STORAGE_KEY_OPERATIONAL)
+        self.mode: str = MODE_CALIBRATION
+        self.selected_cycle_zone: str = ZONE_1
+        self.cycle_zone: str | None = None
+        self.cycle_started_at: datetime | None = None
+
     async def async_setup(self) -> None:
         """Start the weather listeners, restore the balance, register the
-        record_irrigation service, restore the WH51 baseline, and start the
-        20:00/05:30 scheduler triggers."""
+        record_irrigation service, restore the WH51 baseline, restore the
+        operational state, and start the 20:00/05:30 scheduler triggers."""
         await self.weather.async_setup()
         await self.balance.async_setup()
         await self.irrigation_log.async_setup()
@@ -118,7 +138,60 @@ class GardenIrrigationCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             self._notified_irrigation_event_ids[zone_id] = {
                 event.id for event in self.irrigation_log.events_for_zone(zone_id)
             }
+        await self._async_restore_operational_state()
         await self.scheduler.async_setup()
+
+    async def _async_restore_operational_state(self) -> None:
+        stored = await self._operational_store.async_load()
+        self.mode = stored.get("mode", MODE_CALIBRATION)
+        self.selected_cycle_zone = stored.get("selected_cycle_zone", ZONE_1)
+        self.cycle_zone = stored.get("cycle_zone")
+        started_at_raw = stored.get("cycle_started_at")
+        self.cycle_started_at = (
+            dt_util.parse_datetime(started_at_raw) if started_at_raw else None
+        )
+
+    def _operational_save_data(self) -> dict[str, Any]:
+        return {
+            "mode": self.mode,
+            "selected_cycle_zone": self.selected_cycle_zone,
+            "cycle_zone": self.cycle_zone,
+            "cycle_started_at": (
+                self.cycle_started_at.isoformat() if self.cycle_started_at else None
+            ),
+        }
+
+    async def async_set_mode(self, mode: str) -> None:
+        """Set the operational mode (calibration/monitoring) - UX/status only,
+        never alters balance/recommendation/log data retroactively."""
+        self.mode = mode
+        await self._operational_store.async_save(self._operational_save_data())
+        self.async_update_listeners()
+
+    async def async_set_selected_cycle_zone(self, zone_id: str) -> None:
+        """Set which zone `async_start_cycle` will target next."""
+        self.selected_cycle_zone = zone_id
+        await self._operational_store.async_save(self._operational_save_data())
+        self.async_update_listeners()
+
+    async def async_start_cycle(self) -> None:
+        """Declare a manual cycle active for `selected_cycle_zone`, now.
+
+        Purely declarative: no side effect on the deficit/irrigation log
+        until the user actually records the cycle via the existing
+        `record_irrigation` service/backend (irrigation_log.py, unchanged).
+        """
+        self.cycle_zone = self.selected_cycle_zone
+        self.cycle_started_at = dt_util.now()
+        await self._operational_store.async_save(self._operational_save_data())
+        self.async_update_listeners()
+
+    async def async_end_cycle(self) -> None:
+        """Clear the declared-active-cycle state."""
+        self.cycle_zone = None
+        self.cycle_started_at = None
+        await self._operational_store.async_save(self._operational_save_data())
+        self.async_update_listeners()
 
     async def async_shutdown(self) -> None:
         """Stop the weather aggregator's listeners and force a final flush.
