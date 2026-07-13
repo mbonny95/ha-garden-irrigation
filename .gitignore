@@ -1,24 +1,42 @@
+# Python
 __pycache__/
 *.py[cod]
+*.so
 *.egg-info/
-.eggs/
-build/
-dist/
 
+# Virtual env / tooling
 .venv/
 venv/
-.python-version
-uv.lock
-
-.pytest_cache/
+.env
 .mypy_cache/
+.pytest_cache/
 .ruff_cache/
 .coverage
-htmlcov/
 coverage.xml
+htmlcov/
 
+# OS / editor
+.DS_Store
+Thumbs.db
 .vscode/
 .idea/
-*.swp
+.claude/ 
+.python-version
 
-.DS_Store
+# Build / temp
+dist/
+build/
+tmp/
+temp/
+
+# Home Assistant local runtime artifacts
+*.log
+*.db
+*.db-shm
+*.db-wal
+.storage/
+config/
+secrets.yaml
+
+# Graphify: commit graph, ignore local cost artifacts
+graphify-out/cost

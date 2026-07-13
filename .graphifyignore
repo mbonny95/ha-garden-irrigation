@@ -1,0 +1,59 @@
+# VCS / editors / caches
+.git/
+.github/.gitkeep
+.venv/
+venv/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.vscode/
+.idea/
+__pycache__/
+
+# Build / temp / reports
+dist/
+build/
+htmlcov/
+tmp/
+temp/
+.coverage
+coverage.xml
+
+# Python packaging noise
+*.egg-info/
+*.pyc
+*.pyo
+*.pyd
+
+# Logs / databases / local HA runtime
+*.log
+*.db
+*.db-shm
+*.db-wal
+.storage/
+config/
+secrets.yaml
+
+# Large or generated artifacts not useful for bug reasoning
+graphify-out/cost
+output/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.pdf
+*.zip
+
+# Keep source, docs, workflows, tests, dashboards, and generated graph itself
+!custom_components/
+!tests/
+!docs/
+!dashboards/
+!.github/
+!README.md
+!CHANGELOG.md
+!CLAUDE.md
+!pyproject.toml
+!hacs.json
+!graphify-out/
