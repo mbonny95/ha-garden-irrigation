@@ -1,0 +1,259 @@
+# Garden Irrigation — example Lovelace dashboard (Milestone 10)
+#
+# Decision-support only: this dashboard never starts/stops any real hardware.
+# Every control here either (a) reads a diagnostic/computed value, (b) toggles
+# a purely declarative select/button owned by garden_irrigation itself
+# (mode, active_cycle_zone, start/end cycle, start/finish calibration), or
+# (c) calls the `garden_irrigation.record_irrigation` action to LOG a cycle
+# you already ran manually. Nothing here operates a valve, pump, or relay.
+#
+# Core Lovelace cards only (entities/tile/glance/markdown/button/heading via
+# the built-in "sections" view) — no custom cards required.
+#
+# Entity IDs below assume the default zone names shipped by the integration
+# ("Zona 1" / "Zona 2", see const.py DEFAULT_ZONE1_NAME/DEFAULT_ZONE2_NAME)
+# and the single shared device name "Garden Irrigation". If you renamed a
+# zone during setup, or your instance generated different object_ids, open
+# Settings → Devices & services → Garden Irrigation and adjust the entity_ids
+# below to match (or re-pick each entity from the dashboard editor's entity
+# picker instead of using YAML directly).
+
+title: Garden Irrigation
+views:
+  - title: Garden Irrigation
+    path: garden-irrigation
+    icon: mdi:sprinkler-variant
+    type: sections
+    sections:
+      # ---------------------------------------------------------------
+      # Overview
+      # ---------------------------------------------------------------
+      - type: grid
+        cards:
+          - type: heading
+            heading: Overview
+            heading_style: title
+            icon: mdi:information-outline
+          - type: markdown
+            content: >
+              **Decision support only — this integration never controls
+              hardware.** It reads existing weather/soil sensors, computes a
+              water balance locally, and *recommends* irrigation. Taps and
+              the tank/mains source switch are operated manually by you.
+              Liters/mm figures are **estimates**, not measurements.
+          - type: entities
+            title: Status
+            entities:
+              - entity: sensor.garden_irrigation_data_quality
+                name: Data quality
+              - entity: sensor.garden_irrigation_et0_daily
+                name: ET0 (today, in progress)
+              - entity: select.garden_irrigation_mode
+                name: Mode
+              - entity: binary_sensor.garden_irrigation_irrigation_in_progress
+                name: Irrigation in progress
+
+      # ---------------------------------------------------------------
+      # Zone 1
+      # ---------------------------------------------------------------
+      - type: grid
+        cards:
+          - type: heading
+            heading: Zone 1
+            heading_style: subtitle
+            icon: mdi:grass
+          - type: glance
+            title: Water balance
+            show_name: true
+            show_state: true
+            entities:
+              - entity: sensor.garden_irrigation_deficit_zona_1
+                name: Deficit
+              - entity: sensor.garden_irrigation_raw_zona_1
+                name: RAW
+              - entity: sensor.garden_irrigation_taw_zona_1
+                name: TAW
+              - entity: sensor.garden_irrigation_etc_zona_1
+                name: ETc
+              - entity: sensor.garden_irrigation_effective_rain_zona_1
+                name: Eff. rain
+          - type: entities
+            title: Recommendation
+            entities:
+              - entity: binary_sensor.garden_irrigation_needs_irrigation_zona_1
+                name: Needs irrigation (final)
+              - type: attribute
+                entity: binary_sensor.garden_irrigation_needs_irrigation_zona_1
+                attribute: recommended_mm
+                name: Recommended (mm, estimate)
+              - type: attribute
+                entity: binary_sensor.garden_irrigation_needs_irrigation_zona_1
+                attribute: wh51_status
+                name: WH51 signal (device-relative)
+              - type: attribute
+                entity: binary_sensor.garden_irrigation_needs_irrigation_zona_1
+                attribute: preview_needs_irrigation
+                name: Needs irrigation (20:00 preview, not persisted)
+              - entity: binary_sensor.garden_irrigation_weekly_cap_reached_zona_1
+                name: Weekly cap reached
+              - entity: sensor.garden_irrigation_irrigation_7d_zona_1
+                name: Recorded irrigation (7d, governs cap)
+
+      # ---------------------------------------------------------------
+      # Zone 2
+      # ---------------------------------------------------------------
+      - type: grid
+        cards:
+          - type: heading
+            heading: Zone 2
+            heading_style: subtitle
+            icon: mdi:grass
+          - type: glance
+            title: Water balance
+            show_name: true
+            show_state: true
+            entities:
+              - entity: sensor.garden_irrigation_deficit_zona_2
+                name: Deficit
+              - entity: sensor.garden_irrigation_raw_zona_2
+                name: RAW
+              - entity: sensor.garden_irrigation_taw_zona_2
+                name: TAW
+              - entity: sensor.garden_irrigation_etc_zona_2
+                name: ETc
+              - entity: sensor.garden_irrigation_effective_rain_zona_2
+                name: Eff. rain
+          - type: entities
+            title: Recommendation
+            entities:
+              - entity: binary_sensor.garden_irrigation_needs_irrigation_zona_2
+                name: Needs irrigation (final)
+              - type: attribute
+                entity: binary_sensor.garden_irrigation_needs_irrigation_zona_2
+                attribute: recommended_mm
+                name: Recommended (mm, estimate)
+              - type: attribute
+                entity: binary_sensor.garden_irrigation_needs_irrigation_zona_2
+                attribute: wh51_status
+                name: WH51 signal (device-relative)
+              - type: attribute
+                entity: binary_sensor.garden_irrigation_needs_irrigation_zona_2
+                attribute: preview_needs_irrigation
+                name: Needs irrigation (20:00 preview, not persisted)
+              - entity: binary_sensor.garden_irrigation_weekly_cap_reached_zona_2
+                name: Weekly cap reached
+              - entity: sensor.garden_irrigation_irrigation_7d_zona_2
+                name: Recorded irrigation (7d, governs cap)
+
+      # ---------------------------------------------------------------
+      # Manual record / declared cycle / mode
+      # ---------------------------------------------------------------
+      - type: grid
+        cards:
+          - type: heading
+            heading: Manual cycle & recording
+            heading_style: subtitle
+            icon: mdi:watering-can
+          - type: markdown
+            content: >
+              **"Cycle in progress" is a manual declaration**, not an
+              automatic detection: press *Start cycle* when you physically
+              open a tap, *End cycle* when you close it. It only unlocks the
+              rain "consider stopping" advisory below — it never touches the
+              deficit or the log by itself.
+
+
+              **Recording a completed cycle** (the only thing that updates
+              the water balance) is not a native form in this integration —
+              call the `garden_irrigation.record_irrigation` action from
+              Developer tools → Actions (or your own script/automation) with
+              `zone`, `source`, `duration_minutes` (≤ 15) and optional
+              `notes`. The two buttons below are fixed 10-minute presets for
+              convenience; for any other duration use the action directly.
+          - type: entities
+            title: Mode & declared cycle
+            entities:
+              - entity: select.garden_irrigation_mode
+                name: Mode
+              - entity: select.garden_irrigation_active_cycle_zone
+                name: Cycle target zone
+              - entity: button.garden_irrigation_start_cycle
+                name: Start cycle
+              - entity: button.garden_irrigation_end_cycle
+                name: End cycle
+              - entity: binary_sensor.garden_irrigation_irrigation_in_progress
+                name: In progress
+              - type: attribute
+                entity: binary_sensor.garden_irrigation_irrigation_in_progress
+                attribute: elapsed_minutes
+                name: Elapsed (min, diagnostic only)
+          - type: grid
+            columns: 2
+            cards:
+              - type: button
+                name: "Log 10 min — Zone 1 (mains)"
+                icon: mdi:watering-can
+                show_state: false
+                tap_action:
+                  action: perform-action
+                  perform_action: garden_irrigation.record_irrigation
+                  target: {}
+                  data:
+                    zone: zone_1
+                    source: mains_water
+                    duration_minutes: 10
+              - type: button
+                name: "Log 10 min — Zone 2 (mains)"
+                icon: mdi:watering-can
+                show_state: false
+                tap_action:
+                  action: perform-action
+                  perform_action: garden_irrigation.record_irrigation
+                  target: {}
+                  data:
+                    zone: zone_2
+                    source: mains_water
+                    duration_minutes: 10
+
+      # ---------------------------------------------------------------
+      # Diagnostics
+      # ---------------------------------------------------------------
+      - type: grid
+        cards:
+          - type: heading
+            heading: Diagnostics
+            heading_style: subtitle
+            icon: mdi:wrench-cog-outline
+          - type: entities
+            title: ET0 detail
+            entities:
+              - entity: sensor.garden_irrigation_et0_daily
+                name: ET0 (mm)
+              - type: attribute
+                entity: sensor.garden_irrigation_et0_daily
+                attribute: incomplete
+                name: Incomplete (no automatic fallback)
+              - type: attribute
+                entity: sensor.garden_irrigation_et0_daily
+                attribute: missing_inputs
+                name: Missing inputs
+          - type: entities
+            title: WH51 calibration override (per zone)
+            entities:
+              - entity: button.garden_irrigation_start_calibration_zona_1
+                name: Start calibration — Zone 1
+              - entity: button.garden_irrigation_finish_calibration_zona_1
+                name: Finish calibration — Zone 1
+              - entity: button.garden_irrigation_start_calibration_zona_2
+                name: Start calibration — Zone 2
+              - entity: button.garden_irrigation_finish_calibration_zona_2
+                name: Finish calibration — Zone 2
+          - type: markdown
+            content: >
+              WH51 soil-moisture % is **device-relative**, never absolute
+              VWC. For the first 14 days after calibration starts it is
+              diagnostic-only; afterwards it becomes a soft, explainable
+              corroborating signal — never a hard block. See
+              `docs/calibration.md`. Telegram/persistent-notification
+              delivery problems and stale sensor data surface as **Repairs**
+              (Settings → System → Repairs), not as dashboard entities.
