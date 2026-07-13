@@ -13,12 +13,14 @@ manual-cycle event log and its `record_irrigation` service
 per-source aggregates) - recording a cycle feeds directly into
 `coordinator.balance`'s own ledger (used both by the once-daily deficit
 calculation and by the existing irrigation_7d sensor), so no separate
-deficit-update path is needed here. There is still no scheduler
-distinguishing a 20:00 preview from the 05:30 final decision (scheduler.py, a
-later milestone) - `_async_update_data` simply applies the balance for the
-most recently completed day as soon as its weather data is available,
-whenever the coordinator happens to refresh. The recommendation engine is
-NOT started here (see recommendation.py in a later milestone).
+deficit-update path is needed here. Milestone 7 adds the recommendation
+engine (`coordinator.recommendation`, `coordinator.data["recommendation"]`:
+a `{final, preview}` bundle per zone - see recommendation.py for why both are
+always recomputed on every refresh) and the scheduler
+(`coordinator.scheduler`), which only guarantees a refresh happens at 20:00
+and 05:30 local time - it does not gate what gets computed, since the
+final/preview distinction and the once-per-day balance idempotency already
+make every refresh safe regardless of what triggered it.
 """
 
 from __future__ import annotations
@@ -42,6 +44,8 @@ from .const import (
 )
 from .et0 import compute_et0
 from .irrigation_log import IrrigationAggregate, IrrigationLog
+from .recommendation import RecommendationEngine, ZoneRecommendationBundle
+from .scheduler import Scheduler
 from .weather import WeatherAggregator
 
 _LOGGER = logging.getLogger(__name__)
@@ -51,8 +55,7 @@ class GardenIrrigationCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     """Event-driven coordinator (no polling: update_interval is None).
 
     Refreshes are triggered by state-change listeners (weather/WH51 entities)
-    and by the 20:00/05:30 scheduler in later milestones — never by a fixed
-    interval.
+    and by the 20:00/05:30 scheduler triggers - never by a fixed interval.
     """
 
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry) -> None:
@@ -68,13 +71,20 @@ class GardenIrrigationCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self.weather = WeatherAggregator(hass, entry)
         self.balance = BalanceEngine(hass, entry)
         self.irrigation_log = IrrigationLog(hass, entry, self)
+        self.recommendation = RecommendationEngine(
+            hass, entry, self.balance, self.irrigation_log
+        )
+        self.scheduler = Scheduler(hass, self)
 
     async def async_setup(self) -> None:
-        """Start the weather listeners, restore the balance, and register the
-        record_irrigation service."""
+        """Start the weather listeners, restore the balance, register the
+        record_irrigation service, restore the WH51 baseline, and start the
+        20:00/05:30 scheduler triggers."""
         await self.weather.async_setup()
         await self.balance.async_setup()
         await self.irrigation_log.async_setup()
+        await self.recommendation.async_setup()
+        await self.scheduler.async_setup()
 
     async def async_shutdown(self) -> None:
         """Stop the weather aggregator's listeners and force a final flush.
@@ -82,9 +92,11 @@ class GardenIrrigationCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         Extends (not replaces) DataUpdateCoordinator.async_shutdown, which
         also cancels the coordinator's own scheduled refresh/debouncer.
         """
+        await self.scheduler.async_shutdown()
         await self.weather.async_shutdown()
         await self.balance.async_shutdown()
         await self.irrigation_log.async_shutdown()
+        await self.recommendation.async_shutdown()
         await super().async_shutdown()
 
     async def _async_update_data(self) -> dict[str, Any]:
@@ -132,9 +144,20 @@ class GardenIrrigationCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             zone_id: self.irrigation_log.totals_by_source(zone_id) for zone_id in ZONES
         }
 
+        now = dt_util.now()
+        today_et0_mm = None if et0_result.incomplete else et0_result.et0_mm
+        today_rain_mm = self.weather.today_snapshot().rain_mm
+        recommendations: dict[str, ZoneRecommendationBundle] = {
+            zone_id: self.recommendation.build(
+                zone_id, balance_results[zone_id], today_et0_mm, today_rain_mm, now
+            )
+            for zone_id in ZONES
+        }
+
         return {
             "data_quality": DATA_QUALITY_INITIALIZING,
             "et0": et0_result,
             "balance": balance_results,
             "irrigation": irrigation_totals,
+            "recommendation": recommendations,
         }

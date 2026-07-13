@@ -1,9 +1,11 @@
 """The garden_irrigation integration.
 
 Milestone 2: entry setup/unload/reload wiring, plus the weather aggregation
-listeners started/stopped alongside the coordinator. FAO-56/balance/
-recommendation engines, manual-cycle recording, notifications and scheduling
-are added in later milestones without changing this setup contract.
+listeners started/stopped alongside the coordinator. Milestone 7 adds the
+`binary_sensor` platform (needs_irrigation/weekly_cap_reached); the engines
+and services it and the sensor platform read from are all started/stopped by
+`coordinator.async_setup`/`async_shutdown`, so this setup contract itself is
+otherwise unchanged. Notifications are added in a later milestone.
 """
 
 from __future__ import annotations
@@ -15,7 +17,7 @@ from homeassistant.core import HomeAssistant
 from .const import DOMAIN
 from .coordinator import GardenIrrigationCoordinator
 
-PLATFORMS: list[Platform] = [Platform.SENSOR]
+PLATFORMS: list[Platform] = [Platform.SENSOR, Platform.BINARY_SENSOR]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

@@ -38,6 +38,9 @@ STORAGE_KEY_BALANCE = f"{DOMAIN}.balance_state"
 # STORAGE_KEY_BALANCE above: it's exclusively owned by irrigation_log.py, so
 # there is no cross-engine merge-on-save race to worry about.
 STORAGE_KEY_EVENTS = f"{DOMAIN}.events"
+# Milestone 7's WH51 calibration baseline (first-seen timestamp + observed
+# min/max per zone) is its own store file too, for the same isolation reason.
+STORAGE_KEY_RECOMMENDATION = f"{DOMAIN}.recommendation_state"
 
 # --- Sources -----------------------------------------------------------------
 # No automated fallback between sources exists or is planned: the user always
@@ -137,6 +140,19 @@ DEFAULT_RAIN_EFFECTIVE_FACTOR = 0.8
 DEFAULT_WEEKLY_CAP_MM = 30
 DEFAULT_MIN_INTERVAL_HOURS = 48
 DEFAULT_MAX_CYCLE_MINUTES = 15
+# Pause between successive ≤15-minute blocks of a multi-block recommended
+# cycle (Milestone 7 recommendation.py), to let water infiltrate and avoid
+# runoff before the next block starts.
+DEFAULT_BLOCK_PAUSE_MINUTES = 10
+
+# --- Defaults: WH51 soft-signal thresholds (options, future milestones) -----
+# Device-relative position within the observed [baseline_min, baseline_max]
+# range (0 = driest ever observed, 1 = wettest ever observed) - NOT absolute
+# VWC. Only used as a soft, explainable corroborating signal once calibration
+# (DEFAULT_CALIBRATION_DAYS) is complete - never a hard block (CLAUDE.md §1.9).
+DEFAULT_WH51_CRITICAL_THRESHOLD = 0.1
+DEFAULT_WH51_DRY_THRESHOLD = 0.3
+DEFAULT_WH51_WET_THRESHOLD = 0.7
 
 # --- Defaults: wind warnings (options, future milestones) -------------------
 DEFAULT_WIND_WARNING_AVG_KMH = 15

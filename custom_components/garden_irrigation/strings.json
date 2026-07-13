@@ -111,6 +111,14 @@
       "irrigation_7d": {
         "name": "Irrigation (7d) {zone_name}"
       }
+    },
+    "binary_sensor": {
+      "needs_irrigation": {
+        "name": "Needs irrigation {zone_name}"
+      },
+      "weekly_cap_reached": {
+        "name": "Weekly cap reached {zone_name}"
+      }
     }
   },
   "services": {
