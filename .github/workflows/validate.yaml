@@ -1,15 +1,14 @@
 name: Validate
 
-# hassfest and HACS structural validation. Milestone 1 only wires these jobs
-# up so they run in CI; full HACS publication readiness (brand assets, etc.)
-# is completed in Milestone 10 and this workflow is not a merge gate until then.
-
 on:
   push:
     branches: [main]
   pull_request:
   schedule:
     - cron: "0 0 * * 0"
+  workflow_dispatch:
+
+permissions: {}
 
 jobs:
   hassfest:
