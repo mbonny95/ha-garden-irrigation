@@ -148,5 +148,27 @@
         }
       }
     }
+  },
+  "issues": {
+    "telegram_not_configured": {
+      "title": "Telegram is not configured",
+      "description": "Garden Irrigation could not send a notification because no Telegram target is configured. Reports/advisories are being shown as persistent notifications instead. Configure a Telegram notify entity or a bot config entry and chat id from this integration's setup or options to enable Telegram delivery."
+    },
+    "telegram_target_invalid": {
+      "title": "Telegram target is not available",
+      "description": "Garden Irrigation has a Telegram target configured, but the corresponding service is not available (the Telegram integration or notify entity may not be set up). Reports/advisories are being shown as persistent notifications instead."
+    },
+    "telegram_send_failed": {
+      "title": "Telegram delivery failed",
+      "description": "Garden Irrigation's last attempt to send a Telegram message failed. Reports/advisories are being shown as persistent notifications instead. Check the Telegram bot configuration and connectivity."
+    },
+    "wh51_stale": {
+      "title": "Soil moisture sensor not updating ({zone_id})",
+      "description": "The WH51 soil moisture sensor for {zone_id} has not reported a new value within the expected time. Check the sensor's battery, signal, and connectivity."
+    },
+    "weather_stale": {
+      "title": "Weather data not updating",
+      "description": "One or more of the weather entities used to compute ET0 have not reported a new value within the expected time. ET0 and the recommendation may be unavailable until this is resolved."
+    }
   }
 }

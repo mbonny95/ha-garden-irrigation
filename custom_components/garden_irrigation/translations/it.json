@@ -148,5 +148,27 @@
         }
       }
     }
+  },
+  "issues": {
+    "telegram_not_configured": {
+      "title": "Telegram non è configurato",
+      "description": "Garden Irrigation non è riuscito a inviare una notifica perché non è configurata nessuna destinazione Telegram. I report/avvisi vengono mostrati come notifiche persistenti. Configura un'entità notify Telegram oppure un config entry del bot e un chat id dalla configurazione o dalle opzioni di questa integrazione per abilitare l'invio via Telegram."
+    },
+    "telegram_target_invalid": {
+      "title": "La destinazione Telegram non è disponibile",
+      "description": "Garden Irrigation ha una destinazione Telegram configurata, ma il servizio corrispondente non è disponibile (l'integrazione Telegram o l'entità notify potrebbero non essere configurate). I report/avvisi vengono mostrati come notifiche persistenti."
+    },
+    "telegram_send_failed": {
+      "title": "Invio Telegram non riuscito",
+      "description": "L'ultimo tentativo di invio di un messaggio Telegram da parte di Garden Irrigation non è riuscito. I report/avvisi vengono mostrati come notifiche persistenti. Verifica la configurazione del bot Telegram e la connettività."
+    },
+    "wh51_stale": {
+      "title": "Sensore umidità del suolo non aggiornato ({zone_id})",
+      "description": "Il sensore di umidità del suolo WH51 per {zone_id} non riporta un nuovo valore entro il tempo atteso. Verifica batteria, segnale e connettività del sensore."
+    },
+    "weather_stale": {
+      "title": "Dati meteo non aggiornati",
+      "description": "Una o più entità meteo usate per calcolare l'ET0 non riportano un nuovo valore entro il tempo atteso. L'ET0 e la raccomandazione potrebbero risultare non disponibili finché il problema non viene risolto."
+    }
   }
 }

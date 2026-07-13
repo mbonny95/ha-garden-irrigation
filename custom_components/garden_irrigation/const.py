@@ -164,6 +164,15 @@ DEFAULT_STALE_WH51_ERROR_HOURS = 12
 DEFAULT_STALE_WEATHER_WARNING_MINUTES = 30
 DEFAULT_STALE_WEATHER_ERROR_HOURS = 2
 
+# --- Defaults: WH51 battery/signal advisory thresholds (Milestone 8) -------
+# CLAUDE.md/the plan do not give exact numbers for these two (unlike the
+# wind/staleness thresholds above) - these are reasonable, documented
+# defaults pending a future options-flow override: battery is a percentage
+# (see config_flow's battery entity, PERCENTAGE unit); signal follows the
+# common Ecowitt/WH51 0-4 bar-style scale.
+DEFAULT_WH51_BATTERY_WARNING_PERCENT = 20
+DEFAULT_WH51_SIGNAL_WARNING = 1
+
 # --- Defaults: rain accumulator (options, future milestones) ---------------
 DEFAULT_RAIN_RESET_TOLERANCE_MM = 0.1
 
