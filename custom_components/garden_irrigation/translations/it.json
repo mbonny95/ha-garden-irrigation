@@ -112,5 +112,33 @@
         "name": "Irrigazione (7g) {zone_name}"
       }
     }
+  },
+  "services": {
+    "record_irrigation": {
+      "name": "Registra ciclo di irrigazione",
+      "description": "Registra un ciclo di irrigazione eseguito manualmente per una zona. Usa solo l'ora corrente (nessuna retrodatazione); il deficit del bilancio idrico viene aggiornato solo se la sorgente scelta è calibrata per quella zona.",
+      "fields": {
+        "zone": {
+          "name": "Zona",
+          "description": "La zona su cui è stato eseguito il ciclo."
+        },
+        "source": {
+          "name": "Sorgente",
+          "description": "La sorgente d'acqua usata per il ciclo."
+        },
+        "duration_minutes": {
+          "name": "Durata (minuti)",
+          "description": "Durata del ciclo in minuti, maggiore di 0 e al massimo 15 per chiamata."
+        },
+        "notes": {
+          "name": "Note",
+          "description": "Note testuali opzionali."
+        },
+        "idempotency_key": {
+          "name": "Chiave di idempotenza",
+          "description": "Opzionale: ripetere una chiamata con la stessa chiave non ha effetto (protegge da un doppio invio accidentale)."
+        }
+      }
+    }
   }
 }

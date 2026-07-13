@@ -112,5 +112,33 @@
         "name": "Irrigation (7d) {zone_name}"
       }
     }
+  },
+  "services": {
+    "record_irrigation": {
+      "name": "Record irrigation cycle",
+      "description": "Record a manually executed irrigation cycle for a zone. Uses the current timestamp only (no backdating); the water-balance deficit is updated only if the chosen source is calibrated for that zone.",
+      "fields": {
+        "zone": {
+          "name": "Zone",
+          "description": "The zone the cycle was run on."
+        },
+        "source": {
+          "name": "Source",
+          "description": "The water source used for the cycle."
+        },
+        "duration_minutes": {
+          "name": "Duration (minutes)",
+          "description": "Cycle duration in minutes, greater than 0 and at most 15 per call."
+        },
+        "notes": {
+          "name": "Notes",
+          "description": "Optional free-text notes."
+        },
+        "idempotency_key": {
+          "name": "Idempotency key",
+          "description": "Optional: repeating a call with the same key is a no-op (protects against accidental double submission)."
+        }
+      }
+    }
   }
 }

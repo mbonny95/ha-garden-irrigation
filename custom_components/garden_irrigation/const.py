@@ -33,6 +33,11 @@ STORAGE_KEY_STATE = f"{DOMAIN}.state"
 # (weather.py, not modifiable in M4), so a second engine writing into the same
 # file would have its updates silently dropped by the next weather autosave.
 STORAGE_KEY_BALANCE = f"{DOMAIN}.balance_state"
+# Milestone 6's manual irrigation-cycle log is the "events" store from
+# CLAUDE.md (365-day retention) - a third file, for the same reason as
+# STORAGE_KEY_BALANCE above: it's exclusively owned by irrigation_log.py, so
+# there is no cross-engine merge-on-save race to worry about.
+STORAGE_KEY_EVENTS = f"{DOMAIN}.events"
 
 # --- Sources -----------------------------------------------------------------
 # No automated fallback between sources exists or is planned: the user always
