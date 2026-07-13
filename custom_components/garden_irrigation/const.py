@@ -27,6 +27,12 @@ DOMAIN = "garden_irrigation"
 # Milestone 2; per-zone deficit and event-log metadata in later milestones).
 # Each engine owns its own top-level key within the stored dict.
 STORAGE_KEY_STATE = f"{DOMAIN}.state"
+# Milestone 4's water balance uses its OWN store file rather than sharing the
+# key above: WeatherAggregator caches the OTHER top-level keys it doesn't own
+# as a frozen-at-setup snapshot and rewrites them on every debounced save
+# (weather.py, not modifiable in M4), so a second engine writing into the same
+# file would have its updates silently dropped by the next weather autosave.
+STORAGE_KEY_BALANCE = f"{DOMAIN}.balance_state"
 
 # --- Sources -----------------------------------------------------------------
 # No automated fallback between sources exists or is planned: the user always
