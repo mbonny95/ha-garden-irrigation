@@ -35,6 +35,18 @@ elsewhere for the same "is it raining right now" diagnostic purpose
 (CLAUDE.md). Its message text is a small local IT/EN lookup rather than an
 addition to notify.py's `translate()` table - notify.py is out of scope to
 touch in M9.
+
+This later pass closes the two gaps left against the plan's notification
+block: the 20:00 trigger only ever requested a refresh, never actually
+notifying anyone of the preview it computes (`_send_evening_preview`, new);
+and the morning report only ever named the zone by its raw id and the
+recommended mm, dropping deficit/minutes/reasons that were already sitting
+on `ZoneRecommendationResult` (`_zone_report_line`, shared by both reports
+now, new). Every other check in this file (stale weather/WH51, WH51 battery/
+signal, wind, rain-during-cycle) and the uncalibrated-source warning
+(`coordinator._notify_cycle_recorded`, already dispatching
+`cycle_recorded_uncalibrated` deduplicated by event id) were already
+complete and are unchanged here.
 """
 
 from __future__ import annotations
@@ -58,9 +70,11 @@ from .const import (
     CONF_TEMPERATURE_ENTITY,
     CONF_WIND_SPEED_ENTITY,
     CONF_ZONE1_BATTERY_ENTITY,
+    CONF_ZONE1_NAME,
     CONF_ZONE1_SIGNAL_ENTITY,
     CONF_ZONE1_SOIL_MOISTURE_ENTITY,
     CONF_ZONE2_BATTERY_ENTITY,
+    CONF_ZONE2_NAME,
     CONF_ZONE2_SIGNAL_ENTITY,
     CONF_ZONE2_SOIL_MOISTURE_ENTITY,
     DEFAULT_EVENING_CHECK_TIME,
@@ -73,6 +87,9 @@ from .const import (
     DEFAULT_WH51_SIGNAL_WARNING,
     DEFAULT_WIND_WARNING_AVG_KMH,
     DEFAULT_WIND_WARNING_GUST_KMH,
+    DEFAULT_ZONE1_NAME,
+    DEFAULT_ZONE2_NAME,
+    SOURCE_MAINS_WATER,
     ZONE_1,
     ZONES,
 )
@@ -140,6 +157,37 @@ def _stale_level(
     if age >= warning_threshold:
         return "warning"
     return None
+
+
+def _zone_name(entry: Any, zone_id: str) -> str:
+    """Return the user-configured display name for `zone_id`.
+
+    Re-implemented here (not imported from sensor.py/binary_sensor.py/
+    button.py - all out of scope to touch, and each already re-implements
+    this same tiny helper rather than sharing a private one cross-module).
+    """
+    if zone_id == ZONE_1:
+        return str(entry.data.get(CONF_ZONE1_NAME, DEFAULT_ZONE1_NAME))
+    return str(entry.data.get(CONF_ZONE2_NAME, DEFAULT_ZONE2_NAME))
+
+
+def _minutes_text(hass: HomeAssistant, minutes: float | None) -> str:
+    """Pre-formatted minutes for the mains-water source, or a "not available"
+    marker if that source isn't calibrated for the zone."""
+    if minutes is None:
+        return "n/d" if hass.config.language == "it" else "n/a"
+    return f"{minutes:.1f}"
+
+
+def _reasons_text(hass: HomeAssistant, result: Any) -> str:
+    """Compact, bracketed tail listing the recommendation's own internal
+    reason/limit/warning codes - only when there's something to show, so the
+    common case (nothing notable) leaves the report line unchanged."""
+    codes = [*result.reasons, *result.limits_applied, *result.warnings]
+    if not codes:
+        return ""
+    label = "motivi" if hass.config.language == "it" else "notes"
+    return f" [{label}: {', '.join(codes)}]"
 
 
 def _rain_during_cycle_message(
@@ -215,15 +263,45 @@ class Scheduler:
             self._unsub_monitor = None
 
     async def _handle_evening_preview(self, now: datetime) -> None:
-        """20:00 local: guarantee a refresh so the preview reflects today so far."""
+        """20:00 local: refresh, then send the (never-persisted) preview report."""
         await self._coordinator.async_request_refresh()
+        await self._send_evening_preview()
 
     async def _handle_morning_finalize(self, now: datetime) -> None:
         """05:30 local: guarantee a refresh, then send the morning report."""
         await self._coordinator.async_request_refresh()
         await self._send_morning_report()
 
+    def _zone_report_line(self, zone_id: str, result: Any) -> str:
+        """One report line for `result` (either a bundle's `final` or
+        `preview` - same shape, see recommendation.py's ZoneRecommendationResult),
+        shared by the morning report and the evening preview so the two never
+        drift apart. Reports "not ready" plainly (no invented numbers) per
+        CLAUDE.md's no-automatic-fallback rule; otherwise always includes the
+        zone name and current deficit, even when no irrigation is needed."""
+        zone_name = _zone_name(self._coordinator.entry, zone_id)
+        if not result.ready:
+            return translate(self.hass, "morning_report_not_ready", zone_name=zone_name)
+        deficit = result.deficit_mm if result.deficit_mm is not None else 0.0
+        if result.needs_irrigation:
+            source = result.sources.get(SOURCE_MAINS_WATER) if result.sources else None
+            minutes = source.minutes if source is not None else None
+            return translate(
+                self.hass,
+                "morning_report_needs",
+                zone_name=zone_name,
+                mm=result.recommended_mm or 0.0,
+                minutes=_minutes_text(self.hass, minutes),
+                deficit=deficit,
+                reasons=_reasons_text(self.hass, result),
+            )
+        return translate(
+            self.hass, "morning_report_ok", zone_name=zone_name, deficit=deficit
+        )
+
     async def _send_morning_report(self) -> None:
+        """05:30: the FINAL, persisted-balance-based recommendation - what
+        actually happened/is recommended for the just-completed day."""
         data = self._coordinator.data
         if not data:
             return
@@ -233,28 +311,36 @@ class Scheduler:
             bundle = recommendations.get(zone_id)
             if bundle is None:
                 continue
-            final = bundle.final
-            if not final.ready:
-                lines.append(
-                    translate(self.hass, "morning_report_not_ready", zone_id=zone_id)
-                )
-            elif final.needs_irrigation:
-                lines.append(
-                    translate(
-                        self.hass,
-                        "morning_report_needs",
-                        zone_id=zone_id,
-                        mm=final.recommended_mm or 0.0,
-                    )
-                )
-            else:
-                lines.append(translate(self.hass, "morning_report_ok", zone_id=zone_id))
+            lines.append(self._zone_report_line(zone_id, bundle.final))
         if not lines:
             return
         await self._coordinator.notifier.async_send(
             "\n".join(lines),
             title=translate(self.hass, "morning_report_title"),
             notification_id="morning_report",
+        )
+
+    async def _send_evening_preview(self) -> None:
+        """20:00: the PREVIEW variant only ("if today ended right now") -
+        recommendation.py never persists this into the deficit, and neither
+        does sending it here; a distinct title/notification_id from the
+        morning report keeps it clearly labeled as a preview."""
+        data = self._coordinator.data
+        if not data:
+            return
+        recommendations = data.get("recommendation", {})
+        lines: list[str] = []
+        for zone_id in ZONES:
+            bundle = recommendations.get(zone_id)
+            if bundle is None:
+                continue
+            lines.append(self._zone_report_line(zone_id, bundle.preview))
+        if not lines:
+            return
+        await self._coordinator.notifier.async_send(
+            "\n".join(lines),
+            title=translate(self.hass, "evening_preview_title"),
+            notification_id="evening_preview",
         )
 
     # -- Periodic advisory monitor -----------------------------------------

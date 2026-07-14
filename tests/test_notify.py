@@ -233,13 +233,29 @@ async def test_persistent_notification_notifier_never_raises(
 
 async def test_translate_picks_italian(hass: HomeAssistant) -> None:
     hass.config.language = "it"
-    message = translate(hass, "morning_report_needs", zone_id="zone_1", mm=5.0)
+    message = translate(
+        hass,
+        "morning_report_needs",
+        zone_name="Zona 1",
+        mm=5.0,
+        minutes="20.0",
+        deficit=8.0,
+        reasons="",
+    )
     assert "irrigazione" in message.lower()
 
 
 async def test_translate_defaults_to_english(hass: HomeAssistant) -> None:
     hass.config.language = "en"
-    message = translate(hass, "morning_report_needs", zone_id="zone_1", mm=5.0)
+    message = translate(
+        hass,
+        "morning_report_needs",
+        zone_name="Zone 1",
+        mm=5.0,
+        minutes="20.0",
+        deficit=8.0,
+        reasons="",
+    )
     assert "irrigation" in message.lower()
 
 
@@ -247,7 +263,7 @@ async def test_translate_falls_back_to_english_for_unknown_language(
     hass: HomeAssistant,
 ) -> None:
     hass.config.language = "fr"
-    message = translate(hass, "morning_report_ok", zone_id="zone_1")
+    message = translate(hass, "morning_report_ok", zone_name="Zone 1", deficit=0.0)
     assert "no irrigation needed" in message.lower()
 
 

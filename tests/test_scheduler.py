@@ -25,6 +25,7 @@ from custom_components.garden_irrigation.const import (
     DEFAULT_WIND_WARNING_AVG_KMH,
     DEFAULT_WIND_WARNING_GUST_KMH,
     DOMAIN,
+    SOURCE_MAINS_WATER,
     ZONE_1,
     ZONE_2,
 )
@@ -246,18 +247,51 @@ async def test_triggers_survive_dst_spring_forward(
 # ---------------------------------------------------------------------------
 
 
+def _result(
+    *,
+    ready: bool,
+    needs_irrigation: bool | None = None,
+    recommended_mm: float | None = None,
+    deficit_mm: float | None = None,
+    reasons: tuple[str, ...] = (),
+    limits_applied: tuple[str, ...] = (),
+    warnings: tuple[str, ...] = (),
+    sources: dict[str, Any] | None = None,
+) -> SimpleNamespace:
+    """A minimal stand-in for recommendation.py's ZoneRecommendationResult,
+    with every field _zone_report_line reads."""
+    return SimpleNamespace(
+        ready=ready,
+        needs_irrigation=needs_irrigation,
+        recommended_mm=recommended_mm,
+        deficit_mm=deficit_mm,
+        reasons=reasons,
+        limits_applied=limits_applied,
+        warnings=warnings,
+        sources=sources or {},
+    )
+
+
 async def test_morning_report_summarizes_each_zone(hass: HomeAssistant) -> None:
     coordinator = _coordinator(hass)
     coordinator.data = {
         "recommendation": {
             "zone_1": SimpleNamespace(
-                final=SimpleNamespace(
-                    ready=True, needs_irrigation=True, recommended_mm=12.5
+                final=_result(
+                    ready=True,
+                    needs_irrigation=True,
+                    recommended_mm=12.5,
+                    deficit_mm=20.0,
+                    reasons=("deficit_at_or_above_raw",),
+                    sources={SOURCE_MAINS_WATER: SimpleNamespace(minutes=50.0)},
                 )
             ),
             "zone_2": SimpleNamespace(
-                final=SimpleNamespace(
-                    ready=True, needs_irrigation=False, recommended_mm=0.0
+                final=_result(
+                    ready=True,
+                    needs_irrigation=False,
+                    recommended_mm=0.0,
+                    deficit_mm=2.0,
                 )
             ),
         }
@@ -268,9 +302,14 @@ async def test_morning_report_summarizes_each_zone(hass: HomeAssistant) -> None:
 
     mock_send.assert_awaited_once()
     message = mock_send.await_args.args[0]
-    assert "zone_1" in message
+    # Default test fixture zone names (tests/const.py's zones_step_input()).
+    assert "Zona 1" in message
     assert "12.5" in message
-    assert "zone_2" in message
+    assert "50.0" in message  # recommended minutes (mains_water)
+    assert "20.0" in message  # deficit
+    assert "deficit_at_or_above_raw" in message  # reasons tail
+    assert "Zona 2" in message
+    assert "2.0" in message  # zone_2's deficit, even though needs_irrigation=False
     assert mock_send.await_args.kwargs["notification_id"] == "morning_report"
 
 
@@ -278,11 +317,7 @@ async def test_morning_report_handles_not_ready_zone(hass: HomeAssistant) -> Non
     coordinator = _coordinator(hass)
     coordinator.data = {
         "recommendation": {
-            "zone_1": SimpleNamespace(
-                final=SimpleNamespace(
-                    ready=False, needs_irrigation=None, recommended_mm=None
-                )
-            ),
+            "zone_1": SimpleNamespace(final=_result(ready=False)),
         }
     }
 
@@ -290,7 +325,110 @@ async def test_morning_report_handles_not_ready_zone(hass: HomeAssistant) -> Non
         await coordinator.scheduler._send_morning_report()
 
     mock_send.assert_awaited_once()
-    assert "zone_1" in mock_send.await_args.args[0]
+    assert "Zona 1" in mock_send.await_args.args[0]
+
+
+# ---------------------------------------------------------------------------
+# Evening preview content: same per-zone content shape, distinct title/id,
+# always the PREVIEW variant (never the finalized one) - never persisted.
+# ---------------------------------------------------------------------------
+
+
+async def test_evening_preview_summarizes_each_zone(hass: HomeAssistant) -> None:
+    coordinator = _coordinator(hass)
+    coordinator.data = {
+        "recommendation": {
+            "zone_1": SimpleNamespace(
+                preview=_result(
+                    ready=True,
+                    needs_irrigation=True,
+                    recommended_mm=7.0,
+                    deficit_mm=9.0,
+                ),
+                final=_result(ready=False),  # must be ignored by the preview
+            ),
+        }
+    }
+
+    with patch.object(coordinator.notifier, "async_send", new=AsyncMock()) as mock_send:
+        await coordinator.scheduler._send_evening_preview()
+
+    mock_send.assert_awaited_once()
+    message = mock_send.await_args.args[0]
+    assert "Zona 1" in message
+    assert "7.0" in message
+    # Distinct from the morning report - clearly labeled as a preview.
+    assert mock_send.await_args.kwargs["title"] == "Garden Irrigation - Evening preview"
+    assert mock_send.await_args.kwargs["notification_id"] == "evening_preview"
+
+
+async def test_evening_preview_skipped_before_first_refresh(
+    hass: HomeAssistant,
+) -> None:
+    coordinator = _coordinator(hass)  # coordinator.data is still None
+
+    with patch.object(coordinator.notifier, "async_send", new=AsyncMock()) as mock_send:
+        await coordinator.scheduler._send_evening_preview()
+
+    mock_send.assert_not_awaited()
+
+
+async def test_evening_preview_never_touches_deficit_or_balance(
+    hass: HomeAssistant,
+) -> None:
+    """Sending the preview is read-only: no balance/deficit call happens."""
+    coordinator = _coordinator(hass)
+    coordinator.data = {
+        "recommendation": {
+            "zone_1": SimpleNamespace(
+                preview=_result(ready=True, needs_irrigation=True, recommended_mm=7.0)
+            ),
+        }
+    }
+    deficit_before = coordinator.balance.current_deficit_mm(ZONE_1)
+
+    with (
+        patch.object(coordinator.notifier, "async_send", new=AsyncMock()),
+        patch.object(coordinator.balance, "record_irrigation") as mock_record,
+        patch.object(
+            coordinator.balance, "process_daily_balance"
+        ) as mock_process_balance,
+    ):
+        await coordinator.scheduler._send_evening_preview()
+
+    mock_record.assert_not_called()
+    mock_process_balance.assert_not_called()
+    assert coordinator.balance.current_deficit_mm(ZONE_1) == deficit_before
+
+
+async def test_evening_preview_handler_also_sends_the_preview(
+    hass: HomeAssistant,
+) -> None:
+    """The 20:00 handler itself (`_handle_evening_preview`, the real trigger
+    callback - not just `_send_evening_preview` in isolation) performs both
+    steps in order: refresh, then send. Calling the handler directly (rather
+    than registering the full scheduler and firing real time) avoids also
+    triggering the unrelated periodic monitor tick, which has its own
+    dedicated tests below."""
+    coordinator = _coordinator(hass)
+    coordinator.data = {
+        "recommendation": {
+            "zone_1": SimpleNamespace(preview=_result(ready=False)),
+        }
+    }
+    with (
+        patch.object(
+            coordinator, "async_request_refresh", new=AsyncMock()
+        ) as mock_refresh,
+        patch.object(coordinator.notifier, "async_send", new=AsyncMock()) as mock_send,
+    ):
+        await coordinator.scheduler._handle_evening_preview(
+            datetime(2026, 6, 1, 20, 0, tzinfo=UTC)
+        )
+
+    mock_refresh.assert_awaited_once()
+    mock_send.assert_awaited_once()
+    assert mock_send.await_args.kwargs["notification_id"] == "evening_preview"
 
 
 async def test_morning_report_skipped_before_first_refresh(hass: HomeAssistant) -> None:

@@ -40,13 +40,10 @@
   "38": "Package Marker (tests)",
   "39": "Agronomy: water balance, TAW/RAW, effective rain, weekly cap",
   "40": "GardenIrrigationStore",
-  "41": "Any",
   "42": "Irrigation7dZoneSensor",
   "43": "CLAUDE.md — garden_irrigation",
-  "44": "._balance_result",
   "45": "Pre-commit Configuration",
   "46": "[0.1.0] - 2026-07-13",
-  "47": "BlockPlanEntry",
   "48": "README.md",
   "49": "Milestone 10: Dashboard & Docs",
   "50": "Milestone 1: Scaffold & CI Toolchain",
@@ -66,6 +63,5 @@
   "64": "Allen, Pereira, Raes, Smith (1998) — FAO Irrigation and Drainage Paper 56",
   "65": "Docs Index README",
   "66": "bug_report.md",
-  "67": "Bug Report Template",
-  "68": ".async_shutdown"
+  "67": "Bug Report Template"
 }

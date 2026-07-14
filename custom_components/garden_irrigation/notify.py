@@ -45,17 +45,27 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "en": "Garden Irrigation - Cycle recorded",
         "it": "Garden Irrigation - Ciclo registrato",
     },
+    "evening_preview_title": {
+        "en": "Garden Irrigation - Evening preview",
+        "it": "Garden Irrigation - Preview serale",
+    },
     "morning_report_needs": {
-        "en": "{zone_id}: irrigation recommended, {mm:.1f} mm",
-        "it": "{zone_id}: irrigazione consigliata, {mm:.1f} mm",
+        "en": (
+            "{zone_name}: irrigation recommended, {mm:.1f} mm (~{minutes} min), "
+            "deficit {deficit:.1f} mm{reasons}"
+        ),
+        "it": (
+            "{zone_name}: irrigazione consigliata, {mm:.1f} mm (~{minutes} min), "
+            "deficit {deficit:.1f} mm{reasons}"
+        ),
     },
     "morning_report_ok": {
-        "en": "{zone_id}: no irrigation needed",
-        "it": "{zone_id}: nessuna irrigazione necessaria",
+        "en": "{zone_name}: no irrigation needed, deficit {deficit:.1f} mm",
+        "it": "{zone_name}: nessuna irrigazione necessaria, deficit {deficit:.1f} mm",
     },
     "morning_report_not_ready": {
-        "en": "{zone_id}: data not ready yet",
-        "it": "{zone_id}: dati non ancora disponibili",
+        "en": "{zone_name}: data not ready yet",
+        "it": "{zone_name}: dati non ancora disponibili",
     },
     "cycle_recorded": {
         "en": "Cycle recorded: {zone_id}, {source}, {minutes:.1f} min, {mm:.2f} mm",
