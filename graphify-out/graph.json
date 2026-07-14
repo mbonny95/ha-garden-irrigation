@@ -68,7 +68,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_init",
-      "community": 14,
+      "community": 11,
       "norm_label": "__init__.py"
     },
     {
@@ -78,7 +78,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_init_async_setup_entry",
-      "community": 14,
+      "community": 11,
       "norm_label": "async_setup_entry()"
     },
     {
@@ -88,7 +88,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_init_py_homeassistant",
-      "community": 14,
+      "community": 11,
       "norm_label": "homeassistant"
     },
     {
@@ -98,7 +98,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_init_py_configentry",
-      "community": 14,
+      "community": 11,
       "norm_label": "configentry"
     },
     {
@@ -108,7 +108,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_init_async_unload_entry",
-      "community": 14,
+      "community": 11,
       "norm_label": "async_unload_entry()"
     },
     {
@@ -118,7 +118,7 @@
       "source_location": "L96",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_init_async_reload_entry",
-      "community": 14,
+      "community": 11,
       "norm_label": "async_reload_entry()"
     },
     {
@@ -128,7 +128,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_init_rationale_1",
-      "community": 14,
+      "community": 11,
       "norm_label": "the garden_irrigation integration.  milestone 2: entry setup/unload/reload wirin"
     },
     {
@@ -138,7 +138,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_init_rationale_47",
-      "community": 14,
+      "community": 11,
       "norm_label": "set up garden_irrigation from a config entry."
     },
     {
@@ -148,7 +148,7 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_init_rationale_83",
-      "community": 14,
+      "community": 11,
       "norm_label": "unload a config entry and its platforms."
     },
     {
@@ -158,7 +158,7 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_init_rationale_97",
-      "community": 14,
+      "community": 11,
       "norm_label": "reload a config entry when its options change."
     },
     {
@@ -218,7 +218,7 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_irrigationrecord",
-      "community": 2,
+      "community": 44,
       "norm_label": "_irrigationrecord"
     },
     {
@@ -228,7 +228,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_irrigationrecord_to_dict",
-      "community": 2,
+      "community": 44,
       "norm_label": ".to_dict()"
     },
     {
@@ -238,7 +238,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_py_any",
-      "community": 2,
+      "community": 44,
       "norm_label": "any"
     },
     {
@@ -248,7 +248,7 @@
       "source_location": "L129",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_irrigationrecord_from_dict",
-      "community": 2,
+      "community": 44,
       "norm_label": ".from_dict()"
     },
     {
@@ -328,7 +328,7 @@
       "source_location": "L173",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_balanceengine_async_setup",
-      "community": 2,
+      "community": 44,
       "norm_label": ".async_setup()"
     },
     {
@@ -428,7 +428,7 @@
       "source_location": "L341",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_balanceengine_save_data",
-      "community": 2,
+      "community": 44,
       "norm_label": "._save_data()"
     },
     {
@@ -508,7 +508,7 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_rationale_113",
-      "community": 2,
+      "community": 44,
       "norm_label": "one user-recorded irrigation entry (mm already converted from minutes).      mil"
     },
     {
@@ -518,7 +518,7 @@
       "source_location": "L125",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_rationale_125",
-      "community": 2,
+      "community": 44,
       "norm_label": "serialize for store persistence."
     },
     {
@@ -528,7 +528,7 @@
       "source_location": "L130",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_rationale_130",
-      "community": 2,
+      "community": 44,
       "norm_label": "restore from a previously persisted dict (see to_dict)."
     },
     {
@@ -568,7 +568,7 @@
       "source_location": "L174",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_rationale_174",
-      "community": 2,
+      "community": 44,
       "norm_label": "restore persisted deficit/last-balance-date/irrigation ledger."
     },
     {
@@ -1778,7 +1778,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_const",
-      "community": 8,
+      "community": 47,
       "norm_label": "const.py"
     },
     {
@@ -1788,7 +1788,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_const_rationale_1",
-      "community": 8,
+      "community": 47,
       "norm_label": "constants for the garden_irrigation integration.  config-flow keys and defaults,"
     },
     {
@@ -1798,7 +1798,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_coordinator",
-      "community": 8,
+      "community": 4,
       "norm_label": "coordinator.py"
     },
     {
@@ -1808,7 +1808,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_coordinator_zone_name",
-      "community": 16,
+      "community": 4,
       "norm_label": "_zone_name()"
     },
     {
@@ -1818,7 +1818,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_coordinator_py_configentry",
-      "community": 16,
+      "community": 4,
       "norm_label": "configentry"
     },
     {
@@ -1888,7 +1888,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_coordinator_py_any",
-      "community": 16,
+      "community": 4,
       "norm_label": "any"
     },
     {
@@ -1948,7 +1948,7 @@
       "source_location": "L210",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_coordinator_gardenirrigationcoordinator_async_update_data",
-      "community": 16,
+      "community": 4,
       "norm_label": "._async_update_data()"
     },
     {
@@ -1958,7 +1958,7 @@
       "source_location": "L275",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_coordinator_gardenirrigationcoordinator_notify_new_irrigation_events",
-      "community": 16,
+      "community": 4,
       "norm_label": "._notify_new_irrigation_events()"
     },
     {
@@ -1968,7 +1968,7 @@
       "source_location": "L290",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_coordinator_gardenirrigationcoordinator_notify_cycle_recorded",
-      "community": 16,
+      "community": 4,
       "norm_label": "._notify_cycle_recorded()"
     },
     {
@@ -1978,7 +1978,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_coordinator_rationale_1",
-      "community": 8,
+      "community": 4,
       "norm_label": "coordinator for garden_irrigation.  milestone 2 added the weatheraggregator (acc"
     },
     {
@@ -1988,7 +1988,7 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_coordinator_rationale_80",
-      "community": 16,
+      "community": 4,
       "norm_label": "return the user-configured display name for `zone_id`.      re-implemented here"
     },
     {
@@ -2078,7 +2078,7 @@
       "source_location": "L211",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_coordinator_rationale_211",
-      "community": 16,
+      "community": 4,
       "norm_label": "compute et0 for the current day and apply the balance for \"yesterday\"."
     },
     {
@@ -2088,7 +2088,7 @@
       "source_location": "L276",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_coordinator_rationale_276",
-      "community": 16,
+      "community": 4,
       "norm_label": "send a \"cycle recorded\" confirmation for any event not seen yet.          diffs"
     },
     {
@@ -2098,7 +2098,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_diagnostics",
-      "community": 8,
+      "community": 47,
       "norm_label": "diagnostics.py"
     },
     {
@@ -2108,7 +2108,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_diagnostics_async_get_config_entry_diagnostics",
-      "community": 0,
+      "community": 47,
       "norm_label": "async_get_config_entry_diagnostics()"
     },
     {
@@ -2118,7 +2118,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_diagnostics_py_homeassistant",
-      "community": 0,
+      "community": 47,
       "norm_label": "homeassistant"
     },
     {
@@ -2128,7 +2128,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_diagnostics_py_configentry",
-      "community": 0,
+      "community": 47,
       "norm_label": "configentry"
     },
     {
@@ -2138,7 +2138,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_diagnostics_py_any",
-      "community": 0,
+      "community": 47,
       "norm_label": "any"
     },
     {
@@ -2148,7 +2148,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_diagnostics_rationale_1",
-      "community": 8,
+      "community": 47,
       "norm_label": "diagnostics support for garden_irrigation."
     },
     {
@@ -2158,7 +2158,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_diagnostics_rationale_20",
-      "community": 0,
+      "community": 47,
       "norm_label": "return diagnostics for a config entry, with telegram target redacted."
     },
     {
@@ -2168,7 +2168,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_entity",
-      "community": 8,
+      "community": 28,
       "norm_label": "entity.py"
     },
     {
@@ -2178,7 +2178,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_entity_gardenirrigationentity",
-      "community": 18,
+      "community": 28,
       "norm_label": "gardenirrigationentity"
     },
     {
@@ -2188,7 +2188,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_entity_gardenirrigationentity_init",
-      "community": 40,
+      "community": 28,
       "norm_label": ".__init__()"
     },
     {
@@ -2198,7 +2198,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_entity_py_configentry",
-      "community": 40,
+      "community": 28,
       "norm_label": "configentry"
     },
     {
@@ -2228,7 +2228,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_entity_rationale_1",
-      "community": 8,
+      "community": 28,
       "norm_label": "shared base entity for garden_irrigation."
     },
     {
@@ -2238,7 +2238,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_entity_rationale_14",
-      "community": 18,
+      "community": 28,
       "norm_label": "base entity: single shared device, entity-only names (has_entity_name)."
     },
     {
@@ -2248,7 +2248,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_entity_rationale_21",
-      "community": 40,
+      "community": 28,
       "norm_label": "bind the entity to the coordinator and the owning config entry."
     },
     {
@@ -2278,7 +2278,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_et0_et0result",
-      "community": 18,
+      "community": 68,
       "norm_label": "et0result"
     },
     {
@@ -2398,7 +2398,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_et0_rationale_46",
-      "community": 18,
+      "community": 68,
       "norm_label": "daily et0 plus every intermediate fao-56 term, for diagnosis and tests.      whe"
     },
     {
@@ -2568,7 +2568,7 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_irrigation_log_irrigationaggregate",
-      "community": 18,
+      "community": 42,
       "norm_label": "irrigationaggregate"
     },
     {
@@ -2798,7 +2798,7 @@
       "source_location": "L156",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_irrigation_log_rationale_156",
-      "community": 18,
+      "community": 42,
       "norm_label": "a derived (never persisted) sum over a subset of the event log."
     },
     {
@@ -3068,7 +3068,7 @@
       "source_location": "L115",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_notify_translate",
-      "community": 14,
+      "community": 11,
       "norm_label": "translate()"
     },
     {
@@ -3208,7 +3208,7 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_notify_rationale_116",
-      "community": 14,
+      "community": 11,
       "norm_label": "render the it/en template `key` (see `_messages`) with `kwargs`."
     },
     {
@@ -3478,7 +3478,7 @@
       "source_location": "L284",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation_recommendationengine",
-      "community": 31,
+      "community": 23,
       "norm_label": "recommendationengine"
     },
     {
@@ -3538,7 +3538,7 @@
       "source_location": "L332",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation_recommendationengine_update_calibration",
-      "community": 31,
+      "community": 23,
       "norm_label": "._update_calibration()"
     },
     {
@@ -3585,7 +3585,7 @@
       "label": "._save_data()",
       "file_type": "code",
       "source_file": "custom_components/garden_irrigation/recommendation.py",
-      "source_location": "L630",
+      "source_location": "L638",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation_recommendationengine_save_data",
       "community": 23,
@@ -3595,10 +3595,10 @@
       "label": "._schedule_save()",
       "file_type": "code",
       "source_file": "custom_components/garden_irrigation/recommendation.py",
-      "source_location": "L635",
+      "source_location": "L643",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation_recommendationengine_schedule_save",
-      "community": 31,
+      "community": 23,
       "norm_label": "._schedule_save()"
     },
     {
@@ -3748,7 +3748,7 @@
       "source_location": "L285",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation_rationale_285",
-      "community": 31,
+      "community": 23,
       "norm_label": "builds explainable, read-only irrigation recommendations per zone.      not an e"
     },
     {
@@ -3788,7 +3788,7 @@
       "source_location": "L335",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation_rationale_335",
-      "community": 31,
+      "community": 23,
       "norm_label": "widen the observed [min, max] baseline with the current reading.          sample"
     },
     {
@@ -4808,7 +4808,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor",
-      "community": 18,
+      "community": 28,
       "norm_label": "sensor.py"
     },
     {
@@ -4918,7 +4918,7 @@
       "source_location": "L125",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_et0dailysensor",
-      "community": 32,
+      "community": 12,
       "norm_label": "et0dailysensor"
     },
     {
@@ -4938,7 +4938,7 @@
       "source_location": "L147",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_et0dailysensor_et0_result",
-      "community": 32,
+      "community": 68,
       "norm_label": "._et0_result()"
     },
     {
@@ -4948,7 +4948,7 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_et0dailysensor_native_value",
-      "community": 32,
+      "community": 68,
       "norm_label": ".native_value()"
     },
     {
@@ -4958,7 +4958,7 @@
       "source_location": "L161",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_et0dailysensor_extra_state_attributes",
-      "community": 32,
+      "community": 68,
       "norm_label": ".extra_state_attributes()"
     },
     {
@@ -5048,7 +5048,7 @@
       "source_location": "L242",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_etczonesensor_native_value",
-      "community": 5,
+      "community": 18,
       "norm_label": ".native_value()"
     },
     {
@@ -5088,7 +5088,7 @@
       "source_location": "L262",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_deficitzonesensor_native_value",
-      "community": 5,
+      "community": 18,
       "norm_label": ".native_value()"
     },
     {
@@ -5108,7 +5108,7 @@
       "source_location": "L275",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_tawzonesensor",
-      "community": 18,
+      "community": 5,
       "norm_label": "tawzonesensor"
     },
     {
@@ -5148,7 +5148,7 @@
       "source_location": "L297",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rawzonesensor",
-      "community": 18,
+      "community": 5,
       "norm_label": "rawzonesensor"
     },
     {
@@ -5208,7 +5208,7 @@
       "source_location": "L328",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_effectiverainzonesensor_native_value",
-      "community": 5,
+      "community": 18,
       "norm_label": ".native_value()"
     },
     {
@@ -5228,7 +5228,7 @@
       "source_location": "L343",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_irrigation7dzonesensor",
-      "community": 18,
+      "community": 42,
       "norm_label": "irrigation7dzonesensor"
     },
     {
@@ -5288,7 +5288,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_1",
-      "community": 18,
+      "community": 28,
       "norm_label": "sensor platform for garden_irrigation.  milestone 1 added the single diagnostic"
     },
     {
@@ -5358,7 +5358,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_126",
-      "community": 32,
+      "community": 12,
       "norm_label": "daily fao-56 reference evapotranspiration for the current in-progress day."
     },
     {
@@ -5378,7 +5378,7 @@
       "source_location": "L156",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_156",
-      "community": 32,
+      "community": 68,
       "norm_label": "the computed et0 in mm, or none (unknown) if incomplete/not yet run."
     },
     {
@@ -5388,7 +5388,7 @@
       "source_location": "L162",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_162",
-      "community": 32,
+      "community": 68,
       "norm_label": "intermediate fao-56 terms, for diagnosis (see et0.py et0result)."
     },
     {
@@ -5458,7 +5458,7 @@
       "source_location": "L243",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_243",
-      "community": 5,
+      "community": 18,
       "norm_label": "etc in mm, or none until a day has actually been applied."
     },
     {
@@ -5488,7 +5488,7 @@
       "source_location": "L263",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_263",
-      "community": 5,
+      "community": 18,
       "norm_label": "current deficit in mm."
     },
     {
@@ -5498,7 +5498,7 @@
       "source_location": "L276",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_276",
-      "community": 18,
+      "community": 5,
       "norm_label": "total available water for the zone: (root_depth/1000) * awc."
     },
     {
@@ -5518,7 +5518,7 @@
       "source_location": "L298",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_298",
-      "community": 18,
+      "community": 5,
       "norm_label": "readily available water for the zone: taw * p."
     },
     {
@@ -5558,7 +5558,7 @@
       "source_location": "L329",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_329",
-      "community": 5,
+      "community": 18,
       "norm_label": "effective rain in mm, or none until a day has actually been applied."
     },
     {
@@ -5568,7 +5568,7 @@
       "source_location": "L344",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_344",
-      "community": 18,
+      "community": 42,
       "norm_label": "user-recorded irrigation over the trailing sliding 7x24h window.      reads irri"
     },
     {
@@ -5628,7 +5628,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_storage",
-      "community": 27,
+      "community": 4,
       "norm_label": "storage.py"
     },
     {
@@ -5708,7 +5708,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_storage_rationale_1",
-      "community": 27,
+      "community": 4,
       "norm_label": "persistence wrapper for garden_irrigation.  wraps `helpers.storage.store`. domai"
     },
     {
@@ -6701,7 +6701,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "tests_const_user_step_input",
-      "community": 0,
+      "community": 40,
       "norm_label": "user_step_input()"
     },
     {
@@ -6781,7 +6781,7 @@
       "source_location": "L127",
       "_origin": "ast",
       "id": "tests_const_rationale_127",
-      "community": 0,
+      "community": 40,
       "norm_label": "valid input for config-flow step (a): position + fao-56 weather."
     },
     {
@@ -7371,7 +7371,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "tests_test_button_full_entry_data",
-      "community": 0,
+      "community": 1,
       "norm_label": "_full_entry_data()"
     },
     {
@@ -7541,7 +7541,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_config_flow",
-      "community": 0,
+      "community": 40,
       "norm_label": "test_config_flow.py"
     },
     {
@@ -7551,7 +7551,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "tests_test_config_flow_advance_to_create_entry",
-      "community": 0,
+      "community": 40,
       "norm_label": "_advance_to_create_entry()"
     },
     {
@@ -7561,7 +7561,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_config_flow_py_homeassistant",
-      "community": 0,
+      "community": 40,
       "norm_label": "homeassistant"
     },
     {
@@ -7571,7 +7571,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "tests_test_config_flow_test_happy_path_creates_entry",
-      "community": 0,
+      "community": 40,
       "norm_label": "test_happy_path_creates_entry()"
     },
     {
@@ -7581,7 +7581,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "tests_test_config_flow_test_entity_not_found_blocks_step",
-      "community": 0,
+      "community": 40,
       "norm_label": "test_entity_not_found_blocks_step()"
     },
     {
@@ -7591,7 +7591,7 @@
       "source_location": "L103",
       "_origin": "ast",
       "id": "tests_test_config_flow_test_entity_wrong_domain_blocks_step",
-      "community": 0,
+      "community": 40,
       "norm_label": "test_entity_wrong_domain_blocks_step()"
     },
     {
@@ -7601,7 +7601,7 @@
       "source_location": "L121",
       "_origin": "ast",
       "id": "tests_test_config_flow_test_entity_wrong_unit_blocks_step",
-      "community": 0,
+      "community": 40,
       "norm_label": "test_entity_wrong_unit_blocks_step()"
     },
     {
@@ -7611,7 +7611,7 @@
       "source_location": "L143",
       "_origin": "ast",
       "id": "tests_test_config_flow_test_optional_entities_can_be_omitted",
-      "community": 0,
+      "community": 40,
       "norm_label": "test_optional_entities_can_be_omitted()"
     },
     {
@@ -7621,7 +7621,7 @@
       "source_location": "L152",
       "_origin": "ast",
       "id": "tests_test_config_flow_test_duplicate_instance_is_aborted",
-      "community": 0,
+      "community": 40,
       "norm_label": "test_duplicate_instance_is_aborted()"
     },
     {
@@ -7631,7 +7631,7 @@
       "source_location": "L164",
       "_origin": "ast",
       "id": "tests_test_config_flow_test_options_flow_is_pass_through",
-      "community": 0,
+      "community": 40,
       "norm_label": "test_options_flow_is_pass_through()"
     },
     {
@@ -7641,7 +7641,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_config_flow_rationale_1",
-      "community": 0,
+      "community": 40,
       "norm_label": "tests for the garden_irrigation multi-step config flow."
     },
     {
@@ -7651,7 +7651,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "tests_test_config_flow_rationale_34",
-      "community": 0,
+      "community": 40,
       "norm_label": "run all five steps with valid input and return the final flow result."
     },
     {
@@ -7661,7 +7661,7 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "tests_test_config_flow_rationale_71",
-      "community": 0,
+      "community": 40,
       "norm_label": "all five steps, valid input, optional fields omitted -> entry created."
     },
     {
@@ -7671,7 +7671,7 @@
       "source_location": "L87",
       "_origin": "ast",
       "id": "tests_test_config_flow_rationale_87",
-      "community": 0,
+      "community": 40,
       "norm_label": "a nonexistent entity_id must be rejected with entity_not_found."
     },
     {
@@ -7681,7 +7681,7 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "tests_test_config_flow_rationale_104",
-      "community": 0,
+      "community": 40,
       "norm_label": "a non-sensor entity_id must be rejected with entity_wrong_domain."
     },
     {
@@ -7691,7 +7691,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "tests_test_config_flow_rationale_122",
-      "community": 0,
+      "community": 40,
       "norm_label": "an incompatible unit_of_measurement must be rejected."
     },
     {
@@ -7701,7 +7701,7 @@
       "source_location": "L144",
       "_origin": "ast",
       "id": "tests_test_config_flow_rationale_144",
-      "community": 0,
+      "community": 40,
       "norm_label": "battery/signal/wind_gust are optional: omitting them is not an error."
     },
     {
@@ -7711,7 +7711,7 @@
       "source_location": "L153",
       "_origin": "ast",
       "id": "tests_test_config_flow_rationale_153",
-      "community": 0,
+      "community": 40,
       "norm_label": "single_config_entry: a second flow must abort, not create a 2nd entry."
     },
     {
@@ -7721,7 +7721,7 @@
       "source_location": "L165",
       "_origin": "ast",
       "id": "tests_test_config_flow_rationale_165",
-      "community": 0,
+      "community": 40,
       "norm_label": "milestone 1 options flow stub: opens and saves with no required fields."
     },
     {
@@ -8011,7 +8011,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_init",
-      "community": 0,
+      "community": 41,
       "norm_label": "test_init.py"
     },
     {
@@ -8021,7 +8021,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "tests_test_init_full_entry_data",
-      "community": 0,
+      "community": 41,
       "norm_label": "_full_entry_data()"
     },
     {
@@ -8031,7 +8031,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "tests_test_init_test_setup_and_unload_entry",
-      "community": 0,
+      "community": 41,
       "norm_label": "test_setup_and_unload_entry()"
     },
     {
@@ -8041,7 +8041,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_init_py_homeassistant",
-      "community": 0,
+      "community": 41,
       "norm_label": "homeassistant"
     },
     {
@@ -8051,7 +8051,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "tests_test_init_test_reload_entry",
-      "community": 0,
+      "community": 41,
       "norm_label": "test_reload_entry()"
     },
     {
@@ -8061,7 +8061,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "tests_test_init_test_test_telegram_service_registered_and_removed_with_entry",
-      "community": 0,
+      "community": 41,
       "norm_label": "test_test_telegram_service_registered_and_removed_with_entry()"
     },
     {
@@ -8071,7 +8071,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "tests_test_init_test_test_telegram_uses_default_message_and_notifier",
-      "community": 0,
+      "community": 41,
       "norm_label": "test_test_telegram_uses_default_message_and_notifier()"
     },
     {
@@ -8081,7 +8081,7 @@
       "source_location": "L119",
       "_origin": "ast",
       "id": "tests_test_init_test_test_telegram_forwards_custom_message",
-      "community": 0,
+      "community": 41,
       "norm_label": "test_test_telegram_forwards_custom_message()"
     },
     {
@@ -8091,7 +8091,7 @@
       "source_location": "L146",
       "_origin": "ast",
       "id": "tests_test_init_test_test_telegram_has_no_side_effects_on_irrigation_domain",
-      "community": 0,
+      "community": 41,
       "norm_label": "test_test_telegram_has_no_side_effects_on_irrigation_domain()"
     },
     {
@@ -8101,7 +8101,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_init_rationale_1",
-      "community": 0,
+      "community": 41,
       "norm_label": "tests for garden_irrigation entry setup/unload/reload."
     },
     {
@@ -8111,7 +8111,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "tests_test_init_rationale_37",
-      "community": 0,
+      "community": 41,
       "norm_label": "the entry loads cleanly and creates/removes its coordinator on unload."
     },
     {
@@ -8121,7 +8121,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "tests_test_init_rationale_56",
-      "community": 0,
+      "community": 41,
       "norm_label": "reloading the entry (e.g. after an options change) succeeds cleanly."
     },
     {
@@ -8131,7 +8131,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "tests_test_init_rationale_79",
-      "community": 0,
+      "community": 41,
       "norm_label": "the service exists once the entry is loaded, and is torn down on unload."
     },
     {
@@ -8141,7 +8141,7 @@
       "source_location": "L96",
       "_origin": "ast",
       "id": "tests_test_init_rationale_96",
-      "community": 0,
+      "community": 41,
       "norm_label": "with no `message` field, the notifier is called with the default text,     a fix"
     },
     {
@@ -8151,7 +8151,7 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "tests_test_init_rationale_120",
-      "community": 0,
+      "community": 41,
       "norm_label": "a provided `message` is forwarded verbatim instead of the default."
     },
     {
@@ -8161,7 +8161,7 @@
       "source_location": "L149",
       "_origin": "ast",
       "id": "tests_test_init_rationale_149",
-      "community": 0,
+      "community": 41,
       "norm_label": "the service never records irrigation, never touches the balance     ledger, and"
     },
     {
@@ -8738,7 +8738,7 @@
       "label": "_full_entry_data()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L61",
+      "source_location": "L62",
       "_origin": "ast",
       "id": "tests_test_recommendation_full_entry_data",
       "community": 0,
@@ -8758,7 +8758,7 @@
       "label": "_coordinator()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L71",
+      "source_location": "L72",
       "_origin": "ast",
       "id": "tests_test_recommendation_coordinator",
       "community": 13,
@@ -8778,7 +8778,7 @@
       "label": "_balance_result()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L79",
+      "source_location": "L80",
       "_origin": "ast",
       "id": "tests_test_recommendation_balance_result",
       "community": 13,
@@ -8798,7 +8798,7 @@
       "label": "test_dry_scenario_recommends_full_deficit_when_no_limits()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L114",
+      "source_location": "L115",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_dry_scenario_recommends_full_deficit_when_no_limits",
       "community": 13,
@@ -8808,7 +8808,7 @@
       "label": "test_wet_scenario_recommends_nothing()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L136",
+      "source_location": "L137",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_wet_scenario_recommends_nothing",
       "community": 13,
@@ -8818,7 +8818,7 @@
       "label": "test_weekly_cap_fully_reached_blocks_recommendation()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L155",
+      "source_location": "L156",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_weekly_cap_fully_reached_blocks_recommendation",
       "community": 13,
@@ -8828,17 +8828,57 @@
       "label": "test_weekly_cap_partial_limits_recommended_amount()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L175",
+      "source_location": "L178",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_weekly_cap_partial_limits_recommended_amount",
       "community": 13,
       "norm_label": "test_weekly_cap_partial_limits_recommended_amount()"
     },
     {
+      "label": "test_weekly_cap_partial_explicit_cap_remaining_less_than_deficit()",
+      "file_type": "code",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L200",
+      "_origin": "ast",
+      "id": "tests_test_recommendation_test_weekly_cap_partial_explicit_cap_remaining_less_than_deficit",
+      "community": 13,
+      "norm_label": "test_weekly_cap_partial_explicit_cap_remaining_less_than_deficit()"
+    },
+    {
+      "label": "test_weekly_cap_remaining_exactly_equal_to_deficit_is_not_partial()",
+      "file_type": "code",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L226",
+      "_origin": "ast",
+      "id": "tests_test_recommendation_test_weekly_cap_remaining_exactly_equal_to_deficit_is_not_partial",
+      "community": 13,
+      "norm_label": "test_weekly_cap_remaining_exactly_equal_to_deficit_is_not_partial()"
+    },
+    {
+      "label": "test_min_interval_not_elapsed_never_reports_partial_cap()",
+      "file_type": "code",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L251",
+      "_origin": "ast",
+      "id": "tests_test_recommendation_test_min_interval_not_elapsed_never_reports_partial_cap",
+      "community": 13,
+      "norm_label": "test_min_interval_not_elapsed_never_reports_partial_cap()"
+    },
+    {
+      "label": "test_recommended_mm_zero_with_calibrated_mains_reports_zero_minutes()",
+      "file_type": "code",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L282",
+      "_origin": "ast",
+      "id": "tests_test_recommendation_test_recommended_mm_zero_with_calibrated_mains_reports_zero_minutes",
+      "community": 13,
+      "norm_label": "test_recommended_mm_zero_with_calibrated_mains_reports_zero_minutes()"
+    },
+    {
       "label": "test_min_interval_not_elapsed_blocks_recommendation()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L197",
+      "source_location": "L303",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_min_interval_not_elapsed_blocks_recommendation",
       "community": 13,
@@ -8848,7 +8888,7 @@
       "label": "test_min_interval_elapsed_allows_recommendation()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L218",
+      "source_location": "L324",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_min_interval_elapsed_allows_recommendation",
       "community": 13,
@@ -8858,7 +8898,7 @@
       "label": "test_final_not_ready_when_et0_was_unavailable()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L244",
+      "source_location": "L350",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_final_not_ready_when_et0_was_unavailable",
       "community": 13,
@@ -8868,7 +8908,7 @@
       "label": "test_final_not_ready_when_pending()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L261",
+      "source_location": "L367",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_final_not_ready_when_pending",
       "community": 13,
@@ -8878,7 +8918,7 @@
       "label": "test_final_ready_when_already_processed()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L274",
+      "source_location": "L380",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_final_ready_when_already_processed",
       "community": 13,
@@ -8888,7 +8928,7 @@
       "label": "test_preview_not_ready_when_today_et0_unavailable()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L289",
+      "source_location": "L395",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_preview_not_ready_when_today_et0_unavailable",
       "community": 13,
@@ -8898,7 +8938,7 @@
       "label": "test_block_plan_single_block_under_15_minutes()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L312",
+      "source_location": "L418",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_block_plan_single_block_under_15_minutes",
       "community": 13,
@@ -8908,7 +8948,7 @@
       "label": "test_block_plan_splits_into_multiple_blocks_with_pause()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L329",
+      "source_location": "L435",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_block_plan_splits_into_multiple_blocks_with_pause",
       "community": 13,
@@ -8918,7 +8958,7 @@
       "label": "test_uncalibrated_tank_source_reports_no_minutes()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L353",
+      "source_location": "L459",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_uncalibrated_tank_source_reports_no_minutes",
       "community": 13,
@@ -8928,7 +8968,7 @@
       "label": "test_wh51_diagnostic_before_calibration_complete()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L372",
+      "source_location": "L478",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_wh51_diagnostic_before_calibration_complete",
       "community": 13,
@@ -8938,7 +8978,7 @@
       "label": "test_wh51_non_numeric_state_is_treated_as_unavailable()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L388",
+      "source_location": "L494",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_wh51_non_numeric_state_is_treated_as_unavailable",
       "community": 13,
@@ -8948,7 +8988,7 @@
       "label": "test_wh51_critical_and_moderate_classification()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L405",
+      "source_location": "L511",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_wh51_critical_and_moderate_classification",
       "community": 13,
@@ -8958,7 +8998,7 @@
       "label": "test_wh51_soft_signal_corroborates_after_calibration()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L438",
+      "source_location": "L544",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_wh51_soft_signal_corroborates_after_calibration",
       "community": 13,
@@ -8968,7 +9008,7 @@
       "label": "test_wh51_soft_signal_contradicts_is_a_warning_not_a_block()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L472",
+      "source_location": "L578",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_wh51_soft_signal_contradicts_is_a_warning_not_a_block",
       "community": 13,
@@ -8978,17 +9018,27 @@
       "label": "test_preview_projection_matches_manual_calculation()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L509",
+      "source_location": "L615",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_preview_projection_matches_manual_calculation",
       "community": 13,
       "norm_label": "test_preview_projection_matches_manual_calculation()"
     },
     {
+      "label": "test_preview_subtracts_irrigation_recorded_today()",
+      "file_type": "code",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L638",
+      "_origin": "ast",
+      "id": "tests_test_recommendation_test_preview_subtracts_irrigation_recorded_today",
+      "community": 13,
+      "norm_label": "test_preview_subtracts_irrigation_recorded_today()"
+    },
+    {
       "label": "test_preview_never_mutates_persisted_deficit()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L532",
+      "source_location": "L690",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_preview_never_mutates_persisted_deficit",
       "community": 13,
@@ -8998,7 +9048,7 @@
       "label": "test_wh51_calibration_survives_setup_shutdown_roundtrip()",
       "file_type": "code",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L551",
+      "source_location": "L709",
       "_origin": "ast",
       "id": "tests_test_recommendation_test_wh51_calibration_survives_setup_shutdown_roundtrip",
       "community": 13,
@@ -9015,14 +9065,64 @@
       "norm_label": "tests for the garden_irrigation recommendation engine (milestone 7)."
     },
     {
+      "label": "(A) `0 < cap_remaining_mm < deficit_mm`: the recommendation is capped     to wha",
+      "file_type": "rationale",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L203",
+      "_origin": "ast",
+      "id": "tests_test_recommendation_rationale_203",
+      "community": 13,
+      "norm_label": "(a) `0 < cap_remaining_mm < deficit_mm`: the recommendation is capped     to wha"
+    },
+    {
+      "label": "(B) Exact boundary: `cap_remaining_mm == deficit_mm` covers the whole     defici",
+      "file_type": "rationale",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L229",
+      "_origin": "ast",
+      "id": "tests_test_recommendation_rationale_229",
+      "community": 13,
+      "norm_label": "(b) exact boundary: `cap_remaining_mm == deficit_mm` covers the whole     defici"
+    },
+    {
+      "label": "(D) A cap that WOULD be partial is irrelevant once the 48h minimum     interval",
+      "file_type": "rationale",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L254",
+      "_origin": "ast",
+      "id": "tests_test_recommendation_rationale_254",
+      "community": 13,
+      "norm_label": "(d) a cap that would be partial is irrelevant once the 48h minimum     interval"
+    },
+    {
+      "label": "(F) When recommended_mm is 0.0 (e.g. deficit below RAW) but the source     IS ca",
+      "file_type": "rationale",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L285",
+      "_origin": "ast",
+      "id": "tests_test_recommendation_rationale_285",
+      "community": 13,
+      "norm_label": "(f) when recommended_mm is 0.0 (e.g. deficit below raw) but the source     is ca"
+    },
+    {
       "label": "A repeat (idempotent-skip) balance result is still a READY final.",
       "file_type": "rationale",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L275",
+      "source_location": "L381",
       "_origin": "ast",
-      "id": "tests_test_recommendation_rationale_275",
+      "id": "tests_test_recommendation_rationale_381",
       "community": 13,
       "norm_label": "a repeat (idempotent-skip) balance result is still a ready final."
+    },
+    {
+      "label": "(E) The preview must reflect a cycle recorded earlier TODAY (via     irrigation_",
+      "file_type": "rationale",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L641",
+      "_origin": "ast",
+      "id": "tests_test_recommendation_rationale_641",
+      "community": 13,
+      "norm_label": "(e) the preview must reflect a cycle recorded earlier today (via     irrigation_"
     },
     {
       "label": "test_scheduler.py",
@@ -9541,7 +9641,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "tests_test_select_full_entry_data",
-      "community": 8,
+      "community": 0,
       "norm_label": "_full_entry_data()"
     },
     {
@@ -9551,7 +9651,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_select_py_any",
-      "community": 8,
+      "community": 0,
       "norm_label": "any"
     },
     {
@@ -9731,7 +9831,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_sensor",
-      "community": 18,
+      "community": 12,
       "norm_label": "test_sensor.py"
     },
     {
@@ -9831,7 +9931,7 @@
       "source_location": "L191",
       "_origin": "ast",
       "id": "tests_test_sensor_test_et0_daily_none_before_first_refresh",
-      "community": 32,
+      "community": 12,
       "norm_label": "test_et0_daily_none_before_first_refresh()"
     },
     {
@@ -9881,7 +9981,7 @@
       "source_location": "L353",
       "_origin": "ast",
       "id": "tests_test_sensor_test_zone_sensor_units_and_state_classes",
-      "community": 18,
+      "community": 12,
       "norm_label": "test_zone_sensor_units_and_state_classes()"
     },
     {
@@ -9891,7 +9991,7 @@
       "source_location": "L383",
       "_origin": "ast",
       "id": "tests_test_sensor_test_availability_follows_coordinator_update_success",
-      "community": 32,
+      "community": 12,
       "norm_label": "test_availability_follows_coordinator_update_success()"
     },
     {
@@ -9911,7 +10011,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_sensor_rationale_1",
-      "community": 18,
+      "community": 12,
       "norm_label": "tests for the garden_irrigation sensor platform (milestones 1 and 5)."
     },
     {
@@ -11809,7 +11909,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L12",
+      "source_location": "L13",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "custom_components_garden_irrigation_balance",
@@ -12364,7 +12464,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L12",
+      "source_location": "L13",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "custom_components_garden_irrigation_balance_zonebalanceresult",
@@ -12375,7 +12475,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L79",
+      "source_location": "L80",
       "weight": 1.0,
       "source": "tests_test_recommendation_balance_result",
       "target": "custom_components_garden_irrigation_balance_zonebalanceresult",
@@ -16326,7 +16426,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L17",
+      "source_location": "L18",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "custom_components_garden_irrigation_const",
@@ -16730,7 +16830,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L33",
+      "source_location": "L34",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "custom_components_garden_irrigation_coordinator",
@@ -17564,7 +17664,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L33",
+      "source_location": "L34",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "custom_components_garden_irrigation_coordinator_gardenirrigationcoordinator",
@@ -17575,7 +17675,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L71",
+      "source_location": "L72",
       "weight": 1.0,
       "source": "tests_test_recommendation_coordinator",
       "target": "custom_components_garden_irrigation_coordinator_gardenirrigationcoordinator",
@@ -17586,7 +17686,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L556",
+      "source_location": "L714",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_wh51_calibration_survives_setup_shutdown_roundtrip",
       "target": "custom_components_garden_irrigation_coordinator_gardenirrigationcoordinator",
@@ -21099,7 +21199,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L34",
+      "source_location": "L35",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "custom_components_garden_irrigation_recommendation",
@@ -21131,7 +21231,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/recommendation.py",
-      "source_location": "L597",
+      "source_location": "L605",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_recommendation_recommendationengine_evaluate",
       "target": "custom_components_garden_irrigation_recommendation_mm_per_minute",
@@ -21185,7 +21285,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/recommendation.py",
-      "source_location": "L593",
+      "source_location": "L601",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_recommendation_recommendationengine_evaluate",
       "target": "custom_components_garden_irrigation_recommendation_area_m2",
@@ -21259,7 +21359,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/recommendation.py",
-      "source_location": "L608",
+      "source_location": "L616",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_recommendation_recommendationengine_evaluate",
       "target": "custom_components_garden_irrigation_recommendation_block_plan",
@@ -21300,7 +21400,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/recommendation.py",
-      "source_location": "L599",
+      "source_location": "L607",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_recommendation_recommendationengine_evaluate",
       "target": "custom_components_garden_irrigation_recommendation_sourcerecommendation",
@@ -21511,7 +21611,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/recommendation.py",
-      "source_location": "L632",
+      "source_location": "L640",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_recommendation_recommendationengine_save_data",
       "target": "custom_components_garden_irrigation_recommendation_wh51calibrationstate_to_dict",
@@ -21533,7 +21633,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/recommendation.py",
-      "source_location": "L630",
+      "source_location": "L638",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_recommendation_recommendationengine_save_data",
       "target": "custom_components_garden_irrigation_recommendation_py_any",
@@ -21763,7 +21863,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/recommendation.py",
-      "source_location": "L630",
+      "source_location": "L638",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_recommendation_recommendationengine",
       "target": "custom_components_garden_irrigation_recommendation_recommendationengine_save_data",
@@ -21773,7 +21873,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/recommendation.py",
-      "source_location": "L635",
+      "source_location": "L643",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_recommendation_recommendationengine",
       "target": "custom_components_garden_irrigation_recommendation_recommendationengine_schedule_save",
@@ -22985,7 +23085,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L228",
+      "source_location": "L334",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_min_interval_elapsed_allows_recommendation",
       "target": "timedelta"
@@ -22996,7 +23096,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L206",
+      "source_location": "L312",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_min_interval_not_elapsed_blocks_recommendation",
       "target": "timedelta"
@@ -23007,7 +23107,18 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L421",
+      "source_location": "L264",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_min_interval_not_elapsed_never_reports_partial_cap",
+      "target": "timedelta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L527",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_wh51_critical_and_moderate_classification",
       "target": "timedelta"
@@ -23018,7 +23129,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L488",
+      "source_location": "L594",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_wh51_soft_signal_contradicts_is_a_warning_not_a_block",
       "target": "timedelta"
@@ -23029,7 +23140,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L455",
+      "source_location": "L561",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_wh51_soft_signal_corroborates_after_calibration",
       "target": "timedelta"
@@ -28305,7 +28416,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L47",
+      "source_location": "L48",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_const",
@@ -29062,7 +29173,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L47",
+      "source_location": "L48",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_const_user_step_input",
@@ -29073,7 +29184,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L63",
+      "source_location": "L64",
       "weight": 1.0,
       "source": "tests_test_recommendation_full_entry_data",
       "target": "tests_const_user_step_input",
@@ -29402,7 +29513,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L47",
+      "source_location": "L48",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_const_rain_step_input",
@@ -29413,7 +29524,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L64",
+      "source_location": "L65",
       "weight": 1.0,
       "source": "tests_test_recommendation_full_entry_data",
       "target": "tests_const_rain_step_input",
@@ -29698,7 +29809,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L47",
+      "source_location": "L48",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_const_soil_step_input",
@@ -29709,7 +29820,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L65",
+      "source_location": "L66",
       "weight": 1.0,
       "source": "tests_test_recommendation_full_entry_data",
       "target": "tests_const_soil_step_input",
@@ -29994,7 +30105,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L47",
+      "source_location": "L48",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_const_zones_step_input",
@@ -30005,7 +30116,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L66",
+      "source_location": "L67",
       "weight": 1.0,
       "source": "tests_test_recommendation_full_entry_data",
       "target": "tests_const_zones_step_input",
@@ -30290,7 +30401,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L47",
+      "source_location": "L48",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_const_telegram_step_input",
@@ -30301,7 +30412,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L67",
+      "source_location": "L68",
       "weight": 1.0,
       "source": "tests_test_recommendation_full_entry_data",
       "target": "tests_const_telegram_step_input",
@@ -34643,7 +34754,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L79",
+      "source_location": "L80",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_balance_result",
@@ -34653,7 +34764,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L71",
+      "source_location": "L72",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_coordinator",
@@ -34663,7 +34774,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L61",
+      "source_location": "L62",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_full_entry_data",
@@ -34673,7 +34784,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L312",
+      "source_location": "L418",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_block_plan_single_block_under_15_minutes",
@@ -34683,7 +34794,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L329",
+      "source_location": "L435",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_block_plan_splits_into_multiple_blocks_with_pause",
@@ -34693,7 +34804,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L114",
+      "source_location": "L115",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_dry_scenario_recommends_full_deficit_when_no_limits",
@@ -34703,7 +34814,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L244",
+      "source_location": "L350",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_final_not_ready_when_et0_was_unavailable",
@@ -34713,7 +34824,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L261",
+      "source_location": "L367",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_final_not_ready_when_pending",
@@ -34723,7 +34834,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L274",
+      "source_location": "L380",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_final_ready_when_already_processed",
@@ -34733,7 +34844,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L218",
+      "source_location": "L324",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_min_interval_elapsed_allows_recommendation",
@@ -34743,7 +34854,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L197",
+      "source_location": "L303",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_min_interval_not_elapsed_blocks_recommendation",
@@ -34753,7 +34864,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L532",
+      "source_location": "L251",
+      "weight": 1.0,
+      "source": "tests_test_recommendation",
+      "target": "tests_test_recommendation_test_min_interval_not_elapsed_never_reports_partial_cap",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L690",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_preview_never_mutates_persisted_deficit",
@@ -34763,7 +34884,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L289",
+      "source_location": "L395",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_preview_not_ready_when_today_et0_unavailable",
@@ -34773,7 +34894,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L509",
+      "source_location": "L615",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_preview_projection_matches_manual_calculation",
@@ -34783,7 +34904,27 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L353",
+      "source_location": "L638",
+      "weight": 1.0,
+      "source": "tests_test_recommendation",
+      "target": "tests_test_recommendation_test_preview_subtracts_irrigation_recorded_today",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L282",
+      "weight": 1.0,
+      "source": "tests_test_recommendation",
+      "target": "tests_test_recommendation_test_recommended_mm_zero_with_calibrated_mains_reports_zero_minutes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L459",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_uncalibrated_tank_source_reports_no_minutes",
@@ -34793,7 +34934,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L155",
+      "source_location": "L156",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_weekly_cap_fully_reached_blocks_recommendation",
@@ -34803,7 +34944,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L175",
+      "source_location": "L200",
+      "weight": 1.0,
+      "source": "tests_test_recommendation",
+      "target": "tests_test_recommendation_test_weekly_cap_partial_explicit_cap_remaining_less_than_deficit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L178",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_weekly_cap_partial_limits_recommended_amount",
@@ -34813,7 +34964,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L136",
+      "source_location": "L226",
+      "weight": 1.0,
+      "source": "tests_test_recommendation",
+      "target": "tests_test_recommendation_test_weekly_cap_remaining_exactly_equal_to_deficit_is_not_partial",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L137",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_wet_scenario_recommends_nothing",
@@ -34823,7 +34984,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L551",
+      "source_location": "L709",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_wh51_calibration_survives_setup_shutdown_roundtrip",
@@ -34833,7 +34994,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L405",
+      "source_location": "L511",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_wh51_critical_and_moderate_classification",
@@ -34843,7 +35004,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L372",
+      "source_location": "L478",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_wh51_diagnostic_before_calibration_complete",
@@ -34853,7 +35014,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L388",
+      "source_location": "L494",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_wh51_non_numeric_state_is_treated_as_unavailable",
@@ -34863,7 +35024,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L472",
+      "source_location": "L578",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_wh51_soft_signal_contradicts_is_a_warning_not_a_block",
@@ -34873,7 +35034,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L438",
+      "source_location": "L544",
       "weight": 1.0,
       "source": "tests_test_recommendation",
       "target": "tests_test_recommendation_test_wh51_soft_signal_corroborates_after_calibration",
@@ -34894,7 +35055,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L74",
+      "source_location": "L75",
       "weight": 1.0,
       "source": "tests_test_recommendation_coordinator",
       "target": "tests_test_recommendation_full_entry_data",
@@ -34905,7 +35066,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L61",
+      "source_location": "L62",
       "weight": 1.0,
       "source": "tests_test_recommendation_full_entry_data",
       "target": "tests_test_recommendation_py_any",
@@ -34916,7 +35077,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L554",
+      "source_location": "L712",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_wh51_calibration_survives_setup_shutdown_roundtrip",
       "target": "tests_test_recommendation_full_entry_data",
@@ -34927,7 +35088,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L71",
+      "source_location": "L72",
       "weight": 1.0,
       "source": "tests_test_recommendation_coordinator",
       "target": "tests_test_recommendation_py_any",
@@ -34938,7 +35099,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L218",
+      "source_location": "L324",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_min_interval_elapsed_allows_recommendation",
       "target": "tests_test_recommendation_py_any",
@@ -34949,7 +35110,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L197",
+      "source_location": "L303",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_min_interval_not_elapsed_blocks_recommendation",
       "target": "tests_test_recommendation_py_any",
@@ -34960,7 +35121,29 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L405",
+      "source_location": "L251",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_min_interval_not_elapsed_never_reports_partial_cap",
+      "target": "tests_test_recommendation_py_any",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L638",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_preview_subtracts_irrigation_recorded_today",
+      "target": "tests_test_recommendation_py_any",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L511",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_wh51_critical_and_moderate_classification",
       "target": "tests_test_recommendation_py_any",
@@ -34971,7 +35154,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L472",
+      "source_location": "L578",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_wh51_soft_signal_contradicts_is_a_warning_not_a_block",
       "target": "tests_test_recommendation_py_any",
@@ -34982,7 +35165,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L438",
+      "source_location": "L544",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_wh51_soft_signal_corroborates_after_calibration",
       "target": "tests_test_recommendation_py_any",
@@ -34993,7 +35176,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L71",
+      "source_location": "L72",
       "weight": 1.0,
       "source": "tests_test_recommendation_coordinator",
       "target": "tests_test_recommendation_py_homeassistant",
@@ -35004,7 +35187,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L315",
+      "source_location": "L421",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_block_plan_single_block_under_15_minutes",
       "target": "tests_test_recommendation_coordinator",
@@ -35013,474 +35196,12 @@
     {
       "relation": "calls",
       "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L332",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_block_plan_splits_into_multiple_blocks_with_pause",
-      "target": "tests_test_recommendation_coordinator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L117",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_dry_scenario_recommends_full_deficit_when_no_limits",
-      "target": "tests_test_recommendation_coordinator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L245",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_final_not_ready_when_et0_was_unavailable",
-      "target": "tests_test_recommendation_coordinator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L262",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_final_not_ready_when_pending",
-      "target": "tests_test_recommendation_coordinator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L276",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_final_ready_when_already_processed",
-      "target": "tests_test_recommendation_coordinator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L223",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_min_interval_elapsed_allows_recommendation",
-      "target": "tests_test_recommendation_coordinator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L201",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_min_interval_not_elapsed_blocks_recommendation",
-      "target": "tests_test_recommendation_coordinator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L533",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_preview_never_mutates_persisted_deficit",
-      "target": "tests_test_recommendation_coordinator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L292",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_preview_not_ready_when_today_et0_unavailable",
-      "target": "tests_test_recommendation_coordinator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L512",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_preview_projection_matches_manual_calculation",
-      "target": "tests_test_recommendation_coordinator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L354",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_uncalibrated_tank_source_reports_no_minutes",
-      "target": "tests_test_recommendation_coordinator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L158",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_weekly_cap_fully_reached_blocks_recommendation",
-      "target": "tests_test_recommendation_coordinator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L178",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_weekly_cap_partial_limits_recommended_amount",
-      "target": "tests_test_recommendation_coordinator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L137",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_wet_scenario_recommends_nothing",
-      "target": "tests_test_recommendation_coordinator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L410",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_wh51_critical_and_moderate_classification",
-      "target": "tests_test_recommendation_coordinator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L373",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_wh51_diagnostic_before_calibration_complete",
-      "target": "tests_test_recommendation_coordinator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L391",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_wh51_non_numeric_state_is_treated_as_unavailable",
-      "target": "tests_test_recommendation_coordinator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L477",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_wh51_soft_signal_contradicts_is_a_warning_not_a_block",
-      "target": "tests_test_recommendation_coordinator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L443",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_wh51_soft_signal_corroborates_after_calibration",
-      "target": "tests_test_recommendation_coordinator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L312",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_block_plan_single_block_under_15_minutes",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L329",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_block_plan_splits_into_multiple_blocks_with_pause",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L114",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_dry_scenario_recommends_full_deficit_when_no_limits",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L244",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_final_not_ready_when_et0_was_unavailable",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L261",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_final_not_ready_when_pending",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L274",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_final_ready_when_already_processed",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L218",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_min_interval_elapsed_allows_recommendation",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L197",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_min_interval_not_elapsed_blocks_recommendation",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L532",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_preview_never_mutates_persisted_deficit",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L289",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_preview_not_ready_when_today_et0_unavailable",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L509",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_preview_projection_matches_manual_calculation",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L353",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_uncalibrated_tank_source_reports_no_minutes",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L155",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_weekly_cap_fully_reached_blocks_recommendation",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L175",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_weekly_cap_partial_limits_recommended_amount",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L136",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_wet_scenario_recommends_nothing",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L551",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_wh51_calibration_survives_setup_shutdown_roundtrip",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L405",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_wh51_critical_and_moderate_classification",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L372",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_wh51_diagnostic_before_calibration_complete",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L388",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_wh51_non_numeric_state_is_treated_as_unavailable",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L472",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_wh51_soft_signal_contradicts_is_a_warning_not_a_block",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
       "source_location": "L438",
       "weight": 1.0,
-      "source": "tests_test_recommendation_test_wh51_soft_signal_corroborates_after_calibration",
-      "target": "tests_test_recommendation_py_homeassistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L79",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_balance_result",
-      "target": "tests_test_recommendation_py_date",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L317",
-      "weight": 1.0,
-      "source": "tests_test_recommendation_test_block_plan_single_block_under_15_minutes",
-      "target": "tests_test_recommendation_balance_result",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_recommendation.py",
-      "source_location": "L337",
-      "weight": 1.0,
       "source": "tests_test_recommendation_test_block_plan_splits_into_multiple_blocks_with_pause",
-      "target": "tests_test_recommendation_balance_result",
+      "target": "tests_test_recommendation_coordinator",
       "confidence_score": 1.0
     },
     {
@@ -35491,7 +35212,7 @@
       "source_location": "L118",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_dry_scenario_recommends_full_deficit_when_no_limits",
-      "target": "tests_test_recommendation_balance_result",
+      "target": "tests_test_recommendation_coordinator",
       "confidence_score": 1.0
     },
     {
@@ -35499,10 +35220,10 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L246",
+      "source_location": "L351",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_final_not_ready_when_et0_was_unavailable",
-      "target": "tests_test_recommendation_balance_result",
+      "target": "tests_test_recommendation_coordinator",
       "confidence_score": 1.0
     },
     {
@@ -35510,10 +35231,10 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L263",
+      "source_location": "L368",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_final_not_ready_when_pending",
-      "target": "tests_test_recommendation_balance_result",
+      "target": "tests_test_recommendation_coordinator",
       "confidence_score": 1.0
     },
     {
@@ -35521,10 +35242,10 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L277",
+      "source_location": "L382",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_final_ready_when_already_processed",
-      "target": "tests_test_recommendation_balance_result",
+      "target": "tests_test_recommendation_coordinator",
       "confidence_score": 1.0
     },
     {
@@ -35532,10 +35253,10 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L229",
+      "source_location": "L329",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_min_interval_elapsed_allows_recommendation",
-      "target": "tests_test_recommendation_balance_result",
+      "target": "tests_test_recommendation_coordinator",
       "confidence_score": 1.0
     },
     {
@@ -35543,10 +35264,10 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L207",
+      "source_location": "L307",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_min_interval_not_elapsed_blocks_recommendation",
-      "target": "tests_test_recommendation_balance_result",
+      "target": "tests_test_recommendation_coordinator",
       "confidence_score": 1.0
     },
     {
@@ -35554,10 +35275,21 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L535",
+      "source_location": "L259",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_min_interval_not_elapsed_never_reports_partial_cap",
+      "target": "tests_test_recommendation_coordinator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L691",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_preview_never_mutates_persisted_deficit",
-      "target": "tests_test_recommendation_balance_result",
+      "target": "tests_test_recommendation_coordinator",
       "confidence_score": 1.0
     },
     {
@@ -35565,10 +35297,10 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L293",
+      "source_location": "L398",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_preview_not_ready_when_today_et0_unavailable",
-      "target": "tests_test_recommendation_balance_result",
+      "target": "tests_test_recommendation_coordinator",
       "confidence_score": 1.0
     },
     {
@@ -35576,10 +35308,10 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L517",
+      "source_location": "L618",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_preview_projection_matches_manual_calculation",
-      "target": "tests_test_recommendation_balance_result",
+      "target": "tests_test_recommendation_coordinator",
       "confidence_score": 1.0
     },
     {
@@ -35587,10 +35319,32 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L355",
+      "source_location": "L646",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_preview_subtracts_irrigation_recorded_today",
+      "target": "tests_test_recommendation_coordinator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L288",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_recommended_mm_zero_with_calibrated_mains_reports_zero_minutes",
+      "target": "tests_test_recommendation_coordinator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L460",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_uncalibrated_tank_source_reports_no_minutes",
-      "target": "tests_test_recommendation_balance_result",
+      "target": "tests_test_recommendation_coordinator",
       "confidence_score": 1.0
     },
     {
@@ -35601,7 +35355,7 @@
       "source_location": "L159",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_weekly_cap_fully_reached_blocks_recommendation",
-      "target": "tests_test_recommendation_balance_result",
+      "target": "tests_test_recommendation_coordinator",
       "confidence_score": 1.0
     },
     {
@@ -35609,10 +35363,32 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L180",
+      "source_location": "L206",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_weekly_cap_partial_explicit_cap_remaining_less_than_deficit",
+      "target": "tests_test_recommendation_coordinator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L181",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_weekly_cap_partial_limits_recommended_amount",
-      "target": "tests_test_recommendation_balance_result",
+      "target": "tests_test_recommendation_coordinator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L232",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_weekly_cap_remaining_exactly_equal_to_deficit_is_not_partial",
+      "target": "tests_test_recommendation_coordinator",
       "confidence_score": 1.0
     },
     {
@@ -35623,6 +35399,369 @@
       "source_location": "L138",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_wet_scenario_recommends_nothing",
+      "target": "tests_test_recommendation_coordinator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L516",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_wh51_critical_and_moderate_classification",
+      "target": "tests_test_recommendation_coordinator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L479",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_wh51_diagnostic_before_calibration_complete",
+      "target": "tests_test_recommendation_coordinator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L497",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_wh51_non_numeric_state_is_treated_as_unavailable",
+      "target": "tests_test_recommendation_coordinator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L583",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_wh51_soft_signal_contradicts_is_a_warning_not_a_block",
+      "target": "tests_test_recommendation_coordinator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L549",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_wh51_soft_signal_corroborates_after_calibration",
+      "target": "tests_test_recommendation_coordinator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L418",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_block_plan_single_block_under_15_minutes",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L435",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_block_plan_splits_into_multiple_blocks_with_pause",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L115",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_dry_scenario_recommends_full_deficit_when_no_limits",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L350",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_final_not_ready_when_et0_was_unavailable",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L367",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_final_not_ready_when_pending",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L380",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_final_ready_when_already_processed",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L324",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_min_interval_elapsed_allows_recommendation",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L303",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_min_interval_not_elapsed_blocks_recommendation",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L251",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_min_interval_not_elapsed_never_reports_partial_cap",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L690",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_preview_never_mutates_persisted_deficit",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L395",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_preview_not_ready_when_today_et0_unavailable",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L615",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_preview_projection_matches_manual_calculation",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L638",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_preview_subtracts_irrigation_recorded_today",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L282",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_recommended_mm_zero_with_calibrated_mains_reports_zero_minutes",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L459",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_uncalibrated_tank_source_reports_no_minutes",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L156",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_weekly_cap_fully_reached_blocks_recommendation",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L200",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_weekly_cap_partial_explicit_cap_remaining_less_than_deficit",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L178",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_weekly_cap_partial_limits_recommended_amount",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L226",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_weekly_cap_remaining_exactly_equal_to_deficit_is_not_partial",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L137",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_wet_scenario_recommends_nothing",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L709",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_wh51_calibration_survives_setup_shutdown_roundtrip",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L511",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_wh51_critical_and_moderate_classification",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L478",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_wh51_diagnostic_before_calibration_complete",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L494",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_wh51_non_numeric_state_is_treated_as_unavailable",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L578",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_wh51_soft_signal_contradicts_is_a_warning_not_a_block",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L544",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_wh51_soft_signal_corroborates_after_calibration",
+      "target": "tests_test_recommendation_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L80",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_balance_result",
+      "target": "tests_test_recommendation_py_date",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L423",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_block_plan_single_block_under_15_minutes",
       "target": "tests_test_recommendation_balance_result",
       "confidence_score": 1.0
     },
@@ -35631,7 +35770,216 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L560",
+      "source_location": "L443",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_block_plan_splits_into_multiple_blocks_with_pause",
+      "target": "tests_test_recommendation_balance_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L119",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_dry_scenario_recommends_full_deficit_when_no_limits",
+      "target": "tests_test_recommendation_balance_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L352",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_final_not_ready_when_et0_was_unavailable",
+      "target": "tests_test_recommendation_balance_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L369",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_final_not_ready_when_pending",
+      "target": "tests_test_recommendation_balance_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L383",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_final_ready_when_already_processed",
+      "target": "tests_test_recommendation_balance_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L335",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_min_interval_elapsed_allows_recommendation",
+      "target": "tests_test_recommendation_balance_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L313",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_min_interval_not_elapsed_blocks_recommendation",
+      "target": "tests_test_recommendation_balance_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L267",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_min_interval_not_elapsed_never_reports_partial_cap",
+      "target": "tests_test_recommendation_balance_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L693",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_preview_never_mutates_persisted_deficit",
+      "target": "tests_test_recommendation_balance_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L399",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_preview_not_ready_when_today_et0_unavailable",
+      "target": "tests_test_recommendation_balance_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L623",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_preview_projection_matches_manual_calculation",
+      "target": "tests_test_recommendation_balance_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L659",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_preview_subtracts_irrigation_recorded_today",
+      "target": "tests_test_recommendation_balance_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L289",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_recommended_mm_zero_with_calibrated_mains_reports_zero_minutes",
+      "target": "tests_test_recommendation_balance_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L461",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_uncalibrated_tank_source_reports_no_minutes",
+      "target": "tests_test_recommendation_balance_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L160",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_weekly_cap_fully_reached_blocks_recommendation",
+      "target": "tests_test_recommendation_balance_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L209",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_weekly_cap_partial_explicit_cap_remaining_less_than_deficit",
+      "target": "tests_test_recommendation_balance_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L183",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_weekly_cap_partial_limits_recommended_amount",
+      "target": "tests_test_recommendation_balance_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L234",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_weekly_cap_remaining_exactly_equal_to_deficit_is_not_partial",
+      "target": "tests_test_recommendation_balance_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L139",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_test_wet_scenario_recommends_nothing",
+      "target": "tests_test_recommendation_balance_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L718",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_wh51_calibration_survives_setup_shutdown_roundtrip",
       "target": "tests_test_recommendation_balance_result",
@@ -35642,7 +35990,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L414",
+      "source_location": "L520",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_wh51_critical_and_moderate_classification",
       "target": "tests_test_recommendation_balance_result",
@@ -35653,7 +36001,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L375",
+      "source_location": "L481",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_wh51_diagnostic_before_calibration_complete",
       "target": "tests_test_recommendation_balance_result",
@@ -35664,7 +36012,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L395",
+      "source_location": "L501",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_wh51_non_numeric_state_is_treated_as_unavailable",
       "target": "tests_test_recommendation_balance_result",
@@ -35675,7 +36023,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L481",
+      "source_location": "L587",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_wh51_soft_signal_contradicts_is_a_warning_not_a_block",
       "target": "tests_test_recommendation_balance_result",
@@ -35686,7 +36034,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L448",
+      "source_location": "L554",
       "weight": 1.0,
       "source": "tests_test_recommendation_test_wh51_soft_signal_corroborates_after_calibration",
       "target": "tests_test_recommendation_balance_result",
@@ -35696,10 +36044,60 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_recommendation.py",
-      "source_location": "L275",
+      "source_location": "L203",
       "weight": 1.0,
-      "source": "tests_test_recommendation_rationale_275",
+      "source": "tests_test_recommendation_rationale_203",
+      "target": "tests_test_recommendation_test_weekly_cap_partial_explicit_cap_remaining_less_than_deficit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L229",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_rationale_229",
+      "target": "tests_test_recommendation_test_weekly_cap_remaining_exactly_equal_to_deficit_is_not_partial",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L254",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_rationale_254",
+      "target": "tests_test_recommendation_test_min_interval_not_elapsed_never_reports_partial_cap",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L285",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_rationale_285",
+      "target": "tests_test_recommendation_test_recommended_mm_zero_with_calibrated_mains_reports_zero_minutes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L381",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_rationale_381",
       "target": "tests_test_recommendation_test_final_ready_when_already_processed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_recommendation.py",
+      "source_location": "L641",
+      "weight": 1.0,
+      "source": "tests_test_recommendation_rationale_641",
+      "target": "tests_test_recommendation_test_preview_subtracts_irrigation_recorded_today",
       "confidence_score": 1.0
     },
     {
@@ -39600,5 +39998,5 @@
       "source_file": "CHANGELOG.md"
     }
   ],
-  "built_at_commit": "a6e3b059b2754730927eaf3ec11a2be603bd4a04"
+  "built_at_commit": "0e7b9ed85ded0119688b5074e0b8039ddf6b913a"
 }
