@@ -565,16 +565,24 @@ class RecommendationEngine:
             limits_applied.append(LIMIT_MIN_INTERVAL_NOT_ELAPSED)
         if raw_exceeded and cap_remaining_mm <= 0:
             limits_applied.append(LIMIT_WEEKLY_CAP_REACHED)
+        # Partial (as opposed to fully reached) cap: some room remains, but
+        # not enough to cover the whole deficit. Spelled out explicitly on
+        # the same inputs as needs_irrigation/recommended_mm below, rather
+        # than inferred from "recommended_mm ended up smaller than deficit_mm
+        # and the REACHED limit wasn't already added" - that reads back the
+        # cap-reached case through a side door instead of stating it.
+        if (
+            raw_exceeded
+            and min_interval_elapsed
+            and cap_remaining_mm > 0
+            and cap_remaining_mm < deficit_mm
+        ):
+            limits_applied.append(LIMIT_WEEKLY_CAP_PARTIAL)
 
         if not raw_exceeded or not min_interval_elapsed:
             recommended_mm = 0.0
         else:
             recommended_mm = min(deficit_mm, cap_remaining_mm)
-            if (
-                recommended_mm < deficit_mm
-                and LIMIT_WEEKLY_CAP_REACHED not in limits_applied
-            ):
-                limits_applied.append(LIMIT_WEEKLY_CAP_PARTIAL)
 
         # WH51: a soft, explainable corroborating signal only - it never
         # changes needs_irrigation/recommended_mm above, only annotates them.

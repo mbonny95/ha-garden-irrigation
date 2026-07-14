@@ -7,6 +7,7 @@ from typing import Any
 
 import pytest
 from homeassistant.core import HomeAssistant
+from homeassistant.util import dt as dt_util
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.garden_irrigation.balance import (
@@ -170,6 +171,8 @@ async def test_weekly_cap_fully_reached_blocks_recommendation(
     assert final.needs_irrigation is False
     assert final.recommended_mm == 0.0
     assert LIMIT_WEEKLY_CAP_REACHED in final.limits_applied
+    # (C) Fully reached is never also reported as "partial".
+    assert LIMIT_WEEKLY_CAP_PARTIAL not in final.limits_applied
 
 
 async def test_weekly_cap_partial_limits_recommended_amount(
@@ -192,6 +195,109 @@ async def test_weekly_cap_partial_limits_recommended_amount(
     assert final.recommended_mm == pytest.approx(remaining_cap)
     assert LIMIT_WEEKLY_CAP_PARTIAL in final.limits_applied
     assert LIMIT_WEEKLY_CAP_REACHED not in final.limits_applied
+
+
+async def test_weekly_cap_partial_explicit_cap_remaining_less_than_deficit(
+    hass: HomeAssistant,
+) -> None:
+    """(A) `0 < cap_remaining_mm < deficit_mm`: the recommendation is capped
+    to what's left, flagged explicitly as partial, and irrigation is still
+    recommended (the cap isn't fully consumed)."""
+    coordinator = _coordinator(hass)
+    deficit_mm = 25.0
+    cap_remaining_mm = 4.0
+    result = _balance_result(
+        deficit_mm=deficit_mm,
+        irrigation_7d_mm=DEFAULT_WEEKLY_CAP_MM - cap_remaining_mm,
+        weekly_cap_reached=False,
+    )
+
+    bundle = coordinator.recommendation.build(
+        ZONE_1, result, today_et0_mm=5.0, today_rain_mm=0.0
+    )
+
+    final = bundle.final
+    assert final.needs_irrigation is True
+    assert final.recommended_mm == pytest.approx(cap_remaining_mm)
+    assert LIMIT_WEEKLY_CAP_PARTIAL in final.limits_applied
+    assert LIMIT_WEEKLY_CAP_REACHED not in final.limits_applied
+
+
+async def test_weekly_cap_remaining_exactly_equal_to_deficit_is_not_partial(
+    hass: HomeAssistant,
+) -> None:
+    """(B) Exact boundary: `cap_remaining_mm == deficit_mm` covers the whole
+    deficit in one shot - not a "partial" cap, even though the cap is fully
+    consumed by this recommendation."""
+    coordinator = _coordinator(hass)
+    deficit_mm = 20.0  # >= RAW_MM (15) -> raw_exceeded is True
+    result = _balance_result(
+        deficit_mm=deficit_mm,
+        irrigation_7d_mm=DEFAULT_WEEKLY_CAP_MM - deficit_mm,
+        weekly_cap_reached=False,
+    )
+
+    bundle = coordinator.recommendation.build(
+        ZONE_1, result, today_et0_mm=5.0, today_rain_mm=0.0
+    )
+
+    final = bundle.final
+    assert final.needs_irrigation is True
+    assert final.recommended_mm == pytest.approx(deficit_mm)
+    assert LIMIT_WEEKLY_CAP_PARTIAL not in final.limits_applied
+    assert LIMIT_WEEKLY_CAP_REACHED not in final.limits_applied
+
+
+async def test_min_interval_not_elapsed_never_reports_partial_cap(
+    hass: HomeAssistant, freezer: Any
+) -> None:
+    """(D) A cap that WOULD be partial is irrelevant once the 48h minimum
+    interval blocks the recommendation outright - only
+    LIMIT_MIN_INTERVAL_NOT_ELAPSED should appear, never LIMIT_WEEKLY_CAP_PARTIAL,
+    and recommended_mm stays 0.0."""
+    freezer.move_to(datetime(2026, 6, 1, 8, 0, tzinfo=UTC))
+    coordinator = _coordinator(hass)
+    await coordinator.irrigation_log.async_record_irrigation(
+        zone_id=ZONE_1, source=SOURCE_MAINS_WATER, duration_minutes=10.0
+    )
+
+    freezer.move_to(datetime(2026, 6, 1, 8, 0, tzinfo=UTC) + timedelta(hours=10))
+    # cap_remaining_mm (4.0) < deficit_mm (25.0) - would be "partial" on its
+    # own, but the min-interval block takes precedence.
+    result = _balance_result(
+        deficit_mm=25.0,
+        irrigation_7d_mm=DEFAULT_WEEKLY_CAP_MM - 4.0,
+        weekly_cap_reached=False,
+    )
+    bundle = coordinator.recommendation.build(
+        ZONE_1, result, today_et0_mm=5.0, today_rain_mm=0.0
+    )
+
+    final = bundle.final
+    assert LIMIT_MIN_INTERVAL_NOT_ELAPSED in final.limits_applied
+    assert LIMIT_WEEKLY_CAP_PARTIAL not in final.limits_applied
+    assert final.recommended_mm == 0.0
+
+
+async def test_recommended_mm_zero_with_calibrated_mains_reports_zero_minutes(
+    hass: HomeAssistant,
+) -> None:
+    """(F) When recommended_mm is 0.0 (e.g. deficit below RAW) but the source
+    IS calibrated, minutes is 0.0 and blocks is empty - not None/invented,
+    fixing today's semantics against an accidental future regression."""
+    coordinator = _coordinator(hass)  # zone1 mains is calibrated by default
+    result = _balance_result(deficit_mm=5.0)  # 5 < RAW_MM (15) -> no irrigation
+
+    bundle = coordinator.recommendation.build(
+        ZONE_1, result, today_et0_mm=5.0, today_rain_mm=0.0
+    )
+
+    final = bundle.final
+    assert final.recommended_mm == 0.0
+    mains = final.sources[SOURCE_MAINS_WATER]
+    assert mains.calibrated is True
+    assert mains.minutes == 0.0
+    assert mains.blocks == ()
 
 
 async def test_min_interval_not_elapsed_blocks_recommendation(
@@ -527,6 +633,58 @@ async def test_preview_projection_matches_manual_calculation(
 
     assert bundle.preview.ready is True
     assert bundle.preview.deficit_mm == pytest.approx(expected_deficit)
+
+
+async def test_preview_subtracts_irrigation_recorded_today(
+    hass: HomeAssistant, freezer: Any
+) -> None:
+    """(E) The preview must reflect a cycle recorded earlier TODAY (via
+    irrigation_log.aggregate(since=start_of_today, until=now)), not just
+    ET0/rain - this is what distinguishes it from the persisted deficit."""
+    now = datetime(2026, 6, 1, 18, 0, tzinfo=UTC)
+    freezer.move_to(now)
+    coordinator = _coordinator(hass)
+    prev_deficit = 15.0
+    coordinator.balance._deficit[ZONE_1] = prev_deficit
+
+    await coordinator.irrigation_log.async_record_irrigation(
+        zone_id=ZONE_1, source=SOURCE_MAINS_WATER, duration_minutes=10.0
+    )
+    # The recording above must not itself have changed the persisted deficit
+    # (only balance.py's once-a-day finalization does that).
+    assert coordinator.balance.current_deficit_mm(ZONE_1) == prev_deficit
+
+    today_et0_mm = 4.0
+    today_rain_mm = 2.0
+    result = _balance_result(deficit_mm=999.0)  # final's own deficit is irrelevant here
+
+    bundle = coordinator.recommendation.build(
+        ZONE_1, result, today_et0_mm=today_et0_mm, today_rain_mm=today_rain_mm
+    )
+
+    start_of_today = dt_util.start_of_local_day(now)
+    irrigation_today_mm = coordinator.irrigation_log.aggregate(
+        ZONE_1, since=start_of_today, until=now
+    ).mm
+    assert irrigation_today_mm == pytest.approx(10.0 * ZONE1_MAINS_MM_PER_MIN)
+
+    projected_etc_mm = today_et0_mm * DEFAULT_KC
+    eff_rain_mm = min(
+        today_rain_mm * DEFAULT_RAIN_EFFECTIVE_FACTOR, prev_deficit + projected_etc_mm
+    )
+    expected_deficit = min(
+        max(prev_deficit + projected_etc_mm - eff_rain_mm - irrigation_today_mm, 0.0),
+        TAW_MM,
+    )
+
+    assert bundle.preview.ready is True
+    assert bundle.preview.deficit_mm == pytest.approx(expected_deficit)
+    # Sanity: the same-day recording actually lowers the projection relative
+    # to what it would have been without it.
+    no_irrigation_deficit = min(
+        max(prev_deficit + projected_etc_mm - eff_rain_mm, 0.0), TAW_MM
+    )
+    assert bundle.preview.deficit_mm < no_irrigation_deficit
 
 
 async def test_preview_never_mutates_persisted_deficit(hass: HomeAssistant) -> None:
