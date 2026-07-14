@@ -180,6 +180,16 @@
           "description": "Opzionale: ripetere una chiamata con la stessa chiave non ha effetto (protegge da un doppio invio accidentale)."
         }
       }
+    },
+    "test_telegram": {
+      "name": "Invia test Telegram",
+      "description": "Invia un messaggio di prova tramite il notifier configurato (Telegram, o il suo fallback a notifica persistente) per verificarne la consegna. Non registra alcuna irrigazione né modifica il bilancio idrico.",
+      "fields": {
+        "message": {
+          "name": "Messaggio",
+          "description": "Testo personalizzato opzionale; se vuoto viene usato un messaggio di prova predefinito."
+        }
+      }
     }
   },
   "issues": {

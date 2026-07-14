@@ -68,17 +68,17 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_init",
-      "community": 11,
+      "community": 29,
       "norm_label": "__init__.py"
     },
     {
       "label": "async_setup_entry()",
       "file_type": "code",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L29",
+      "source_location": "L46",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_init_async_setup_entry",
-      "community": 11,
+      "community": 29,
       "norm_label": "async_setup_entry()"
     },
     {
@@ -88,7 +88,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_init_py_homeassistant",
-      "community": 11,
+      "community": 29,
       "norm_label": "homeassistant"
     },
     {
@@ -98,27 +98,27 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_init_py_configentry",
-      "community": 11,
+      "community": 29,
       "norm_label": "configentry"
     },
     {
       "label": "async_unload_entry()",
       "file_type": "code",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L43",
+      "source_location": "L82",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_init_async_unload_entry",
-      "community": 11,
+      "community": 29,
       "norm_label": "async_unload_entry()"
     },
     {
       "label": "async_reload_entry()",
       "file_type": "code",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L55",
+      "source_location": "L96",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_init_async_reload_entry",
-      "community": 11,
+      "community": 29,
       "norm_label": "async_reload_entry()"
     },
     {
@@ -128,37 +128,37 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_init_rationale_1",
-      "community": 11,
+      "community": 29,
       "norm_label": "the garden_irrigation integration.  milestone 2: entry setup/unload/reload wirin"
     },
     {
       "label": "Set up garden_irrigation from a config entry.",
       "file_type": "rationale",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L30",
+      "source_location": "L47",
       "_origin": "ast",
-      "id": "custom_components_garden_irrigation_init_rationale_30",
-      "community": 11,
+      "id": "custom_components_garden_irrigation_init_rationale_47",
+      "community": 29,
       "norm_label": "set up garden_irrigation from a config entry."
     },
     {
       "label": "Unload a config entry and its platforms.",
       "file_type": "rationale",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L44",
+      "source_location": "L83",
       "_origin": "ast",
-      "id": "custom_components_garden_irrigation_init_rationale_44",
-      "community": 11,
+      "id": "custom_components_garden_irrigation_init_rationale_83",
+      "community": 29,
       "norm_label": "unload a config entry and its platforms."
     },
     {
       "label": "Reload a config entry when its options change.",
       "file_type": "rationale",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L56",
+      "source_location": "L97",
       "_origin": "ast",
-      "id": "custom_components_garden_irrigation_init_rationale_56",
-      "community": 11,
+      "id": "custom_components_garden_irrigation_init_rationale_97",
+      "community": 29,
       "norm_label": "reload a config entry when its options change."
     },
     {
@@ -168,7 +168,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance",
-      "community": 18,
+      "community": 2,
       "norm_label": "balance.py"
     },
     {
@@ -208,7 +208,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_zonebalanceresult",
-      "community": 18,
+      "community": 5,
       "norm_label": "zonebalanceresult"
     },
     {
@@ -218,7 +218,7 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_irrigationrecord",
-      "community": 29,
+      "community": 2,
       "norm_label": "_irrigationrecord"
     },
     {
@@ -228,7 +228,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_irrigationrecord_to_dict",
-      "community": 29,
+      "community": 2,
       "norm_label": ".to_dict()"
     },
     {
@@ -238,7 +238,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_py_any",
-      "community": 29,
+      "community": 2,
       "norm_label": "any"
     },
     {
@@ -248,7 +248,7 @@
       "source_location": "L129",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_irrigationrecord_from_dict",
-      "community": 29,
+      "community": 2,
       "norm_label": ".from_dict()"
     },
     {
@@ -258,7 +258,7 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_local_day_bounds",
-      "community": 18,
+      "community": 2,
       "norm_label": "_local_day_bounds()"
     },
     {
@@ -268,7 +268,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_py_date",
-      "community": 18,
+      "community": 2,
       "norm_label": "date"
     },
     {
@@ -278,7 +278,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_py_datetime",
-      "community": 29,
+      "community": 2,
       "norm_label": "datetime"
     },
     {
@@ -288,7 +288,7 @@
       "source_location": "L143",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_balanceengine",
-      "community": 29,
+      "community": 2,
       "norm_label": "balanceengine"
     },
     {
@@ -298,7 +298,7 @@
       "source_location": "L153",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_balanceengine_init",
-      "community": 40,
+      "community": 2,
       "norm_label": ".__init__()"
     },
     {
@@ -308,7 +308,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_py_homeassistant",
-      "community": 40,
+      "community": 2,
       "norm_label": "homeassistant"
     },
     {
@@ -318,7 +318,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_py_configentry",
-      "community": 40,
+      "community": 2,
       "norm_label": "configentry"
     },
     {
@@ -328,7 +328,7 @@
       "source_location": "L173",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_balanceengine_async_setup",
-      "community": 29,
+      "community": 2,
       "norm_label": ".async_setup()"
     },
     {
@@ -338,7 +338,7 @@
       "source_location": "L189",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_balanceengine_async_shutdown",
-      "community": 29,
+      "community": 2,
       "norm_label": ".async_shutdown()"
     },
     {
@@ -348,7 +348,7 @@
       "source_location": "L193",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_balanceengine_current_deficit_mm",
-      "community": 29,
+      "community": 2,
       "norm_label": ".current_deficit_mm()"
     },
     {
@@ -358,7 +358,7 @@
       "source_location": "L197",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_balanceengine_record_irrigation",
-      "community": 29,
+      "community": 2,
       "norm_label": ".record_irrigation()"
     },
     {
@@ -368,7 +368,7 @@
       "source_location": "L210",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_balanceengine_prune_irrigation",
-      "community": 29,
+      "community": 2,
       "norm_label": "._prune_irrigation()"
     },
     {
@@ -378,7 +378,7 @@
       "source_location": "L216",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_balanceengine_irrigation_mm_between",
-      "community": 29,
+      "community": 2,
       "norm_label": "._irrigation_mm_between()"
     },
     {
@@ -388,7 +388,7 @@
       "source_location": "L225",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_balanceengine_weekly_irrigation_mm",
-      "community": 29,
+      "community": 2,
       "norm_label": ".weekly_irrigation_mm()"
     },
     {
@@ -398,7 +398,7 @@
       "source_location": "L240",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_balanceengine_unchanged_result",
-      "community": 18,
+      "community": 2,
       "norm_label": "._unchanged_result()"
     },
     {
@@ -408,7 +408,7 @@
       "source_location": "L263",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_balanceengine_pending_result",
-      "community": 18,
+      "community": 2,
       "norm_label": ".pending_result()"
     },
     {
@@ -418,7 +418,7 @@
       "source_location": "L275",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_balanceengine_process_daily_balance",
-      "community": 18,
+      "community": 2,
       "norm_label": ".process_daily_balance()"
     },
     {
@@ -428,7 +428,7 @@
       "source_location": "L341",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_balanceengine_save_data",
-      "community": 29,
+      "community": 2,
       "norm_label": "._save_data()"
     },
     {
@@ -438,7 +438,7 @@
       "source_location": "L360",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_balanceengine_schedule_save",
-      "community": 29,
+      "community": 2,
       "norm_label": "._schedule_save()"
     },
     {
@@ -448,7 +448,7 @@
       "source_location": "L363",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_balanceengine_async_force_flush",
-      "community": 29,
+      "community": 2,
       "norm_label": "._async_force_flush()"
     },
     {
@@ -458,7 +458,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_rationale_1",
-      "community": 18,
+      "community": 2,
       "norm_label": "per-zone water balance engine for garden_irrigation.  milestone 4 scope only: et"
     },
     {
@@ -498,7 +498,7 @@
       "source_location": "L94",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_rationale_94",
-      "community": 18,
+      "community": 5,
       "norm_label": "outcome of one `process_daily_balance` call for a single zone/day."
     },
     {
@@ -508,7 +508,7 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_rationale_113",
-      "community": 29,
+      "community": 2,
       "norm_label": "one user-recorded irrigation entry (mm already converted from minutes).      mil"
     },
     {
@@ -518,7 +518,7 @@
       "source_location": "L125",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_rationale_125",
-      "community": 29,
+      "community": 2,
       "norm_label": "serialize for store persistence."
     },
     {
@@ -528,7 +528,7 @@
       "source_location": "L130",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_rationale_130",
-      "community": 29,
+      "community": 2,
       "norm_label": "restore from a previously persisted dict (see to_dict)."
     },
     {
@@ -538,7 +538,7 @@
       "source_location": "L137",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_rationale_137",
-      "community": 18,
+      "community": 2,
       "norm_label": "local [00:00:00.000000, 23:59:59.999999] bounds for a calendar day."
     },
     {
@@ -548,7 +548,7 @@
       "source_location": "L144",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_rationale_144",
-      "community": 29,
+      "community": 2,
       "norm_label": "owns the per-zone water balance for one config entry.      not an entity: plain"
     },
     {
@@ -558,7 +558,7 @@
       "source_location": "L159",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_rationale_159",
-      "community": 40,
+      "community": 2,
       "norm_label": "build the engine with per-zone deficit/ledger starting empty."
     },
     {
@@ -568,7 +568,7 @@
       "source_location": "L174",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_rationale_174",
-      "community": 29,
+      "community": 2,
       "norm_label": "restore persisted deficit/last-balance-date/irrigation ledger."
     },
     {
@@ -578,7 +578,7 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_rationale_190",
-      "community": 29,
+      "community": 2,
       "norm_label": "force an immediate (non-debounced) persistence flush."
     },
     {
@@ -588,7 +588,7 @@
       "source_location": "L194",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_rationale_194",
-      "community": 29,
+      "community": 2,
       "norm_label": "return the currently stored deficit for `zone_id`, unmodified."
     },
     {
@@ -598,7 +598,7 @@
       "source_location": "L198",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_rationale_198",
-      "community": 29,
+      "community": 2,
       "norm_label": "append one recorded irrigation entry (engine-level api; see class docstring)."
     },
     {
@@ -608,7 +608,7 @@
       "source_location": "L226",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_rationale_226",
-      "community": 29,
+      "community": 2,
       "norm_label": "sum of recorded irrigation over the trailing sliding 7x24h window.          `as_"
     },
     {
@@ -618,7 +618,7 @@
       "source_location": "L243",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_rationale_243",
-      "community": 18,
+      "community": 2,
       "norm_label": "report current stored state for `day` without mutating anything."
     },
     {
@@ -628,7 +628,7 @@
       "source_location": "L264",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_rationale_264",
-      "community": 18,
+      "community": 2,
       "norm_label": "report current state for `day` without attempting to process it.          use th"
     },
     {
@@ -638,7 +638,7 @@
       "source_location": "L282",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_balance_rationale_282",
-      "community": 18,
+      "community": 2,
       "norm_label": "apply (once, idempotently) the completed day's balance for one zone.          `e"
     },
     {
@@ -648,7 +648,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_binary_sensor",
-      "community": 18,
+      "community": 3,
       "norm_label": "binary_sensor.py"
     },
     {
@@ -888,7 +888,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_binary_sensor_rationale_1",
-      "community": 18,
+      "community": 3,
       "norm_label": "binary sensor platform for garden_irrigation.  milestone 7 added `needs_irrigati"
     },
     {
@@ -1778,7 +1778,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_const",
-      "community": 18,
+      "community": 8,
       "norm_label": "const.py"
     },
     {
@@ -1788,7 +1788,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_const_rationale_1",
-      "community": 18,
+      "community": 8,
       "norm_label": "constants for the garden_irrigation integration.  config-flow keys and defaults,"
     },
     {
@@ -1798,7 +1798,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_coordinator",
-      "community": 18,
+      "community": 8,
       "norm_label": "coordinator.py"
     },
     {
@@ -1978,7 +1978,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_coordinator_rationale_1",
-      "community": 18,
+      "community": 8,
       "norm_label": "coordinator for garden_irrigation.  milestone 2 added the weatheraggregator (acc"
     },
     {
@@ -2098,7 +2098,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_diagnostics",
-      "community": 18,
+      "community": 8,
       "norm_label": "diagnostics.py"
     },
     {
@@ -2148,7 +2148,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_diagnostics_rationale_1",
-      "community": 18,
+      "community": 8,
       "norm_label": "diagnostics support for garden_irrigation."
     },
     {
@@ -2168,7 +2168,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_entity",
-      "community": 18,
+      "community": 28,
       "norm_label": "entity.py"
     },
     {
@@ -2178,7 +2178,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_entity_gardenirrigationentity",
-      "community": 5,
+      "community": 28,
       "norm_label": "gardenirrigationentity"
     },
     {
@@ -2188,7 +2188,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_entity_gardenirrigationentity_init",
-      "community": 6,
+      "community": 28,
       "norm_label": ".__init__()"
     },
     {
@@ -2198,7 +2198,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_entity_py_configentry",
-      "community": 6,
+      "community": 28,
       "norm_label": "configentry"
     },
     {
@@ -2228,7 +2228,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_entity_rationale_1",
-      "community": 18,
+      "community": 28,
       "norm_label": "shared base entity for garden_irrigation."
     },
     {
@@ -2238,7 +2238,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_entity_rationale_14",
-      "community": 5,
+      "community": 28,
       "norm_label": "base entity: single shared device, entity-only names (has_entity_name)."
     },
     {
@@ -2248,7 +2248,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_entity_rationale_21",
-      "community": 6,
+      "community": 28,
       "norm_label": "bind the entity to the coordinator and the owning config entry."
     },
     {
@@ -2488,7 +2488,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_irrigation_log",
-      "community": 18,
+      "community": 22,
       "norm_label": "irrigation_log.py"
     },
     {
@@ -2678,7 +2678,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_irrigation_log_py_datetime",
-      "community": 16,
+      "community": 40,
       "norm_label": "datetime"
     },
     {
@@ -2698,7 +2698,7 @@
       "source_location": "L289",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_irrigation_log_irrigationlog_aggregate",
-      "community": 16,
+      "community": 40,
       "norm_label": ".aggregate()"
     },
     {
@@ -2708,7 +2708,7 @@
       "source_location": "L317",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_irrigation_log_irrigationlog_totals_by_source",
-      "community": 16,
+      "community": 40,
       "norm_label": ".totals_by_source()"
     },
     {
@@ -2738,7 +2738,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_irrigation_log_rationale_1",
-      "community": 18,
+      "community": 22,
       "norm_label": "manual irrigation-cycle recording and persistence for garden_irrigation.  milest"
     },
     {
@@ -2868,7 +2868,7 @@
       "source_location": "L297",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_irrigation_log_rationale_297",
-      "community": 16,
+      "community": 40,
       "norm_label": "derive count/mm/liters over the matching subset of the event log.          mm/li"
     },
     {
@@ -2878,7 +2878,7 @@
       "source_location": "L318",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_irrigation_log_rationale_318",
-      "community": 16,
+      "community": 40,
       "norm_label": "per-source aggregate totals for `zone_id` (all retained events)."
     },
     {
@@ -3038,17 +3038,17 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_notify",
-      "community": 14,
+      "community": 18,
       "norm_label": "notify.py"
     },
     {
       "label": "_language()",
       "file_type": "code",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L97",
+      "source_location": "L101",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_notify_language",
-      "community": 14,
+      "community": 18,
       "norm_label": "_language()"
     },
     {
@@ -3058,17 +3058,17 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_notify_py_homeassistant",
-      "community": 14,
+      "community": 18,
       "norm_label": "homeassistant"
     },
     {
       "label": "translate()",
       "file_type": "code",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L101",
+      "source_location": "L105",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_notify_translate",
-      "community": 14,
+      "community": 18,
       "norm_label": "translate()"
     },
     {
@@ -3078,17 +3078,17 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_notify_py_any",
-      "community": 14,
+      "community": 41,
       "norm_label": "any"
     },
     {
       "label": "Notifier",
       "file_type": "code",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L107",
+      "source_location": "L111",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_notify_notifier",
-      "community": 14,
+      "community": 18,
       "norm_label": "notifier"
     },
     {
@@ -3098,54 +3098,54 @@
       "source_location": "",
       "_origin": "ast",
       "id": "abc",
-      "community": 14,
+      "community": 18,
       "norm_label": "abc"
     },
     {
       "label": ".async_send()",
       "file_type": "code",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L111",
+      "source_location": "L115",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_notify_notifier_async_send",
-      "community": 14,
+      "community": 18,
       "norm_label": ".async_send()"
     },
     {
       "label": "PersistentNotificationNotifier",
       "file_type": "code",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L122",
+      "source_location": "L126",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_notify_persistentnotificationnotifier",
-      "community": 14,
+      "community": 18,
       "norm_label": "persistentnotificationnotifier"
     },
     {
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L129",
+      "source_location": "L133",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_notify_persistentnotificationnotifier_init",
-      "community": 14,
+      "community": 18,
       "norm_label": ".__init__()"
     },
     {
       "label": ".async_send()",
       "file_type": "code",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L133",
+      "source_location": "L137",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_notify_persistentnotificationnotifier_async_send",
-      "community": 14,
+      "community": 18,
       "norm_label": ".async_send()"
     },
     {
       "label": "TelegramNotifier",
       "file_type": "code",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L156",
+      "source_location": "L160",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_notify_telegramnotifier",
       "community": 14,
@@ -3155,10 +3155,10 @@
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L172",
+      "source_location": "L176",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_notify_telegramnotifier_init",
-      "community": 14,
+      "community": 18,
       "norm_label": ".__init__()"
     },
     {
@@ -3168,27 +3168,27 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_notify_py_configentry",
-      "community": 14,
+      "community": 18,
       "norm_label": "configentry"
     },
     {
       "label": "._target_service()",
       "file_type": "code",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L178",
+      "source_location": "L182",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_notify_telegramnotifier_target_service",
-      "community": 14,
+      "community": 41,
       "norm_label": "._target_service()"
     },
     {
       "label": ".async_send()",
       "file_type": "code",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L197",
+      "source_location": "L201",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_notify_telegramnotifier_async_send",
-      "community": 14,
+      "community": 41,
       "norm_label": ".async_send()"
     },
     {
@@ -3198,76 +3198,76 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_notify_rationale_1",
-      "community": 14,
+      "community": 18,
       "norm_label": "notifier abstraction for garden_irrigation.  milestone 8 scope only: an abstract"
     },
     {
       "label": "Render the IT/EN template `key` (see `_MESSAGES`) with `kwargs`.",
       "file_type": "rationale",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L102",
+      "source_location": "L106",
       "_origin": "ast",
-      "id": "custom_components_garden_irrigation_notify_rationale_102",
-      "community": 14,
+      "id": "custom_components_garden_irrigation_notify_rationale_106",
+      "community": 18,
       "norm_label": "render the it/en template `key` (see `_messages`) with `kwargs`."
     },
     {
       "label": "Abstract notifier: send a message, degrading cleanly on any failure.",
       "file_type": "rationale",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L108",
+      "source_location": "L112",
       "_origin": "ast",
-      "id": "custom_components_garden_irrigation_notify_rationale_108",
-      "community": 14,
+      "id": "custom_components_garden_irrigation_notify_rationale_112",
+      "community": 18,
       "norm_label": "abstract notifier: send a message, degrading cleanly on any failure."
     },
     {
       "label": "Send `message`. Must never raise - failures degrade internally.",
       "file_type": "rationale",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L119",
+      "source_location": "L123",
       "_origin": "ast",
-      "id": "custom_components_garden_irrigation_notify_rationale_119",
-      "community": 14,
+      "id": "custom_components_garden_irrigation_notify_rationale_123",
+      "community": 18,
       "norm_label": "send `message`. must never raise - failures degrade internally."
     },
     {
       "label": "Fallback notifier: a dismissible `persistent_notification` card.      `notificat",
       "file_type": "rationale",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L123",
+      "source_location": "L127",
       "_origin": "ast",
-      "id": "custom_components_garden_irrigation_notify_rationale_123",
-      "community": 14,
+      "id": "custom_components_garden_irrigation_notify_rationale_127",
+      "community": 18,
       "norm_label": "fallback notifier: a dismissible `persistent_notification` card.      `notificat"
     },
     {
       "label": "Bind to `hass`; nothing else to set up (stateless).",
       "file_type": "rationale",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L130",
+      "source_location": "L134",
       "_origin": "ast",
-      "id": "custom_components_garden_irrigation_notify_rationale_130",
-      "community": 14,
+      "id": "custom_components_garden_irrigation_notify_rationale_134",
+      "community": 18,
       "norm_label": "bind to `hass`; nothing else to set up (stateless)."
     },
     {
       "label": "Create (or replace) a persistent_notification; never raises.",
       "file_type": "rationale",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L141",
+      "source_location": "L145",
       "_origin": "ast",
-      "id": "custom_components_garden_irrigation_notify_rationale_141",
-      "community": 14,
+      "id": "custom_components_garden_irrigation_notify_rationale_145",
+      "community": 18,
       "norm_label": "create (or replace) a persistent_notification; never raises."
     },
     {
       "label": "Sends via the configured Telegram target; degrades on failure/misconfiguration.",
       "file_type": "rationale",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L157",
+      "source_location": "L161",
       "_origin": "ast",
-      "id": "custom_components_garden_irrigation_notify_rationale_157",
+      "id": "custom_components_garden_irrigation_notify_rationale_161",
       "community": 14,
       "norm_label": "sends via the configured telegram target; degrades on failure/misconfiguration."
     },
@@ -3275,30 +3275,30 @@
       "label": "Bind to `hass`/`entry` and build the persistent_notification fallback.",
       "file_type": "rationale",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L173",
+      "source_location": "L177",
       "_origin": "ast",
-      "id": "custom_components_garden_irrigation_notify_rationale_173",
-      "community": 14,
+      "id": "custom_components_garden_irrigation_notify_rationale_177",
+      "community": 18,
       "norm_label": "bind to `hass`/`entry` and build the persistent_notification fallback."
     },
     {
       "label": "Return (domain, service, base_service_data) for the configured         target, o",
       "file_type": "rationale",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L179",
+      "source_location": "L183",
       "_origin": "ast",
-      "id": "custom_components_garden_irrigation_notify_rationale_179",
-      "community": 14,
+      "id": "custom_components_garden_irrigation_notify_rationale_183",
+      "community": 41,
       "norm_label": "return (domain, service, base_service_data) for the configured         target, o"
     },
     {
       "label": "Send via Telegram; on any failure, degrade to persistent_notification.",
       "file_type": "rationale",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L205",
+      "source_location": "L209",
       "_origin": "ast",
-      "id": "custom_components_garden_irrigation_notify_rationale_205",
-      "community": 14,
+      "id": "custom_components_garden_irrigation_notify_rationale_209",
+      "community": 41,
       "norm_label": "send via telegram; on any failure, degrade to persistent_notification."
     },
     {
@@ -3308,7 +3308,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation",
-      "community": 18,
+      "community": 31,
       "norm_label": "recommendation.py"
     },
     {
@@ -3358,7 +3358,7 @@
       "source_location": "L154",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation_current_taw_raw_mm",
-      "community": 15,
+      "community": 31,
       "norm_label": "_current_taw_raw_mm()"
     },
     {
@@ -3368,7 +3368,7 @@
       "source_location": "L161",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation_block_plan",
-      "community": 47,
+      "community": 31,
       "norm_label": "_block_plan()"
     },
     {
@@ -3378,7 +3378,7 @@
       "source_location": "L177",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation_blockplanentry",
-      "community": 47,
+      "community": 31,
       "norm_label": "blockplanentry"
     },
     {
@@ -3388,7 +3388,7 @@
       "source_location": "L185",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation_sourcerecommendation",
-      "community": 40,
+      "community": 31,
       "norm_label": "sourcerecommendation"
     },
     {
@@ -3408,7 +3408,7 @@
       "source_location": "L217",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation_zonerecommendationbundle",
-      "community": 18,
+      "community": 3,
       "norm_label": "zonerecommendationbundle"
     },
     {
@@ -3418,7 +3418,7 @@
       "source_location": "L225",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation_wh51calibrationstate",
-      "community": 23,
+      "community": 1,
       "norm_label": "_wh51calibrationstate"
     },
     {
@@ -3528,7 +3528,7 @@
       "source_location": "L322",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation_recommendationengine_read_wh51_percent",
-      "community": 15,
+      "community": 31,
       "norm_label": "._read_wh51_percent()"
     },
     {
@@ -3608,7 +3608,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation_rationale_1",
-      "community": 18,
+      "community": 31,
       "norm_label": "recommendation engine for garden_irrigation.  milestone 7 scope only: an explain"
     },
     {
@@ -3648,7 +3648,7 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation_rationale_155",
-      "community": 15,
+      "community": 31,
       "norm_label": "taw/raw from the same config-derived constants balance.py's     zoneagronomypara"
     },
     {
@@ -3658,7 +3658,7 @@
       "source_location": "L162",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation_rationale_162",
-      "community": 47,
+      "community": 31,
       "norm_label": "split `minutes` into <=default_max_cycle_minutes-minute blocks, with a     pause"
     },
     {
@@ -3668,7 +3668,7 @@
       "source_location": "L178",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation_rationale_178",
-      "community": 47,
+      "community": 31,
       "norm_label": "one block of a possibly multi-block recommended cycle."
     },
     {
@@ -3678,7 +3678,7 @@
       "source_location": "L186",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation_rationale_186",
-      "community": 40,
+      "community": 31,
       "norm_label": "per-source (mm/minute-dependent) view of the recommended amount."
     },
     {
@@ -3698,7 +3698,7 @@
       "source_location": "L218",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation_rationale_218",
-      "community": 18,
+      "community": 3,
       "norm_label": "the final (persisted-balance-based) and preview (projected) results."
     },
     {
@@ -3708,7 +3708,7 @@
       "source_location": "L226",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_recommendation_rationale_226",
-      "community": 23,
+      "community": 1,
       "norm_label": "per-zone wh51 calibration baseline (device-relative, not vwc)."
     },
     {
@@ -4058,7 +4058,7 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_scheduler_parse_hms",
-      "community": 11,
+      "community": 47,
       "norm_label": "_parse_hms()"
     },
     {
@@ -4198,7 +4198,7 @@
       "source_location": "L179",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_scheduler_scheduler_async_setup",
-      "community": 11,
+      "community": 47,
       "norm_label": ".async_setup()"
     },
     {
@@ -4208,7 +4208,7 @@
       "source_location": "L205",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_scheduler_scheduler_async_shutdown",
-      "community": 11,
+      "community": 68,
       "norm_label": ".async_shutdown()"
     },
     {
@@ -4328,7 +4328,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_scheduler_rationale_90",
-      "community": 11,
+      "community": 47,
       "norm_label": "parse a \"hh:mm:ss\" const.py default into (hour, minute, second)."
     },
     {
@@ -4388,7 +4388,7 @@
       "source_location": "L180",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_scheduler_rationale_180",
-      "community": 11,
+      "community": 47,
       "norm_label": "register the 20:00/05:30 triggers and the periodic monitor tick."
     },
     {
@@ -4398,7 +4398,7 @@
       "source_location": "L206",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_scheduler_rationale_206",
-      "community": 11,
+      "community": 68,
       "norm_label": "unsubscribe every trigger."
     },
     {
@@ -4728,7 +4728,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_py_configentry",
-      "community": 32,
+      "community": 6,
       "norm_label": "configentry"
     },
     {
@@ -4748,7 +4748,7 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_zone_name",
-      "community": 32,
+      "community": 6,
       "norm_label": "_zone_name()"
     },
     {
@@ -4758,7 +4758,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_dataqualitysensor",
-      "community": 12,
+      "community": 32,
       "norm_label": "dataqualitysensor"
     },
     {
@@ -4768,7 +4768,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "sensorentity",
-      "community": 5,
+      "community": 32,
       "norm_label": "sensorentity"
     },
     {
@@ -4778,7 +4778,7 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_dataqualitysensor_init",
-      "community": 32,
+      "community": 6,
       "norm_label": ".__init__()"
     },
     {
@@ -4788,7 +4788,7 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_dataqualitysensor_available",
-      "community": 12,
+      "community": 32,
       "norm_label": ".available()"
     },
     {
@@ -4798,7 +4798,7 @@
       "source_location": "L117",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_dataqualitysensor_native_value",
-      "community": 12,
+      "community": 32,
       "norm_label": ".native_value()"
     },
     {
@@ -4808,7 +4808,7 @@
       "source_location": "L125",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_et0dailysensor",
-      "community": 5,
+      "community": 12,
       "norm_label": "et0dailysensor"
     },
     {
@@ -4818,7 +4818,7 @@
       "source_location": "L140",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_et0dailysensor_init",
-      "community": 32,
+      "community": 6,
       "norm_label": ".__init__()"
     },
     {
@@ -4828,7 +4828,7 @@
       "source_location": "L147",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_et0dailysensor_et0_result",
-      "community": 5,
+      "community": 44,
       "norm_label": "._et0_result()"
     },
     {
@@ -4838,7 +4838,7 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_et0dailysensor_native_value",
-      "community": 5,
+      "community": 44,
       "norm_label": ".native_value()"
     },
     {
@@ -4848,7 +4848,7 @@
       "source_location": "L161",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_et0dailysensor_extra_state_attributes",
-      "community": 5,
+      "community": 44,
       "norm_label": ".extra_state_attributes()"
     },
     {
@@ -4858,7 +4858,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_py_any",
-      "community": 41,
+      "community": 5,
       "norm_label": "any"
     },
     {
@@ -4878,7 +4878,7 @@
       "source_location": "L193",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_zonebalancesensor_init",
-      "community": 32,
+      "community": 6,
       "norm_label": ".__init__()"
     },
     {
@@ -4888,7 +4888,7 @@
       "source_location": "L207",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_zonebalancesensor_balance_result",
-      "community": 44,
+      "community": 5,
       "norm_label": "._balance_result()"
     },
     {
@@ -4898,7 +4898,7 @@
       "source_location": "L214",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_zonebalancesensor_extra_attributes",
-      "community": 41,
+      "community": 5,
       "norm_label": "._extra_attributes()"
     },
     {
@@ -4908,7 +4908,7 @@
       "source_location": "L219",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_zonebalancesensor_extra_state_attributes",
-      "community": 41,
+      "community": 5,
       "norm_label": ".extra_state_attributes()"
     },
     {
@@ -4928,7 +4928,7 @@
       "source_location": "L235",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_etczonesensor_init",
-      "community": 32,
+      "community": 6,
       "norm_label": ".__init__()"
     },
     {
@@ -4938,7 +4938,7 @@
       "source_location": "L242",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_etczonesensor_native_value",
-      "community": 44,
+      "community": 5,
       "norm_label": ".native_value()"
     },
     {
@@ -4948,7 +4948,7 @@
       "source_location": "L247",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_etczonesensor_extra_attributes",
-      "community": 41,
+      "community": 5,
       "norm_label": "._extra_attributes()"
     },
     {
@@ -4968,7 +4968,7 @@
       "source_location": "L255",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_deficitzonesensor_init",
-      "community": 32,
+      "community": 6,
       "norm_label": ".__init__()"
     },
     {
@@ -4978,7 +4978,7 @@
       "source_location": "L262",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_deficitzonesensor_native_value",
-      "community": 44,
+      "community": 5,
       "norm_label": ".native_value()"
     },
     {
@@ -4988,7 +4988,7 @@
       "source_location": "L267",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_deficitzonesensor_extra_attributes",
-      "community": 41,
+      "community": 5,
       "norm_label": "._extra_attributes()"
     },
     {
@@ -5008,7 +5008,7 @@
       "source_location": "L278",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_tawzonesensor_init",
-      "community": 32,
+      "community": 6,
       "norm_label": ".__init__()"
     },
     {
@@ -5018,7 +5018,7 @@
       "source_location": "L285",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_tawzonesensor_native_value",
-      "community": 44,
+      "community": 5,
       "norm_label": ".native_value()"
     },
     {
@@ -5028,7 +5028,7 @@
       "source_location": "L290",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_tawzonesensor_extra_attributes",
-      "community": 41,
+      "community": 5,
       "norm_label": "._extra_attributes()"
     },
     {
@@ -5048,7 +5048,7 @@
       "source_location": "L300",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rawzonesensor_init",
-      "community": 32,
+      "community": 6,
       "norm_label": ".__init__()"
     },
     {
@@ -5058,7 +5058,7 @@
       "source_location": "L307",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rawzonesensor_native_value",
-      "community": 44,
+      "community": 5,
       "norm_label": ".native_value()"
     },
     {
@@ -5068,7 +5068,7 @@
       "source_location": "L312",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rawzonesensor_extra_attributes",
-      "community": 41,
+      "community": 5,
       "norm_label": "._extra_attributes()"
     },
     {
@@ -5088,7 +5088,7 @@
       "source_location": "L321",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_effectiverainzonesensor_init",
-      "community": 32,
+      "community": 6,
       "norm_label": ".__init__()"
     },
     {
@@ -5098,7 +5098,7 @@
       "source_location": "L328",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_effectiverainzonesensor_native_value",
-      "community": 44,
+      "community": 5,
       "norm_label": ".native_value()"
     },
     {
@@ -5108,7 +5108,7 @@
       "source_location": "L333",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_effectiverainzonesensor_extra_attributes",
-      "community": 41,
+      "community": 5,
       "norm_label": "._extra_attributes()"
     },
     {
@@ -5128,7 +5128,7 @@
       "source_location": "L370",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_irrigation7dzonesensor_init",
-      "community": 32,
+      "community": 6,
       "norm_label": ".__init__()"
     },
     {
@@ -5198,7 +5198,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_84",
-      "community": 32,
+      "community": 6,
       "norm_label": "return the user-configured display name for `zone_id`."
     },
     {
@@ -5208,7 +5208,7 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_91",
-      "community": 12,
+      "community": 32,
       "norm_label": "diagnostic sensor reporting overall data-quality status.      milestone 1: alway"
     },
     {
@@ -5218,7 +5218,7 @@
       "source_location": "L107",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_107",
-      "community": 32,
+      "community": 6,
       "norm_label": "initialize with a stable unique_id derived from the config entry."
     },
     {
@@ -5228,7 +5228,7 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_113",
-      "community": 12,
+      "community": 32,
       "norm_label": "always available in milestone 1 (never unavailable)."
     },
     {
@@ -5238,7 +5238,7 @@
       "source_location": "L118",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_118",
-      "community": 12,
+      "community": 32,
       "norm_label": "return `not_configured` pre-refresh, `initializing` afterwards."
     },
     {
@@ -5248,7 +5248,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_126",
-      "community": 5,
+      "community": 12,
       "norm_label": "daily fao-56 reference evapotranspiration for the current in-progress day."
     },
     {
@@ -5258,7 +5258,7 @@
       "source_location": "L143",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_143",
-      "community": 32,
+      "community": 6,
       "norm_label": "initialize with a stable unique_id derived from the config entry."
     },
     {
@@ -5268,7 +5268,7 @@
       "source_location": "L156",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_156",
-      "community": 5,
+      "community": 44,
       "norm_label": "the computed et0 in mm, or none (unknown) if incomplete/not yet run."
     },
     {
@@ -5278,7 +5278,7 @@
       "source_location": "L162",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_162",
-      "community": 5,
+      "community": 44,
       "norm_label": "intermediate fao-56 terms, for diagnosis (see et0.py et0result)."
     },
     {
@@ -5298,7 +5298,7 @@
       "source_location": "L200",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_200",
-      "community": 32,
+      "community": 6,
       "norm_label": "initialize with a per-zone unique_id and translation placeholder."
     },
     {
@@ -5308,7 +5308,7 @@
       "source_location": "L215",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_215",
-      "community": 41,
+      "community": 5,
       "norm_label": "subclasses add their own attributes on top of the common ones."
     },
     {
@@ -5318,7 +5318,7 @@
       "source_location": "L220",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_220",
-      "community": 41,
+      "community": 5,
       "norm_label": "common day/applied/skipped_reason plus subclass-specific attributes."
     },
     {
@@ -5338,7 +5338,7 @@
       "source_location": "L238",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_238",
-      "community": 32,
+      "community": 6,
       "norm_label": "initialize the per-zone etc sensor."
     },
     {
@@ -5348,7 +5348,7 @@
       "source_location": "L243",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_243",
-      "community": 44,
+      "community": 5,
       "norm_label": "etc in mm, or none until a day has actually been applied."
     },
     {
@@ -5368,7 +5368,7 @@
       "source_location": "L258",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_258",
-      "community": 32,
+      "community": 6,
       "norm_label": "initialize the per-zone deficit sensor."
     },
     {
@@ -5378,7 +5378,7 @@
       "source_location": "L263",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_263",
-      "community": 44,
+      "community": 5,
       "norm_label": "current deficit in mm."
     },
     {
@@ -5398,7 +5398,7 @@
       "source_location": "L281",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_281",
-      "community": 32,
+      "community": 6,
       "norm_label": "initialize the per-zone taw sensor."
     },
     {
@@ -5418,7 +5418,7 @@
       "source_location": "L303",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_303",
-      "community": 32,
+      "community": 6,
       "norm_label": "initialize the per-zone raw sensor."
     },
     {
@@ -5438,7 +5438,7 @@
       "source_location": "L324",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_324",
-      "community": 32,
+      "community": 6,
       "norm_label": "initialize the per-zone effective-rain sensor."
     },
     {
@@ -5448,7 +5448,7 @@
       "source_location": "L329",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_329",
-      "community": 44,
+      "community": 5,
       "norm_label": "effective rain in mm, or none until a day has actually been applied."
     },
     {
@@ -5468,7 +5468,7 @@
       "source_location": "L373",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_sensor_rationale_373",
-      "community": 32,
+      "community": 6,
       "norm_label": "initialize the per-zone 7-day irrigation sensor."
     },
     {
@@ -5518,7 +5518,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_storage",
-      "community": 18,
+      "community": 1,
       "norm_label": "storage.py"
     },
     {
@@ -5528,7 +5528,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_storage_gardenirrigationstore",
-      "community": 40,
+      "community": 1,
       "norm_label": "gardenirrigationstore"
     },
     {
@@ -5538,7 +5538,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_storage_gardenirrigationstore_init",
-      "community": 40,
+      "community": 1,
       "norm_label": ".__init__()"
     },
     {
@@ -5548,7 +5548,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_storage_py_homeassistant",
-      "community": 40,
+      "community": 1,
       "norm_label": "homeassistant"
     },
     {
@@ -5558,7 +5558,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_storage_gardenirrigationstore_async_load",
-      "community": 40,
+      "community": 1,
       "norm_label": ".async_load()"
     },
     {
@@ -5568,7 +5568,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_storage_py_any",
-      "community": 40,
+      "community": 1,
       "norm_label": "any"
     },
     {
@@ -5578,7 +5578,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_storage_gardenirrigationstore_async_save",
-      "community": 40,
+      "community": 1,
       "norm_label": ".async_save()"
     },
     {
@@ -5588,7 +5588,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_storage_gardenirrigationstore_async_delay_save",
-      "community": 40,
+      "community": 1,
       "norm_label": ".async_delay_save()"
     },
     {
@@ -5598,7 +5598,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_storage_rationale_1",
-      "community": 18,
+      "community": 1,
       "norm_label": "persistence wrapper for garden_irrigation.  wraps `helpers.storage.store`. domai"
     },
     {
@@ -5608,7 +5608,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_storage_rationale_21",
-      "community": 40,
+      "community": 1,
       "norm_label": "thin async wrapper around a versioned, debounced store file."
     },
     {
@@ -5618,7 +5618,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_storage_rationale_24",
-      "community": 40,
+      "community": 1,
       "norm_label": "create a store bound to `key` (e.g. \"garden_irrigation.state\")."
     },
     {
@@ -5628,7 +5628,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_storage_rationale_28",
-      "community": 40,
+      "community": 1,
       "norm_label": "load persisted data, or an empty dict if nothing was saved yet."
     },
     {
@@ -5638,7 +5638,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_storage_rationale_33",
-      "community": 40,
+      "community": 1,
       "norm_label": "persist data immediately (atomic write via store).          used for forced flus"
     },
     {
@@ -5648,7 +5648,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_storage_rationale_44",
-      "community": 40,
+      "community": 1,
       "norm_label": "schedule a debounced save; used for high-frequency live updates.          `data_"
     },
     {
@@ -5928,7 +5928,7 @@
       "source_location": "L241",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_weather_rainaccumulator_add_sample",
-      "community": 30,
+      "community": 19,
       "norm_label": ".add_sample()"
     },
     {
@@ -6118,7 +6118,7 @@
       "source_location": "L507",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_weather_weatheraggregator_apply_sample",
-      "community": 30,
+      "community": 19,
       "norm_label": "._apply_sample()"
     },
     {
@@ -6348,7 +6348,7 @@
       "source_location": "L242",
       "_origin": "ast",
       "id": "custom_components_garden_irrigation_weather_rationale_242",
-      "community": 30,
+      "community": 19,
       "norm_label": "process one raw reading, updating daily_mm per the reset rules above."
     },
     {
@@ -7908,7 +7908,7 @@
       "label": "_full_entry_data()",
       "file_type": "code",
       "source_file": "tests/test_init.py",
-      "source_location": "L21",
+      "source_location": "L26",
       "_origin": "ast",
       "id": "tests_test_init_full_entry_data",
       "community": 0,
@@ -7918,7 +7918,7 @@
       "label": "test_setup_and_unload_entry()",
       "file_type": "code",
       "source_file": "tests/test_init.py",
-      "source_location": "L31",
+      "source_location": "L36",
       "_origin": "ast",
       "id": "tests_test_init_test_setup_and_unload_entry",
       "community": 0,
@@ -7938,11 +7938,51 @@
       "label": "test_reload_entry()",
       "file_type": "code",
       "source_file": "tests/test_init.py",
-      "source_location": "L50",
+      "source_location": "L55",
       "_origin": "ast",
       "id": "tests_test_init_test_reload_entry",
       "community": 0,
       "norm_label": "test_reload_entry()"
+    },
+    {
+      "label": "test_test_telegram_service_registered_and_removed_with_entry()",
+      "file_type": "code",
+      "source_file": "tests/test_init.py",
+      "source_location": "L76",
+      "_origin": "ast",
+      "id": "tests_test_init_test_test_telegram_service_registered_and_removed_with_entry",
+      "community": 0,
+      "norm_label": "test_test_telegram_service_registered_and_removed_with_entry()"
+    },
+    {
+      "label": "test_test_telegram_uses_default_message_and_notifier()",
+      "file_type": "code",
+      "source_file": "tests/test_init.py",
+      "source_location": "L93",
+      "_origin": "ast",
+      "id": "tests_test_init_test_test_telegram_uses_default_message_and_notifier",
+      "community": 0,
+      "norm_label": "test_test_telegram_uses_default_message_and_notifier()"
+    },
+    {
+      "label": "test_test_telegram_forwards_custom_message()",
+      "file_type": "code",
+      "source_file": "tests/test_init.py",
+      "source_location": "L119",
+      "_origin": "ast",
+      "id": "tests_test_init_test_test_telegram_forwards_custom_message",
+      "community": 0,
+      "norm_label": "test_test_telegram_forwards_custom_message()"
+    },
+    {
+      "label": "test_test_telegram_has_no_side_effects_on_irrigation_domain()",
+      "file_type": "code",
+      "source_file": "tests/test_init.py",
+      "source_location": "L146",
+      "_origin": "ast",
+      "id": "tests_test_init_test_test_telegram_has_no_side_effects_on_irrigation_domain",
+      "community": 0,
+      "norm_label": "test_test_telegram_has_no_side_effects_on_irrigation_domain()"
     },
     {
       "label": "Tests for garden_irrigation entry setup/unload/reload.",
@@ -7958,9 +7998,9 @@
       "label": "The entry loads cleanly and creates/removes its coordinator on unload.",
       "file_type": "rationale",
       "source_file": "tests/test_init.py",
-      "source_location": "L32",
+      "source_location": "L37",
       "_origin": "ast",
-      "id": "tests_test_init_rationale_32",
+      "id": "tests_test_init_rationale_37",
       "community": 0,
       "norm_label": "the entry loads cleanly and creates/removes its coordinator on unload."
     },
@@ -7968,11 +8008,51 @@
       "label": "Reloading the entry (e.g. after an options change) succeeds cleanly.",
       "file_type": "rationale",
       "source_file": "tests/test_init.py",
-      "source_location": "L51",
+      "source_location": "L56",
       "_origin": "ast",
-      "id": "tests_test_init_rationale_51",
+      "id": "tests_test_init_rationale_56",
       "community": 0,
       "norm_label": "reloading the entry (e.g. after an options change) succeeds cleanly."
+    },
+    {
+      "label": "The service exists once the entry is loaded, and is torn down on unload.",
+      "file_type": "rationale",
+      "source_file": "tests/test_init.py",
+      "source_location": "L79",
+      "_origin": "ast",
+      "id": "tests_test_init_rationale_79",
+      "community": 0,
+      "norm_label": "the service exists once the entry is loaded, and is torn down on unload."
+    },
+    {
+      "label": "With no `message` field, the notifier is called with the default text,     a fix",
+      "file_type": "rationale",
+      "source_file": "tests/test_init.py",
+      "source_location": "L96",
+      "_origin": "ast",
+      "id": "tests_test_init_rationale_96",
+      "community": 0,
+      "norm_label": "with no `message` field, the notifier is called with the default text,     a fix"
+    },
+    {
+      "label": "A provided `message` is forwarded verbatim instead of the default.",
+      "file_type": "rationale",
+      "source_file": "tests/test_init.py",
+      "source_location": "L120",
+      "_origin": "ast",
+      "id": "tests_test_init_rationale_120",
+      "community": 0,
+      "norm_label": "a provided `message` is forwarded verbatim instead of the default."
+    },
+    {
+      "label": "The service never records irrigation, never touches the balance     ledger, and",
+      "file_type": "rationale",
+      "source_file": "tests/test_init.py",
+      "source_location": "L149",
+      "_origin": "ast",
+      "id": "tests_test_init_rationale_149",
+      "community": 0,
+      "norm_label": "the service never records irrigation, never touches the balance     ledger, and"
     },
     {
       "label": "test_irrigation_log.py",
@@ -9221,7 +9301,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "tests_test_select_full_entry_data",
-      "community": 8,
+      "community": 0,
       "norm_label": "_full_entry_data()"
     },
     {
@@ -9231,7 +9311,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_select_py_any",
-      "community": 8,
+      "community": 0,
       "norm_label": "any"
     },
     {
@@ -9491,7 +9571,7 @@
       "source_location": "L153",
       "_origin": "ast",
       "id": "tests_test_sensor_test_zone_sensor_unique_ids_and_translation_keys",
-      "community": 5,
+      "community": 12,
       "norm_label": "test_zone_sensor_unique_ids_and_translation_keys()"
     },
     {
@@ -9541,7 +9621,7 @@
       "source_location": "L248",
       "_origin": "ast",
       "id": "tests_test_sensor_test_zone_sensors_pending_state_before_any_finalized_day",
-      "community": 12,
+      "community": 5,
       "norm_label": "test_zone_sensors_pending_state_before_any_finalized_day()"
     },
     {
@@ -9641,7 +9721,7 @@
       "source_location": "L154",
       "_origin": "ast",
       "id": "tests_test_sensor_rationale_154",
-      "community": 5,
+      "community": 12,
       "norm_label": "unique_id/translation_key/translation_placeholders are stable and per-zone."
     },
     {
@@ -9671,7 +9751,7 @@
       "source_location": "L251",
       "_origin": "ast",
       "id": "tests_test_sensor_rationale_251",
-      "community": 12,
+      "community": 5,
       "norm_label": "immediately after setup, taw/raw/deficit/irrigation_7d are already known     (th"
     },
     {
@@ -11073,7 +11153,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L19",
+      "source_location": "L30",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_init",
       "target": "custom_components_garden_irrigation_coordinator",
@@ -11084,7 +11164,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L18",
+      "source_location": "L29",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_init",
       "target": "custom_components_garden_irrigation_const",
@@ -11095,7 +11175,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L19",
+      "source_location": "L30",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_init",
       "target": "custom_components_garden_irrigation_coordinator_gardenirrigationcoordinator",
@@ -11105,7 +11185,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L55",
+      "source_location": "L96",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_init",
       "target": "custom_components_garden_irrigation_init_async_reload_entry",
@@ -11115,7 +11195,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L29",
+      "source_location": "L46",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_init",
       "target": "custom_components_garden_irrigation_init_async_setup_entry",
@@ -11125,20 +11205,10 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L43",
+      "source_location": "L82",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_init",
       "target": "custom_components_garden_irrigation_init_async_unload_entry",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "custom_components_garden_irrigation_init_rationale_1",
-      "target": "custom_components_garden_irrigation_init",
       "confidence_score": 1.0
     },
     {
@@ -11149,6 +11219,27 @@
       "source_location": "L23",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify",
+      "target": "custom_components_garden_irrigation_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "custom_components/garden_irrigation/__init__.py",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "custom_components_garden_irrigation_init",
+      "target": "custom_components_garden_irrigation_notify_translate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "custom_components/garden_irrigation/__init__.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "custom_components_garden_irrigation_init_rationale_1",
       "target": "custom_components_garden_irrigation_init",
       "confidence_score": 1.0
     },
@@ -11168,7 +11259,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L31",
+      "source_location": "L48",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_init_async_setup_entry",
       "target": "custom_components_garden_irrigation_coordinator_gardenirrigationcoordinator",
@@ -11179,7 +11270,7 @@
       "context": "argument",
       "confidence": "INFERRED",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L38",
+      "source_location": "L55",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_init_async_setup_entry",
       "target": "custom_components_garden_irrigation_init_async_reload_entry",
@@ -11190,7 +11281,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L29",
+      "source_location": "L46",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_init_async_setup_entry",
       "target": "custom_components_garden_irrigation_init_py_configentry",
@@ -11201,19 +11292,30 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L29",
+      "source_location": "L46",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_init_async_setup_entry",
       "target": "custom_components_garden_irrigation_init_py_homeassistant",
       "confidence_score": 1.0
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "custom_components/garden_irrigation/__init__.py",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "custom_components_garden_irrigation_init_async_setup_entry",
+      "target": "custom_components_garden_irrigation_notify_translate",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L30",
+      "source_location": "L47",
       "weight": 1.0,
-      "source": "custom_components_garden_irrigation_init_rationale_30",
+      "source": "custom_components_garden_irrigation_init_rationale_47",
       "target": "custom_components_garden_irrigation_init_async_setup_entry",
       "confidence_score": 1.0
     },
@@ -11222,7 +11324,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L55",
+      "source_location": "L96",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_init_async_reload_entry",
       "target": "custom_components_garden_irrigation_init_py_homeassistant",
@@ -11233,7 +11335,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L43",
+      "source_location": "L82",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_init_async_unload_entry",
       "target": "custom_components_garden_irrigation_init_py_homeassistant",
@@ -11244,7 +11346,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L55",
+      "source_location": "L96",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_init_async_reload_entry",
       "target": "custom_components_garden_irrigation_init_py_configentry",
@@ -11255,7 +11357,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L43",
+      "source_location": "L82",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_init_async_unload_entry",
       "target": "custom_components_garden_irrigation_init_py_configentry",
@@ -11265,9 +11367,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L44",
+      "source_location": "L83",
       "weight": 1.0,
-      "source": "custom_components_garden_irrigation_init_rationale_44",
+      "source": "custom_components_garden_irrigation_init_rationale_83",
       "target": "custom_components_garden_irrigation_init_async_unload_entry",
       "confidence_score": 1.0
     },
@@ -11275,9 +11377,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/__init__.py",
-      "source_location": "L56",
+      "source_location": "L97",
       "weight": 1.0,
-      "source": "custom_components_garden_irrigation_init_rationale_56",
+      "source": "custom_components_garden_irrigation_init_rationale_97",
       "target": "custom_components_garden_irrigation_init_async_reload_entry",
       "confidence_score": 1.0
     },
@@ -15951,7 +16053,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L9",
+      "source_location": "L12",
       "weight": 1.0,
       "source": "tests_test_init",
       "target": "custom_components_garden_irrigation_const",
@@ -16347,6 +16449,17 @@
       "source_location": "L24",
       "weight": 1.0,
       "source": "tests_test_button",
+      "target": "custom_components_garden_irrigation_coordinator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "tests_test_init",
       "target": "custom_components_garden_irrigation_coordinator",
       "confidence_score": 1.0
     },
@@ -17117,6 +17230,28 @@
       "source": "tests_test_button_test_cycle_state_survives_setup_shutdown_roundtrip",
       "target": "custom_components_garden_irrigation_coordinator_gardenirrigationcoordinator",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "tests_test_init",
+      "target": "custom_components_garden_irrigation_coordinator_gardenirrigationcoordinator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "indirect_call",
+      "context": "argument",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_init.py",
+      "source_location": "L169",
+      "weight": 1.0,
+      "source": "tests_test_init_test_test_telegram_has_no_side_effects_on_irrigation_domain",
+      "target": "custom_components_garden_irrigation_coordinator_gardenirrigationcoordinator"
     },
     {
       "relation": "imports",
@@ -19859,7 +19994,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L97",
+      "source_location": "L101",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify",
       "target": "custom_components_garden_irrigation_notify_language",
@@ -19869,7 +20004,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L107",
+      "source_location": "L111",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify",
       "target": "custom_components_garden_irrigation_notify_notifier",
@@ -19879,7 +20014,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L122",
+      "source_location": "L126",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify",
       "target": "custom_components_garden_irrigation_notify_persistentnotificationnotifier",
@@ -19889,7 +20024,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L156",
+      "source_location": "L160",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify",
       "target": "custom_components_garden_irrigation_notify_telegramnotifier",
@@ -19899,7 +20034,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L101",
+      "source_location": "L105",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify",
       "target": "custom_components_garden_irrigation_notify_translate",
@@ -19941,6 +20076,17 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "tests_test_init",
+      "target": "custom_components_garden_irrigation_notify",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "tests/test_notify.py",
       "source_location": "L23",
       "weight": 1.0,
@@ -19953,7 +20099,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L97",
+      "source_location": "L101",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify_language",
       "target": "custom_components_garden_irrigation_notify_py_homeassistant",
@@ -19964,7 +20110,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L103",
+      "source_location": "L107",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify_translate",
       "target": "custom_components_garden_irrigation_notify_language",
@@ -19975,7 +20121,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L129",
+      "source_location": "L133",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify_persistentnotificationnotifier_init",
       "target": "custom_components_garden_irrigation_notify_py_homeassistant",
@@ -19986,7 +20132,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L172",
+      "source_location": "L176",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify_telegramnotifier_init",
       "target": "custom_components_garden_irrigation_notify_py_homeassistant",
@@ -19997,7 +20143,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L101",
+      "source_location": "L105",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify_translate",
       "target": "custom_components_garden_irrigation_notify_py_homeassistant",
@@ -20007,9 +20153,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L102",
+      "source_location": "L106",
       "weight": 1.0,
-      "source": "custom_components_garden_irrigation_notify_rationale_102",
+      "source": "custom_components_garden_irrigation_notify_rationale_106",
       "target": "custom_components_garden_irrigation_notify_translate",
       "confidence_score": 1.0
     },
@@ -20018,7 +20164,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L101",
+      "source_location": "L105",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify_translate",
       "target": "custom_components_garden_irrigation_notify_py_any",
@@ -20094,6 +20240,28 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "tests_test_init",
+      "target": "custom_components_garden_irrigation_notify_translate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L110",
+      "weight": 1.0,
+      "source": "tests_test_init_test_test_telegram_uses_default_message_and_notifier",
+      "target": "custom_components_garden_irrigation_notify_translate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "tests/test_notify.py",
       "source_location": "L23",
       "weight": 1.0,
@@ -20139,7 +20307,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L178",
+      "source_location": "L182",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify_telegramnotifier_target_service",
       "target": "custom_components_garden_irrigation_notify_py_any",
@@ -20149,7 +20317,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L107",
+      "source_location": "L111",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify_notifier",
       "target": "abc",
@@ -20159,7 +20327,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L111",
+      "source_location": "L115",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify_notifier",
       "target": "custom_components_garden_irrigation_notify_notifier_async_send",
@@ -20169,7 +20337,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L122",
+      "source_location": "L126",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify_persistentnotificationnotifier",
       "target": "custom_components_garden_irrigation_notify_notifier",
@@ -20179,9 +20347,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L108",
+      "source_location": "L112",
       "weight": 1.0,
-      "source": "custom_components_garden_irrigation_notify_rationale_108",
+      "source": "custom_components_garden_irrigation_notify_rationale_112",
       "target": "custom_components_garden_irrigation_notify_notifier",
       "confidence_score": 1.0
     },
@@ -20189,7 +20357,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L156",
+      "source_location": "L160",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify_telegramnotifier",
       "target": "custom_components_garden_irrigation_notify_notifier",
@@ -20199,9 +20367,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L119",
+      "source_location": "L123",
       "weight": 1.0,
-      "source": "custom_components_garden_irrigation_notify_rationale_119",
+      "source": "custom_components_garden_irrigation_notify_rationale_123",
       "target": "custom_components_garden_irrigation_notify_notifier_async_send",
       "confidence_score": 1.0
     },
@@ -20209,7 +20377,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L133",
+      "source_location": "L137",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify_persistentnotificationnotifier",
       "target": "custom_components_garden_irrigation_notify_persistentnotificationnotifier_async_send",
@@ -20219,7 +20387,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L129",
+      "source_location": "L133",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify_persistentnotificationnotifier",
       "target": "custom_components_garden_irrigation_notify_persistentnotificationnotifier_init",
@@ -20229,9 +20397,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L123",
+      "source_location": "L127",
       "weight": 1.0,
-      "source": "custom_components_garden_irrigation_notify_rationale_123",
+      "source": "custom_components_garden_irrigation_notify_rationale_127",
       "target": "custom_components_garden_irrigation_notify_persistentnotificationnotifier",
       "confidence_score": 1.0
     },
@@ -20240,7 +20408,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L176",
+      "source_location": "L180",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify_telegramnotifier_init",
       "target": "custom_components_garden_irrigation_notify_persistentnotificationnotifier",
@@ -20294,9 +20462,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L130",
+      "source_location": "L134",
       "weight": 1.0,
-      "source": "custom_components_garden_irrigation_notify_rationale_130",
+      "source": "custom_components_garden_irrigation_notify_rationale_134",
       "target": "custom_components_garden_irrigation_notify_persistentnotificationnotifier_init",
       "confidence_score": 1.0
     },
@@ -20304,9 +20472,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L141",
+      "source_location": "L145",
       "weight": 1.0,
-      "source": "custom_components_garden_irrigation_notify_rationale_141",
+      "source": "custom_components_garden_irrigation_notify_rationale_145",
       "target": "custom_components_garden_irrigation_notify_persistentnotificationnotifier_async_send",
       "confidence_score": 1.0
     },
@@ -20314,9 +20482,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L157",
+      "source_location": "L161",
       "weight": 1.0,
-      "source": "custom_components_garden_irrigation_notify_rationale_157",
+      "source": "custom_components_garden_irrigation_notify_rationale_161",
       "target": "custom_components_garden_irrigation_notify_telegramnotifier",
       "confidence_score": 1.0
     },
@@ -20324,7 +20492,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L197",
+      "source_location": "L201",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify_telegramnotifier",
       "target": "custom_components_garden_irrigation_notify_telegramnotifier_async_send",
@@ -20334,7 +20502,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L172",
+      "source_location": "L176",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify_telegramnotifier",
       "target": "custom_components_garden_irrigation_notify_telegramnotifier_init",
@@ -20344,7 +20512,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L178",
+      "source_location": "L182",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify_telegramnotifier",
       "target": "custom_components_garden_irrigation_notify_telegramnotifier_target_service",
@@ -20442,9 +20610,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L173",
+      "source_location": "L177",
       "weight": 1.0,
-      "source": "custom_components_garden_irrigation_notify_rationale_173",
+      "source": "custom_components_garden_irrigation_notify_rationale_177",
       "target": "custom_components_garden_irrigation_notify_telegramnotifier_init",
       "confidence_score": 1.0
     },
@@ -20453,7 +20621,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L172",
+      "source_location": "L176",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify_telegramnotifier_init",
       "target": "custom_components_garden_irrigation_notify_py_configentry",
@@ -20463,9 +20631,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L179",
+      "source_location": "L183",
       "weight": 1.0,
-      "source": "custom_components_garden_irrigation_notify_rationale_179",
+      "source": "custom_components_garden_irrigation_notify_rationale_183",
       "target": "custom_components_garden_irrigation_notify_telegramnotifier_target_service",
       "confidence_score": 1.0
     },
@@ -20474,7 +20642,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L206",
+      "source_location": "L210",
       "weight": 1.0,
       "source": "custom_components_garden_irrigation_notify_telegramnotifier_async_send",
       "target": "custom_components_garden_irrigation_notify_telegramnotifier_target_service",
@@ -20484,9 +20652,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "custom_components/garden_irrigation/notify.py",
-      "source_location": "L205",
+      "source_location": "L209",
       "weight": 1.0,
-      "source": "custom_components_garden_irrigation_notify_rationale_205",
+      "source": "custom_components_garden_irrigation_notify_rationale_209",
       "target": "custom_components_garden_irrigation_notify_telegramnotifier_async_send",
       "confidence_score": 1.0
     },
@@ -27611,7 +27779,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L11",
+      "source_location": "L16",
       "weight": 1.0,
       "source": "tests_test_init",
       "target": "tests_const",
@@ -27852,7 +28020,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L11",
+      "source_location": "L16",
       "weight": 1.0,
       "source": "tests_test_init",
       "target": "tests_const_setup_mock_weather_states",
@@ -27863,7 +28031,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L52",
+      "source_location": "L57",
       "weight": 1.0,
       "source": "tests_test_init_test_reload_entry",
       "target": "tests_const_setup_mock_weather_states",
@@ -27874,9 +28042,53 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L33",
+      "source_location": "L38",
       "weight": 1.0,
       "source": "tests_test_init_test_setup_and_unload_entry",
+      "target": "tests_const_setup_mock_weather_states",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L121",
+      "weight": 1.0,
+      "source": "tests_test_init_test_test_telegram_forwards_custom_message",
+      "target": "tests_const_setup_mock_weather_states",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L151",
+      "weight": 1.0,
+      "source": "tests_test_init_test_test_telegram_has_no_side_effects_on_irrigation_domain",
+      "target": "tests_const_setup_mock_weather_states",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L80",
+      "weight": 1.0,
+      "source": "tests_test_init_test_test_telegram_service_registered_and_removed_with_entry",
+      "target": "tests_const_setup_mock_weather_states",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L99",
+      "weight": 1.0,
+      "source": "tests_test_init_test_test_telegram_uses_default_message_and_notifier",
       "target": "tests_const_setup_mock_weather_states",
       "confidence_score": 1.0
     },
@@ -28291,7 +28503,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L11",
+      "source_location": "L16",
       "weight": 1.0,
       "source": "tests_test_init",
       "target": "tests_const_user_step_input",
@@ -28302,7 +28514,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L23",
+      "source_location": "L28",
       "weight": 1.0,
       "source": "tests_test_init_full_entry_data",
       "target": "tests_const_user_step_input",
@@ -28631,7 +28843,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L11",
+      "source_location": "L16",
       "weight": 1.0,
       "source": "tests_test_init",
       "target": "tests_const_rain_step_input",
@@ -28642,7 +28854,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L24",
+      "source_location": "L29",
       "weight": 1.0,
       "source": "tests_test_init_full_entry_data",
       "target": "tests_const_rain_step_input",
@@ -28927,7 +29139,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L11",
+      "source_location": "L16",
       "weight": 1.0,
       "source": "tests_test_init",
       "target": "tests_const_soil_step_input",
@@ -28938,7 +29150,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L25",
+      "source_location": "L30",
       "weight": 1.0,
       "source": "tests_test_init_full_entry_data",
       "target": "tests_const_soil_step_input",
@@ -29223,7 +29435,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L11",
+      "source_location": "L16",
       "weight": 1.0,
       "source": "tests_test_init",
       "target": "tests_const_zones_step_input",
@@ -29234,7 +29446,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L26",
+      "source_location": "L31",
       "weight": 1.0,
       "source": "tests_test_init_full_entry_data",
       "target": "tests_const_zones_step_input",
@@ -29519,7 +29731,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L11",
+      "source_location": "L16",
       "weight": 1.0,
       "source": "tests_test_init",
       "target": "tests_const_telegram_step_input",
@@ -29530,7 +29742,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L27",
+      "source_location": "L32",
       "weight": 1.0,
       "source": "tests_test_init_full_entry_data",
       "target": "tests_const_telegram_step_input",
@@ -32285,7 +32497,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L21",
+      "source_location": "L26",
       "weight": 1.0,
       "source": "tests_test_init",
       "target": "tests_test_init_full_entry_data",
@@ -32295,7 +32507,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L50",
+      "source_location": "L55",
       "weight": 1.0,
       "source": "tests_test_init",
       "target": "tests_test_init_test_reload_entry",
@@ -32305,10 +32517,50 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L31",
+      "source_location": "L36",
       "weight": 1.0,
       "source": "tests_test_init",
       "target": "tests_test_init_test_setup_and_unload_entry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L119",
+      "weight": 1.0,
+      "source": "tests_test_init",
+      "target": "tests_test_init_test_test_telegram_forwards_custom_message",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L146",
+      "weight": 1.0,
+      "source": "tests_test_init",
+      "target": "tests_test_init_test_test_telegram_has_no_side_effects_on_irrigation_domain",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "tests_test_init",
+      "target": "tests_test_init_test_test_telegram_service_registered_and_removed_with_entry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L93",
+      "weight": 1.0,
+      "source": "tests_test_init",
+      "target": "tests_test_init_test_test_telegram_uses_default_message_and_notifier",
       "confidence_score": 1.0
     },
     {
@@ -32326,7 +32578,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L53",
+      "source_location": "L58",
       "weight": 1.0,
       "source": "tests_test_init_test_reload_entry",
       "target": "tests_test_init_full_entry_data",
@@ -32337,9 +32589,53 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L34",
+      "source_location": "L39",
       "weight": 1.0,
       "source": "tests_test_init_test_setup_and_unload_entry",
+      "target": "tests_test_init_full_entry_data",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L122",
+      "weight": 1.0,
+      "source": "tests_test_init_test_test_telegram_forwards_custom_message",
+      "target": "tests_test_init_full_entry_data",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L152",
+      "weight": 1.0,
+      "source": "tests_test_init_test_test_telegram_has_no_side_effects_on_irrigation_domain",
+      "target": "tests_test_init_full_entry_data",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L81",
+      "weight": 1.0,
+      "source": "tests_test_init_test_test_telegram_service_registered_and_removed_with_entry",
+      "target": "tests_test_init_full_entry_data",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L100",
+      "weight": 1.0,
+      "source": "tests_test_init_test_test_telegram_uses_default_message_and_notifier",
       "target": "tests_test_init_full_entry_data",
       "confidence_score": 1.0
     },
@@ -32347,9 +32643,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L32",
+      "source_location": "L37",
       "weight": 1.0,
-      "source": "tests_test_init_rationale_32",
+      "source": "tests_test_init_rationale_37",
       "target": "tests_test_init_test_setup_and_unload_entry",
       "confidence_score": 1.0
     },
@@ -32358,7 +32654,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L31",
+      "source_location": "L36",
       "weight": 1.0,
       "source": "tests_test_init_test_setup_and_unload_entry",
       "target": "tests_test_init_py_homeassistant",
@@ -32369,9 +32665,53 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L50",
+      "source_location": "L55",
       "weight": 1.0,
       "source": "tests_test_init_test_reload_entry",
+      "target": "tests_test_init_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L119",
+      "weight": 1.0,
+      "source": "tests_test_init_test_test_telegram_forwards_custom_message",
+      "target": "tests_test_init_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L146",
+      "weight": 1.0,
+      "source": "tests_test_init_test_test_telegram_has_no_side_effects_on_irrigation_domain",
+      "target": "tests_test_init_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "tests_test_init_test_test_telegram_service_registered_and_removed_with_entry",
+      "target": "tests_test_init_py_homeassistant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L93",
+      "weight": 1.0,
+      "source": "tests_test_init_test_test_telegram_uses_default_message_and_notifier",
       "target": "tests_test_init_py_homeassistant",
       "confidence_score": 1.0
     },
@@ -32379,10 +32719,50 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_init.py",
-      "source_location": "L51",
+      "source_location": "L56",
       "weight": 1.0,
-      "source": "tests_test_init_rationale_51",
+      "source": "tests_test_init_rationale_56",
       "target": "tests_test_init_test_reload_entry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L79",
+      "weight": 1.0,
+      "source": "tests_test_init_rationale_79",
+      "target": "tests_test_init_test_test_telegram_service_registered_and_removed_with_entry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L96",
+      "weight": 1.0,
+      "source": "tests_test_init_rationale_96",
+      "target": "tests_test_init_test_test_telegram_uses_default_message_and_notifier",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L120",
+      "weight": 1.0,
+      "source": "tests_test_init_rationale_120",
+      "target": "tests_test_init_test_test_telegram_forwards_custom_message",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_init.py",
+      "source_location": "L149",
+      "weight": 1.0,
+      "source": "tests_test_init_rationale_149",
+      "target": "tests_test_init_test_test_telegram_has_no_side_effects_on_irrigation_domain",
       "confidence_score": 1.0
     },
     {
@@ -38343,5 +38723,5 @@
       "source_file": "CHANGELOG.md"
     }
   ],
-  "built_at_commit": "67d53e86ea1332debf151516b9ad9fa7a88280a8"
+  "built_at_commit": "53e7462e37b8f4279e06523e61a910b18ab9a466"
 }

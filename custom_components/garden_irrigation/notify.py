@@ -91,6 +91,10 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "en": "Strong wind: avg {avg:.1f} km/h, gust {gust:.1f} km/h",
         "it": "Vento forte: media {avg:.1f} km/h, raffica {gust:.1f} km/h",
     },
+    "test_telegram_default": {
+        "en": "Garden Irrigation: Telegram test succeeded.",
+        "it": "Garden Irrigation: test Telegram riuscito.",
+    },
 }
 
 

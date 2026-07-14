@@ -7,16 +7,30 @@ adds the `select` (mode, active_cycle_zone) and `button` (start/end cycle,
 start/finish calibration) platforms. All of these read from/mutate state
 started/stopped by `coordinator.async_setup`/`async_shutdown`, so this setup
 contract itself is otherwise unchanged.
+
+`test_telegram` (this milestone) is a diagnostic-only service: it sends a
+message through the already-existing `coordinator.notifier` (see notify.py -
+degrades to a persistent notification and never raises on its own) and
+touches nothing else - no irrigation event, no balance/deficit change, no
+coordinator refresh. It is registered/removed here rather than inside any
+domain engine module (irrigation_log.py etc.) since it isn't owned by one.
 """
 
 from __future__ import annotations
 
+import logging
+
+import voluptuous as vol
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, ServiceCall
+from homeassistant.helpers import config_validation as cv
 
 from .const import DOMAIN
 from .coordinator import GardenIrrigationCoordinator
+from .notify import translate
+
+_LOGGER = logging.getLogger(__name__)
 
 PLATFORMS: list[Platform] = [
     Platform.SENSOR,
@@ -24,6 +38,9 @@ PLATFORMS: list[Platform] = [
     Platform.SELECT,
     Platform.BUTTON,
 ]
+
+SERVICE_TEST_TELEGRAM = "test_telegram"
+TEST_TELEGRAM_SCHEMA = vol.Schema({vol.Optional("message"): cv.string})
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -37,6 +54,28 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(entry.add_update_listener(async_reload_entry))
 
+    if not hass.services.has_service(DOMAIN, SERVICE_TEST_TELEGRAM):
+
+        async def _async_handle_test_telegram(call: ServiceCall) -> None:
+            """Send a one-off test message via the notifier - nothing else."""
+            target: GardenIrrigationCoordinator = hass.data[DOMAIN][entry.entry_id]
+            message = call.data.get("message") or translate(
+                hass, "test_telegram_default"
+            )
+            _LOGGER.info("Sending Garden Irrigation Telegram test notification")
+            await target.notifier.async_send(
+                message,
+                title="Garden Irrigation",
+                notification_id="garden_irrigation_test_telegram",
+            )
+
+        hass.services.async_register(
+            DOMAIN,
+            SERVICE_TEST_TELEGRAM,
+            _async_handle_test_telegram,
+            schema=TEST_TELEGRAM_SCHEMA,
+        )
+
     return True
 
 
@@ -49,6 +88,8 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         hass.data[DOMAIN].pop(entry.entry_id)
         if not hass.data[DOMAIN]:
             hass.data.pop(DOMAIN)
+            if hass.services.has_service(DOMAIN, SERVICE_TEST_TELEGRAM):
+                hass.services.async_remove(DOMAIN, SERVICE_TEST_TELEGRAM)
     return unload_ok
 
 

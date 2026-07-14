@@ -180,6 +180,16 @@
           "description": "Optional: repeating a call with the same key is a no-op (protects against accidental double submission)."
         }
       }
+    },
+    "test_telegram": {
+      "name": "Send Telegram test",
+      "description": "Send a one-off test message through the configured notifier (Telegram, or its persistent-notification fallback) to verify delivery. Does not record any irrigation or change the water balance.",
+      "fields": {
+        "message": {
+          "name": "Message",
+          "description": "Optional custom text; a default test message is used if left empty."
+        }
+      }
     }
   },
   "issues": {
