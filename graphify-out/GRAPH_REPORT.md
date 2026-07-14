@@ -1,16 +1,16 @@
 # Graph Report - garden-irrigation  (2026-07-14)
 
 ## Corpus Check
-- 53 files · ~42,768 words
+- 53 files · ~43,404 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1091 nodes · 2573 edges · 68 communities (47 shown, 21 thin omitted)
-- Extraction: 93% EXTRACTED · 7% INFERRED · 0% AMBIGUOUS · INFERRED: 190 edges (avg confidence: 0.59)
+- 1099 nodes · 2601 edges · 69 communities (47 shown, 22 thin omitted)
+- Extraction: 93% EXTRACTED · 7% INFERRED · 0% AMBIGUOUS · INFERRED: 191 edges (avg confidence: 0.59)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `67d53e86`
+- Built from commit: `53e7462e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -80,12 +80,13 @@
 - Allen, Pereira, Raes, Smith (1998) — FAO Irrigation and Drainage Paper 56
 - Docs Index README
 - Bug Report Template
+- .async_shutdown
 
 ## God Nodes (most connected - your core abstractions)
-1. `GardenIrrigationCoordinator` - 116 edges
+1. `GardenIrrigationCoordinator` - 118 edges
 2. `ZoneBalanceResult` - 46 edges
-3. `GardenIrrigationStore` - 42 edges
-4. `setup_mock_weather_states()` - 40 edges
+3. `setup_mock_weather_states()` - 44 edges
+4. `GardenIrrigationStore` - 42 edges
 5. `_coordinator()` - 34 edges
 6. `WeatherAggregator` - 32 edges
 7. `user_step_input()` - 32 edges
@@ -96,13 +97,13 @@
 ## Surprising Connections (you probably didn't know these)
 - `Validate Workflow (hassfest/HACS)` --semantically_similar_to--> `Pre-commit Configuration`  [INFERRED] [semantically similar]
   .github/workflows/validate.yaml → .pre-commit-config.yaml
+- `test_test_telegram_has_no_side_effects_on_irrigation_domain()` --indirect_call--> `GardenIrrigationCoordinator`  [INFERRED]
+  tests/test_init.py → custom_components/garden_irrigation/coordinator.py
+- `test_zone_sensor_unique_ids_and_translation_keys()` --indirect_call--> `EtcZoneSensor`  [INFERRED]
+  tests/test_sensor.py → custom_components/garden_irrigation/sensor.py
 - `test_zone_sensor_units_and_state_classes()` --indirect_call--> `EtcZoneSensor`  [INFERRED]
   tests/test_sensor.py → custom_components/garden_irrigation/sensor.py
-- `test_zone_sensor_units_and_state_classes()` --indirect_call--> `DeficitZoneSensor`  [INFERRED]
-  tests/test_sensor.py → custom_components/garden_irrigation/sensor.py
-- `test_zone_sensor_units_and_state_classes()` --indirect_call--> `TawZoneSensor`  [INFERRED]
-  tests/test_sensor.py → custom_components/garden_irrigation/sensor.py
-- `test_zone_sensor_units_and_state_classes()` --indirect_call--> `RawZoneSensor`  [INFERRED]
+- `test_zone_sensor_unique_ids_and_translation_keys()` --indirect_call--> `DeficitZoneSensor`  [INFERRED]
   tests/test_sensor.py → custom_components/garden_irrigation/sensor.py
 
 ## Import Cycles
@@ -115,43 +116,43 @@
 - **Cross-linked Project Documentation Set** — readme_readme, docs_readme_docs_readme, docs_agronomy_agronomy_doc, docs_calibration_calibration_doc, docs_fao56_fao56_doc, claude_claude_md [EXTRACTED 1.00]
 - **Milestone 9 Feature Set (modes, calibration override, declared cycle)** — claude_modes_calibration_monitoring, claude_declared_manual_cycle, docs_calibration_wh51_manual_override, changelog_milestone_9_modes_calibration [EXTRACTED 1.00]
 
-## Communities (68 total, 21 thin omitted)
+## Communities (69 total, 22 thin omitted)
 
 ### Community 0 - "Diagnostics & Test Fixtures"
-Cohesion: 0.08
-Nodes (53): async_get_config_entry_diagnostics(), Any, ConfigEntry, HomeAssistant, Return diagnostics for a config entry, with Telegram target redacted., Any, rain_step_input(), Shared mock entity ids and step-input builders for garden_irrigation tests. (+45 more)
+Cohesion: 0.07
+Nodes (63): async_get_config_entry_diagnostics(), Any, ConfigEntry, HomeAssistant, Return diagnostics for a config entry, with Telegram target redacted., Any, rain_step_input(), Shared mock entity ids and step-input builders for garden_irrigation tests. (+55 more)
 
 ### Community 1 - "Button Platform (Cycle & Calibration)"
-Cohesion: 0.07
-Nodes (46): ButtonEntity, async_setup_entry(), _CalibrationOverrideButton, EndCycleButton, FinishCalibrationButton, AddEntitiesCallback, Any, ConfigEntry (+38 more)
+Cohesion: 0.06
+Nodes (57): ButtonEntity, async_setup_entry(), _CalibrationOverrideButton, EndCycleButton, FinishCalibrationButton, AddEntitiesCallback, Any, ConfigEntry (+49 more)
 
 ### Community 2 - "Water Balance Engine"
-Cohesion: 0.12
-Nodes (31): Per-zone agronomy parameters (options-flow configurable in a later milestone)., Total Available Water [mm]., Readily Available Water [mm]., ZoneAgronomyParams, _engine(), Any, HomeAssistant, Tests for the garden_irrigation per-zone water balance engine (Milestone 4). (+23 more)
+Cohesion: 0.05
+Nodes (54): BalanceEngine, _IrrigationRecord, _local_day_bounds(), Any, ConfigEntry, date, datetime, HomeAssistant (+46 more)
 
 ### Community 3 - "Binary Sensor Platform"
 Cohesion: 0.07
-Nodes (50): BinarySensorEntity, async_setup_entry(), IrrigationInProgressSensor, NeedsIrrigationZoneSensor, AddEntitiesCallback, Any, ConfigEntry, HomeAssistant (+42 more)
+Nodes (53): BinarySensorEntity, async_setup_entry(), IrrigationInProgressSensor, NeedsIrrigationZoneSensor, AddEntitiesCallback, Any, ConfigEntry, HomeAssistant (+45 more)
 
 ### Community 4 - "FAO-56 ET0 Engine"
 Cohesion: 0.07
 Nodes (47): compute_et0(), _extraterrestrial_radiation_mj(), _incomplete_result(), _net_longwave_radiation_mj(), _pressure_from_altitude_kpa(), _psychrometric_constant(), date, FAO-56 Penman-Monteith daily reference evapotranspiration (ET0) engine.  Milesto (+39 more)
 
 ### Community 5 - "Zone Sensors (Deficit & Rain)"
-Cohesion: 0.13
-Nodes (30): GardenIrrigationEntity, Base entity: single shared device, entity-only names (has_entity_name)., ET0Result, Daily ET0 plus every intermediate FAO-56 term, for diagnosis and tests.      Whe, IrrigationAggregate, A derived (never persisted) sum over a subset of the event log., async_setup_entry(), DeficitZoneSensor (+22 more)
+Cohesion: 0.10
+Nodes (31): Outcome of one `process_daily_balance` call for a single zone/day., ZoneBalanceResult, ET0Result, Daily ET0 plus every intermediate FAO-56 term, for diagnosis and tests.      Whe, IrrigationAggregate, A derived (never persisted) sum over a subset of the event log., async_setup_entry(), DeficitZoneSensor (+23 more)
 
 ### Community 6 - "Coordinator: Operational State"
-Cohesion: 0.11
-Nodes (13): GardenIrrigationCoordinator, Any, Start the weather listeners, restore the balance, register the         record_ir, Set the operational mode (calibration/monitoring) - UX/status only,         neve, Set which zone `async_start_cycle` will target next., Declare a manual cycle active for `selected_cycle_zone`, now.          Purely de, Clear the declared-active-cycle state., Stop the weather aggregator's listeners and force a final flush.          Extend (+5 more)
+Cohesion: 0.08
+Nodes (23): GardenIrrigationCoordinator, Any, Start the weather listeners, restore the balance, register the         record_ir, Set the operational mode (calibration/monitoring) - UX/status only,         neve, Set which zone `async_start_cycle` will target next., Declare a manual cycle active for `selected_cycle_zone`, now.          Purely de, Clear the declared-active-cycle state., Stop the weather aggregator's listeners and force a final flush.          Extend (+15 more)
 
 ### Community 7 - "Scheduler Tests"
 Cohesion: 0.15
 Nodes (42): HomeAssistant, Register mock states for every entity a full config flow run needs., setup_mock_weather_states(), _coordinator(), _issue(), Any, HomeAssistant, IssueEntry (+34 more)
 
 ### Community 8 - "Select Platform (Mode & Cycle Zone)"
-Cohesion: 0.09
-Nodes (36): ActiveCycleZoneSelect, async_setup_entry(), ModeSelect, AddEntitiesCallback, ConfigEntry, HomeAssistant, Select platform for garden_irrigation.  Milestone 9 scope only:   - `select.mode, Set up the garden_irrigation select platform. (+28 more)
+Cohesion: 0.08
+Nodes (37): Constants for the garden_irrigation integration.  Config-flow keys and defaults,, Coordinator for garden_irrigation.  Milestone 2 added the WeatherAggregator (acc, Diagnostics support for garden_irrigation., ActiveCycleZoneSelect, async_setup_entry(), ModeSelect, AddEntitiesCallback, ConfigEntry (+29 more)
 
 ### Community 9 - "Config Flow"
 Cohesion: 0.08
@@ -162,40 +163,40 @@ Cohesion: 0.20
 Nodes (10): Declared Manual Cycle In Progress, Rationale: Estimates vs Measurements Labeling, Modes: calibration / monitoring (select.mode), Golden Rule: v1 Never Actuates Hardware, record_irrigation Action, services.yaml (record_irrigation schema), Garden Irrigation Lovelace Dashboard, Weekly Irrigation Cap (30mm default) (+2 more)
 
 ### Community 11 - "Scheduler: Advisory Monitors"
-Cohesion: 0.07
-Nodes (35): async_reload_entry(), async_setup_entry(), async_unload_entry(), ConfigEntry, HomeAssistant, The garden_irrigation integration.  Milestone 2: entry setup/unload/reload wirin, Set up garden_irrigation from a config entry., Unload a config entry and its platforms. (+27 more)
+Cohesion: 0.12
+Nodes (22): _battery_entity_id(), _entity_age(), _numeric_state(), Any, datetime, HomeAssistant, _rain_during_cycle_message(), Scheduler for garden_irrigation.  Milestone 7 added two daily local-time trigger (+14 more)
 
 ### Community 12 - "ET0 Sensor & Tests"
-Cohesion: 0.12
-Nodes (30): DataQualitySensor, Always available in Milestone 1 (never unavailable)., Return `not_configured` pre-refresh, `initializing` afterwards., Diagnostic sensor reporting overall data-quality status.      Milestone 1: alway, _full_entry_data(), Any, HomeAssistant, Tests for the garden_irrigation sensor platform (Milestones 1 and 5). (+22 more)
+Cohesion: 0.14
+Nodes (28): Et0DailySensor, Daily FAO-56 reference evapotranspiration for the current in-progress day., _full_entry_data(), Any, HomeAssistant, Tests for the garden_irrigation sensor platform (Milestones 1 and 5)., Every sensor described by the plan's data-backed subset exists after setup., unique_id/translation_key/translation_placeholders are stable and per-zone. (+20 more)
 
 ### Community 13 - "Recommendation Engine Tests"
 Cohesion: 0.23
 Nodes (28): _balance_result(), _coordinator(), Any, date, HomeAssistant, Tests for the garden_irrigation recommendation engine (Milestone 7)., A repeat (idempotent-skip) balance result is still a READY final., test_block_plan_single_block_under_15_minutes() (+20 more)
 
 ### Community 14 - "Telegram Notifier & Tests"
-Cohesion: 0.08
-Nodes (44): ABC, _language(), Notifier, PersistentNotificationNotifier, Any, ConfigEntry, HomeAssistant, Notifier abstraction for garden_irrigation.  Milestone 8 scope only: an abstract (+36 more)
+Cohesion: 0.18
+Nodes (26): Sends via the configured Telegram target; degrades on failure/misconfiguration., TelegramNotifier, _issue(), Any, HomeAssistant, IssueEntry, Tests for the garden_irrigation notifier abstraction (Milestone 8)., If both target styles are (inconsistently) present, entity_id wins. (+18 more)
 
 ### Community 15 - "Recommendation: Block Plan & WH51"
-Cohesion: 0.17
-Nodes (13): _classify_wh51(), _current_taw_raw_mm(), datetime, TAW/RAW from the same config-derived constants balance.py's     ZoneAgronomyPara, One explainable, read-only recommendation for a single zone., Return (status, calibrated) for one WH51 reading given its baseline., Builds explainable, read-only irrigation recommendations per zone.      Not an e, Widen the observed [min, max] baseline with the current reading.          Sample (+5 more)
+Cohesion: 0.21
+Nodes (11): _classify_wh51(), datetime, One explainable, read-only recommendation for a single zone., Return (status, calibrated) for one WH51 reading given its baseline., Builds explainable, read-only irrigation recommendations per zone.      Not an e, Widen the observed [min, max] baseline with the current reading.          Sample, Build both the final and preview recommendation for `zone_id`., Project "if today ended right now" without touching balance.py.          Uses th (+3 more)
 
 ### Community 16 - "Irrigation Event Log"
-Cohesion: 0.11
-Nodes (15): IrrigationEvent, IrrigationLog, Any, datetime, One persisted, user-recorded irrigation cycle., Serialize for Store persistence., Restore from a previously persisted dict (see to_dict)., Owns the manual-cycle event log and the `record_irrigation` service.      Not an (+7 more)
+Cohesion: 0.13
+Nodes (12): IrrigationEvent, IrrigationLog, Any, One persisted, user-recorded irrigation cycle., Serialize for Store persistence., Restore from a previously persisted dict (see to_dict)., Owns the manual-cycle event log and the `record_irrigation` service.      Not an, Restore persisted events and register the recording service. (+4 more)
 
 ### Community 17 - "Repair Issues"
 Cohesion: 0.16
 Nodes (21): async_clear_all_issues(), async_clear_telegram_issues(), async_clear_weather_stale_issue(), async_clear_wh51_stale_issue(), async_create_telegram_not_configured_issue(), async_create_telegram_send_failed_issue(), async_create_telegram_target_invalid_issue(), async_create_weather_stale_issue() (+13 more)
 
 ### Community 18 - "Notifier Abstraction"
-Cohesion: 0.12
-Nodes (19): _local_day_bounds(), date, Per-zone water balance engine for garden_irrigation.  Milestone 4 scope only: ET, Local [00:00:00.000000, 23:59:59.999999] bounds for a calendar day., Report current stored state for `day` without mutating anything., Report current state for `day` without attempting to process it.          Use th, Apply (once, idempotently) the completed day's balance for one zone.          `e, Outcome of one `process_daily_balance` call for a single zone/day. (+11 more)
+Cohesion: 0.13
+Nodes (15): ABC, _language(), Notifier, PersistentNotificationNotifier, ConfigEntry, HomeAssistant, Notifier abstraction for garden_irrigation.  Milestone 8 scope only: an abstract, Render the IT/EN template `key` (see `_MESSAGES`) with `kwargs`. (+7 more)
 
 ### Community 19 - "Weather: Rain & Time-Weighted Accumulators"
-Cohesion: 0.18
-Nodes (11): datetime, Running min/max and a time-weighted sum (sum of value * dt_seconds) for one fiel, Close the previous interval up to `ts`, then open a new one at `value`., Time-weighted mean including the still-open interval up to `as_of`., Time integral in MJ/m² including the still-open interval up to `as_of`., Close the day at `midnight`, then reset, carrying the last known         value f, Non-destructive view of the current (in-progress) day, as of `as_of`., _TimeWeightedAccumulator (+3 more)
+Cohesion: 0.15
+Nodes (12): datetime, Running min/max and a time-weighted sum (sum of value * dt_seconds) for one fiel, Close the previous interval up to `ts`, then open a new one at `value`., Time-weighted mean including the still-open interval up to `as_of`., Time integral in MJ/m² including the still-open interval up to `as_of`., Close the day at `midnight`, then reset, carrying the last known         value f, Process one raw reading, updating daily_mm per the reset rules above., Non-destructive view of the current (in-progress) day, as of `as_of`. (+4 more)
 
 ### Community 20 - "Weather: Snapshot Persistence"
 Cohesion: 0.14
@@ -206,12 +207,12 @@ Cohesion: 0.15
 Nodes (10): ConfigEntry, date, HomeAssistant, Return today's total and reset it; the raw baseline is NOT reset         (the ph, Owns the daily weather accumulators for one config entry.      Not an entity: th, Build the entity map from the config entry; accumulators start empty., Stop listening and force an immediate (non-debounced) persistence flush., Finalize the closed day into history, reset accumulators, force-flush. (+2 more)
 
 ### Community 22 - "Irrigation Log: Aggregates"
-Cohesion: 0.25
-Nodes (7): _area_m2(), _mm_per_minute(), ConfigEntry, HomeAssistant, Return the configured area for `zone_id` in square meters., Build the log with an empty event list; nothing is persisted yet., Return the configured mm/minute for `zone_id`+`source`, or None if unset.
+Cohesion: 0.22
+Nodes (8): _area_m2(), _mm_per_minute(), ConfigEntry, HomeAssistant, Manual irrigation-cycle recording and persistence for garden_irrigation.  Milest, Return the configured area for `zone_id` in square meters., Build the log with an empty event list; nothing is persisted yet., Return the configured mm/minute for `zone_id`+`source`, or None if unset.
 
 ### Community 23 - "Recommendation Engine Core"
-Cohesion: 0.20
-Nodes (7): Any, Per-zone WH51 calibration baseline (device-relative, not VWC)., Serialize for Store persistence., Restore from a previously persisted dict (see to_dict)., Restore the persisted WH51 calibration baseline., Force an immediate (non-debounced) persistence flush., _Wh51CalibrationState
+Cohesion: 0.22
+Nodes (5): Any, Serialize for Store persistence., Restore from a previously persisted dict (see to_dict)., Restore the persisted WH51 calibration baseline., Force an immediate (non-debounced) persistence flush.
 
 ### Community 24 - "Rain Accumulator Tests"
 Cohesion: 0.27
@@ -229,21 +230,25 @@ Nodes (14): after_dependencies, codeowners, config_flow, documentation, domain, 
 Cohesion: 0.33
 Nodes (5): ConfigEntry, HomeAssistant, Return the user-configured display name for `zone_id`.      Re-implemented here, Initialize the coordinator for a single config entry., _zone_name()
 
+### Community 28 - "Base Entity & Device Info"
+Cohesion: 0.20
+Nodes (7): GardenIrrigationEntity, ConfigEntry, Shared base entity for garden_irrigation., Base entity: single shared device, entity-only names (has_entity_name)., Bind the entity to the coordinator and the owning config entry., Single logical device: this integration does not control hardware., DeviceInfo
+
 ### Community 29 - "Integration Setup/Unload"
-Cohesion: 0.12
-Nodes (13): BalanceEngine, _IrrigationRecord, Any, datetime, One user-recorded irrigation entry (mm already converted from minutes).      Mil, Serialize for Store persistence., Restore from a previously persisted dict (see to_dict)., Owns the per-zone water balance for one config entry.      Not an entity: plain (+5 more)
+Cohesion: 0.31
+Nodes (9): async_reload_entry(), async_setup_entry(), async_unload_entry(), ConfigEntry, HomeAssistant, The garden_irrigation integration.  Milestone 2: entry setup/unload/reload wirin, Set up garden_irrigation from a config entry., Unload a config entry and its platforms. (+1 more)
 
 ### Community 30 - "Weather: Live State-Change Handling"
-Cohesion: 0.18
-Nodes (8): _parse_float(), Process one raw reading, updating daily_mm per the reset rules above., Bounded, one-shot recorder backfill for today only (never a loop).          Only, Return the numeric value of a state, or None if unknown/unavailable/invalid., Event, EventStateChangedData, State, test_parse_float_rejects_unknown_unavailable_and_invalid()
+Cohesion: 0.22
+Nodes (7): _parse_float(), Bounded, one-shot recorder backfill for today only (never a loop).          Only, Return the numeric value of a state, or None if unknown/unavailable/invalid., Event, EventStateChangedData, State, test_parse_float_rejects_unknown_unavailable_and_invalid()
 
 ### Community 31 - "Recommendation: WH51 Reading"
-Cohesion: 0.20
-Nodes (9): _area_m2(), _mm_per_minute(), ConfigEntry, HomeAssistant, Return the configured mm/minute for `zone_id`+`source`, or None if unset.      D, Return the configured area for `zone_id` in square meters., Return the configured WH51 soil-moisture entity_id for `zone_id`., Build the engine with an empty WH51 calibration baseline. (+1 more)
+Cohesion: 0.11
+Nodes (18): _area_m2(), _block_plan(), BlockPlanEntry, _current_taw_raw_mm(), _mm_per_minute(), ConfigEntry, HomeAssistant, Recommendation engine for garden_irrigation.  Milestone 7 scope only: an explain (+10 more)
 
 ### Community 32 - "Data Quality Sensor"
-Cohesion: 0.14
-Nodes (12): ConfigEntry, Initialize with a stable unique_id derived from the config entry., Initialize with a stable unique_id derived from the config entry., Initialize with a per-zone unique_id and translation placeholder., Initialize the per-zone ETc sensor., Initialize the per-zone deficit sensor., Initialize the per-zone TAW sensor., Initialize the per-zone RAW sensor. (+4 more)
+Cohesion: 0.29
+Nodes (5): DataQualitySensor, Always available in Milestone 1 (never unavailable)., Return `not_configured` pre-refresh, `initializing` afterwards., Diagnostic sensor reporting overall data-quality status.      Milestone 1: alway, SensorEntity
 
 ### Community 33 - "Telegram Send Logic"
 Cohesion: 0.08
@@ -262,12 +267,12 @@ Cohesion: 0.10
 Nodes (17): Agronomy: water balance, TAW/RAW, effective rain, weekly cap, Deficit, Effective rain, Recorded irrigation and the weekly cap, TAW / RAW, Uncalibrated sources, The automatic 14-day window (Milestone 7), The explicit override (Milestone 9) (+9 more)
 
 ### Community 40 - "GardenIrrigationStore"
-Cohesion: 0.12
-Nodes (13): ConfigEntry, HomeAssistant, Build the engine with per-zone deficit/ledger starting empty., Per-source (mm/minute-dependent) view of the recommended amount., SourceRecommendation, GardenIrrigationStore, Any, HomeAssistant (+5 more)
+Cohesion: 0.40
+Nodes (3): datetime, Derive count/mm/liters over the matching subset of the event log.          mm/li, Per-source aggregate totals for `zone_id` (all retained events).
 
 ### Community 41 - "Any"
-Cohesion: 0.22
-Nodes (3): Any, Subclasses add their own attributes on top of the common ones., Common day/applied/skipped_reason plus subclass-specific attributes.
+Cohesion: 0.40
+Nodes (3): Any, Return (domain, service, base_service_data) for the configured         target, o, Send via Telegram; on any failure, degrade to persistent_notification.
 
 ### Community 42 - "Irrigation7dZoneSensor"
 Cohesion: 0.27
@@ -276,10 +281,6 @@ Nodes (6): Irrigation7dZoneSensor, User-recorded irrigation over the trailing sl
 ### Community 43 - "CLAUDE.md — garden_irrigation"
 Cohesion: 0.22
 Nodes (8): Architecture invariants, CLAUDE.md — garden_irrigation, Config, Conventions, Golden rules (never violate), graphify, Water/agronomy model (do not "simplify" away), Workflow guardrails
-
-### Community 44 - "._balance_result"
-Cohesion: 0.22
-Nodes (3): ETc in mm, or None until a day has actually been applied., Current deficit in mm., Effective rain in mm, or None until a day has actually been applied.
 
 ### Community 45 - "Pre-commit Configuration"
 Cohesion: 0.40
@@ -291,24 +292,24 @@ Nodes (3): [0.1.0] - 2026-07-13, Added, Changelog
 
 ### Community 47 - "BlockPlanEntry"
 Cohesion: 0.50
-Nodes (4): _block_plan(), BlockPlanEntry, Split `minutes` into <=DEFAULT_MAX_CYCLE_MINUTES-minute blocks, with a     pause, One block of a possibly multi-block recommended cycle.
+Nodes (3): _parse_hms(), Register the 20:00/05:30 triggers and the periodic monitor tick., Parse a "HH:MM:SS" const.py default into (hour, minute, second).
 
 ## Knowledge Gaps
 - **83 isolated node(s):** `domain`, `name`, `recorder`, `@mbonny95`, `config_flow` (+78 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **21 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **22 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `GardenIrrigationCoordinator` connect `Coordinator: Operational State` to `Button Platform (Cycle & Calibration)`, `Water Balance Engine`, `Binary Sensor Platform`, `Zone Sensors (Deficit & Rain)`, `Scheduler Tests`, `Select Platform (Mode & Cycle Zone)`, `Scheduler: Advisory Monitors`, `ET0 Sensor & Tests`, `Recommendation Engine Tests`, `Telegram Notifier & Tests`, `Recommendation: Block Plan & WH51`, `Irrigation Event Log`, `Notifier Abstraction`, `Weather Aggregator Core`, `Irrigation Log: Aggregates`, `Constants & Coordinator Init`, `Integration Setup/Unload`, `Data Quality Sensor`, `Scheduler Setup`, `GardenIrrigationStore`, `Irrigation7dZoneSensor`?**
-  _High betweenness centrality (0.327) - this node is a cross-community bridge._
-- **Why does `GardenIrrigationStore` connect `GardenIrrigationStore` to `Button Platform (Cycle & Calibration)`, `Water Balance Engine`, `FAO-56 ET0 Engine`, `Zone Sensors (Deficit & Rain)`, `Coordinator: Operational State`, `BlockPlanEntry`, `Irrigation Event Log`, `Recommendation: Block Plan & WH51`, `Notifier Abstraction`, `Weather: Rain & Time-Weighted Accumulators`, `Weather Aggregator Core`, `Irrigation Log: Aggregates`, `Recommendation Engine Core`, `Rain Accumulator Tests`, `Constants & Coordinator Init`, `Integration Setup/Unload`, `Recommendation: WH51 Reading`?**
-  _High betweenness centrality (0.075) - this node is a cross-community bridge._
-- **Why does `compute_et0()` connect `FAO-56 ET0 Engine` to `Notifier Abstraction`, `Zone Sensors (Deficit & Rain)`, `Coordinator: Operational State`?**
+- **Why does `GardenIrrigationCoordinator` connect `Coordinator: Operational State` to `Diagnostics & Test Fixtures`, `Button Platform (Cycle & Calibration)`, `Water Balance Engine`, `Binary Sensor Platform`, `Zone Sensors (Deficit & Rain)`, `Scheduler Tests`, `Select Platform (Mode & Cycle Zone)`, `Scheduler: Advisory Monitors`, `ET0 Sensor & Tests`, `Recommendation Engine Tests`, `Telegram Notifier & Tests`, `Recommendation: Block Plan & WH51`, `Irrigation Event Log`, `Weather Aggregator Core`, `Irrigation Log: Aggregates`, `Constants & Coordinator Init`, `Base Entity & Device Info`, `Integration Setup/Unload`, `Data Quality Sensor`, `Scheduler Setup`, `Irrigation7dZoneSensor`?**
+  _High betweenness centrality (0.319) - this node is a cross-community bridge._
+- **Why does `GardenIrrigationStore` connect `Button Platform (Cycle & Calibration)` to `Water Balance Engine`, `Binary Sensor Platform`, `FAO-56 ET0 Engine`, `Zone Sensors (Deficit & Rain)`, `Coordinator: Operational State`, `Select Platform (Mode & Cycle Zone)`, `Recommendation: Block Plan & WH51`, `Irrigation Event Log`, `Weather: Rain & Time-Weighted Accumulators`, `Weather Aggregator Core`, `Irrigation Log: Aggregates`, `Rain Accumulator Tests`, `Constants & Coordinator Init`, `Recommendation: WH51 Reading`?**
+  _High betweenness centrality (0.073) - this node is a cross-community bridge._
+- **Why does `compute_et0()` connect `FAO-56 ET0 Engine` to `Select Platform (Mode & Cycle Zone)`, `Zone Sensors (Deficit & Rain)`, `Coordinator: Operational State`?**
   _High betweenness centrality (0.054) - this node is a cross-community bridge._
-- **Are the 32 inferred relationships involving `GardenIrrigationCoordinator` (e.g. with `IrrigationInProgressSensor` and `NeedsIrrigationZoneSensor`) actually correct?**
-  _`GardenIrrigationCoordinator` has 32 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 33 inferred relationships involving `GardenIrrigationCoordinator` (e.g. with `IrrigationInProgressSensor` and `NeedsIrrigationZoneSensor`) actually correct?**
+  _`GardenIrrigationCoordinator` has 33 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 21 inferred relationships involving `ZoneBalanceResult` (e.g. with `GardenIrrigationStore` and `IrrigationInProgressSensor`) actually correct?**
   _`ZoneBalanceResult` has 21 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 39 inferred relationships involving `timedelta` (e.g. with `._prune_irrigation()` and `.weekly_irrigation_mm()`) actually correct?**
