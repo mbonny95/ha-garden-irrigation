@@ -15,9 +15,9 @@
     "semantic_hash": "72526b31887a377553f83888c388de3b"
   },
   "custom_components/garden_irrigation/balance.py": {
-    "mtime": 1783972521.0031674,
-    "ast_hash": "6d22ecddbc9e08d93eb25e8b85af823e",
-    "semantic_hash": "6d22ecddbc9e08d93eb25e8b85af823e"
+    "mtime": 1784021315.9101384,
+    "ast_hash": "fd205fc560e3e8fe135df00fe61fcdc8",
+    "semantic_hash": ""
   },
   "custom_components/garden_irrigation/binary_sensor.py": {
     "mtime": 1783972521.0036137,
@@ -65,9 +65,9 @@
     "semantic_hash": "41e22c8d39a904a0e109b6d7f4fe64b9"
   },
   "custom_components/garden_irrigation/manifest.json": {
-    "mtime": 1783948895.3622756,
-    "ast_hash": "6516f1607a3ae4a254bbf194eb1c5d38",
-    "semantic_hash": "6516f1607a3ae4a254bbf194eb1c5d38"
+    "mtime": 1783975296.667539,
+    "ast_hash": "53218c76dcf268a3d98af7e2bbdf415c",
+    "semantic_hash": ""
   },
   "custom_components/garden_irrigation/notify.py": {
     "mtime": 1783972521.0061154,
@@ -95,9 +95,9 @@
     "semantic_hash": "01b48318acc2946f48cb8e4f3245e35d"
   },
   "custom_components/garden_irrigation/sensor.py": {
-    "mtime": 1783972521.007806,
-    "ast_hash": "4fcfcd77abaa84db8c83425d8d509bcb",
-    "semantic_hash": "4fcfcd77abaa84db8c83425d8d509bcb"
+    "mtime": 1784020720.4478106,
+    "ast_hash": "c10013420d77671a9f80d4658f177e47",
+    "semantic_hash": ""
   },
   "custom_components/garden_irrigation/storage.py": {
     "mtime": 1783972521.0084908,
@@ -155,9 +155,9 @@
     "semantic_hash": "5933d216bcb62ee3c97d703fa6c94889"
   },
   "tests/test_balance.py": {
-    "mtime": 1783972521.0125706,
-    "ast_hash": "fd76d3e8eab156aa24e365d5a3f4fe87",
-    "semantic_hash": "fd76d3e8eab156aa24e365d5a3f4fe87"
+    "mtime": 1784021367.311988,
+    "ast_hash": "00a9c4e613a76a40895396994bfa1540",
+    "semantic_hash": ""
   },
   "tests/test_binary_sensor.py": {
     "mtime": 1783972521.012849,
@@ -215,9 +215,9 @@
     "semantic_hash": "79c5b6dab191174125a397a3efe1d8f8"
   },
   "tests/test_sensor.py": {
-    "mtime": 1783972521.0179183,
-    "ast_hash": "eec10f113be40561d9448a6ea2d99236",
-    "semantic_hash": "eec10f113be40561d9448a6ea2d99236"
+    "mtime": 1784021396.883291,
+    "ast_hash": "dfec7320d6276564865bb0cbdb7bd36c",
+    "semantic_hash": ""
   },
   "tests/test_weather.py": {
     "mtime": 1783972521.018262,
@@ -255,9 +255,9 @@
     "semantic_hash": "cf6fac18e52c4ac5b71678300dfde4f1"
   },
   "CLAUDE.md": {
-    "mtime": 1783867597.4577084,
-    "ast_hash": "8c654537930e40f35fa22f245398fba1",
-    "semantic_hash": "8c654537930e40f35fa22f245398fba1"
+    "mtime": 1783974787.2394857,
+    "ast_hash": "2983f65b80c1b2adaaa857bebac551ac",
+    "semantic_hash": ""
   },
   "README.md": {
     "mtime": 1783972521.0022006,
@@ -303,5 +303,15 @@
     "mtime": 1783867610.0461385,
     "ast_hash": "d710f94fdc941b67407489c179837d97",
     "semantic_hash": "d710f94fdc941b67407489c179837d97"
+  },
+  "custom_components/garden_irrigation/brand/icon.png": {
+    "mtime": 1783973405.6724966,
+    "ast_hash": "a0404b285ab001ea6b597ed097953c55",
+    "semantic_hash": ""
+  },
+  "custom_components/garden_irrigation/brand/logo.png": {
+    "mtime": 1783973953.2793794,
+    "ast_hash": "3601f124b56d16c6c47ad6bd6c31070e",
+    "semantic_hash": ""
   }
 }
