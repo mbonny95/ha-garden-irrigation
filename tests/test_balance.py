@@ -205,13 +205,21 @@ async def test_et0_unavailable_leaves_deficit_unchanged_and_day_not_marked_proce
 # ---------------------------------------------------------------------------
 
 
-async def test_weekly_irrigation_sum_and_cap_reached(hass: HomeAssistant) -> None:
+async def test_weekly_irrigation_sum_and_cap_reached(
+    hass: HomeAssistant, freezer: Any
+) -> None:
     engine = _engine(hass)
     as_of = datetime(2026, 6, 8, 6, 0, tzinfo=UTC)
     engine.record_irrigation(ZONE_1, datetime(2026, 6, 3, 8, 0, tzinfo=UTC), mm=15.0)
     engine.record_irrigation(ZONE_1, datetime(2026, 6, 6, 8, 0, tzinfo=UTC), mm=15.0)
 
     assert engine.weekly_irrigation_mm(ZONE_1, as_of) == 30.0
+
+    # process_daily_balance always applies the *completed* day (`day`), but
+    # the weekly cap it reports is anchored to "now" (see
+    # weekly_irrigation_mm's docstring) - freeze "now" to as_of so this test
+    # exercises that anchor explicitly instead of coincidentally matching it.
+    freezer.move_to(as_of)
     day = as_of.date()
     result = engine.process_daily_balance(ZONE_1, day, et0_mm=1.0, rain_mm=0.0)
     assert result.irrigation_7d_mm == 30.0
@@ -229,16 +237,49 @@ async def test_weekly_window_excludes_records_older_than_seven_days(
     assert engine.weekly_irrigation_mm(ZONE_1, as_of) == 0.0
 
 
-async def test_weekly_cap_not_reached_below_threshold(hass: HomeAssistant) -> None:
+async def test_weekly_cap_not_reached_below_threshold(
+    hass: HomeAssistant, freezer: Any
+) -> None:
     engine = _engine(hass)
     as_of = datetime(2026, 6, 8, 6, 0, tzinfo=UTC)
     engine.record_irrigation(ZONE_1, datetime(2026, 6, 6, 8, 0, tzinfo=UTC), mm=10.0)
 
+    freezer.move_to(as_of)
     day = as_of.date()
     result = engine.process_daily_balance(ZONE_1, day, et0_mm=1.0, rain_mm=0.0)
 
     assert result.irrigation_7d_mm == 10.0
     assert result.weekly_cap_reached is False
+
+
+async def test_weekly_cap_reflects_irrigation_recorded_after_the_processed_day(
+    hass: HomeAssistant, freezer: Any
+) -> None:
+    """Regression: the production coordinator always applies `day = yesterday`
+    (coordinator.py), while a cycle can be recorded at any later instant
+    (today). The weekly cap must reflect that recording immediately, not
+    only after `day` itself advances to include it at the next 05:30
+    rollover."""
+    engine = _engine(hass)
+    yesterday = date(2026, 6, 7)
+    now = datetime(2026, 6, 8, 9, 0, tzinfo=UTC)
+    freezer.move_to(now)
+
+    # Applying "yesterday"'s balance first, as the real coordinator does -
+    # with no irrigation recorded yet.
+    result_before = engine.process_daily_balance(
+        ZONE_1, yesterday, et0_mm=1.0, rain_mm=0.0
+    )
+    assert result_before.irrigation_7d_mm == 0.0
+
+    # A cycle is now recorded "today" (after yesterday already ended).
+    engine.record_irrigation(ZONE_1, now, mm=12.0)
+
+    # Reporting current state again (e.g. the next coordinator refresh,
+    # still before the next day's finalization) must already reflect it,
+    # even though `day` itself (yesterday) hasn't changed.
+    pending = engine.pending_result(ZONE_1, yesterday)
+    assert pending.irrigation_7d_mm == 12.0
 
 
 # ---------------------------------------------------------------------------

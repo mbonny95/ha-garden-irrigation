@@ -22,7 +22,9 @@ from custom_components.garden_irrigation.const import (
     DEFAULT_ROOT_DEPTH_MM,
     DEFAULT_WEEKLY_CAP_MM,
     DOMAIN,
+    SOURCE_MAINS_WATER,
     ZONE_1,
+    ZONE_2,
     ZONES,
 )
 from custom_components.garden_irrigation.coordinator import (
@@ -271,11 +273,18 @@ async def test_zone_sensors_pending_state_before_any_finalized_day(
         assert raw.native_value == taw.native_value * DEFAULT_P_DEPLETION_FRACTION
         assert irrigation_7d.native_value == 0.0
 
-        for entity in (etc, deficit, taw, raw, eff_rain, irrigation_7d):
+        for entity in (etc, deficit, taw, raw, eff_rain):
             assert entity.available is True
             attrs = entity.extra_state_attributes
             assert attrs is not None
             assert attrs["applied"] is False
+
+        # irrigation_7d is not a _ZoneBalanceSensor (reads irrigation_log.py
+        # directly, not coordinator.data["balance"]) - no applied/day here.
+        assert irrigation_7d.available is True
+        irrigation_attrs = irrigation_7d.extra_state_attributes
+        assert irrigation_attrs["breakdown"]["mains_water"]["mm"] == 0.0
+        assert irrigation_attrs["weekly_cap_reached"] is False
 
 
 async def test_zone_sensors_applied_state_after_finalized_day(
@@ -395,3 +404,51 @@ async def test_availability_follows_coordinator_update_success(
     assert etc_sensor.available is False
     # data_quality intentionally always reports available (Milestone 1 contract).
     assert data_quality_sensor.available is True
+
+
+# ---------------------------------------------------------------------------
+# irrigation_7d reflects irrigation_log.py directly, not balance.py's own
+# day-anchored figure (regression: same-day recordings must show up now,
+# not only after the next day's 05:30 finalization).
+# ---------------------------------------------------------------------------
+
+
+async def test_irrigation_7d_reflects_same_day_recording_immediately(
+    hass: HomeAssistant,
+) -> None:
+    """A cycle recorded today must be visible today - not just after balance.py's
+    next once-per-day rollover, which is anchored to the end of yesterday."""
+    entry = MockConfigEntry(domain=DOMAIN, data=_full_entry_data())
+    entry.add_to_hass(hass)
+    coordinator = GardenIrrigationCoordinator(hass, entry)
+    await coordinator.async_refresh()
+
+    await coordinator.irrigation_log.async_record_irrigation(
+        zone_id=ZONE_1, source=SOURCE_MAINS_WATER, duration_minutes=10.0
+    )
+    await coordinator.irrigation_log.async_record_irrigation(
+        zone_id=ZONE_2, source=SOURCE_MAINS_WATER, duration_minutes=10.0
+    )
+
+    zone1 = Irrigation7dZoneSensor(coordinator, entry, ZONE_1)
+    zone2 = Irrigation7dZoneSensor(coordinator, entry, ZONE_2)
+
+    # Defaults: zone1 mains 0.25 mm/min, zone2 mains 0.175 mm/min -> 10 min each.
+    assert zone1.native_value == 2.5
+    assert zone2.native_value == 1.75
+
+    # balance.py's own figure is now ALSO correct here (its weekly-cap
+    # anchor was fixed separately in balance.py - see BalanceEngine.
+    # weekly_irrigation_mm's docstring), so the two agree. This sensor still
+    # does not read it directly (see its own docstring for why), but the
+    # values matching is the expected end-to-end result, not a coincidence.
+    balance_result = coordinator.data["balance"][ZONE_1]
+    assert balance_result.irrigation_7d_mm == 2.5
+
+    zone1_attrs = zone1.extra_state_attributes
+    assert zone1_attrs["breakdown"]["mains_water"]["mm"] == 2.5
+    assert zone1_attrs["breakdown"]["mains_water"]["count"] == 1
+    assert zone1_attrs["breakdown"]["rainwater_tank"]["mm"] == 0.0
+    assert zone1_attrs["cap_mm"] == DEFAULT_WEEKLY_CAP_MM
+    assert zone1_attrs["remaining_mm"] == DEFAULT_WEEKLY_CAP_MM - 2.5
+    assert zone1_attrs["weekly_cap_reached"] is False

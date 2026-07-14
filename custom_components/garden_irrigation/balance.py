@@ -223,7 +223,18 @@ class BalanceEngine:
         )
 
     def weekly_irrigation_mm(self, zone_id: str, as_of: datetime) -> float:
-        """Sum of recorded irrigation over the trailing sliding 7x24h window."""
+        """Sum of recorded irrigation over the trailing sliding 7x24h window.
+
+        `as_of` is deliberately a caller-supplied instant, not derived from
+        any `day` this engine is processing: the weekly cap is a genuinely
+        different concept from the daily balance (see CLAUDE.md - "finestra
+        mobile 7x24h", not a calendar week and not tied to the completed-day
+        finalization). Callers reporting the *current* cap state must pass
+        `dt_util.now()`, never a day's `day_end` - see `_unchanged_result`/
+        `process_daily_balance` below, where passing `day_end` (the last
+        *finalized* day's end) used to silently exclude same-day recordings
+        from the cap until the next 05:30 rollover.
+        """
         return self._irrigation_mm_between(zone_id, as_of - timedelta(days=7), as_of)
 
     def _unchanged_result(
@@ -232,8 +243,7 @@ class BalanceEngine:
         """Report current stored state for `day` without mutating anything."""
         params = self._params[zone_id]
         day_start, day_end = _local_day_bounds(day)
-        as_of = day_end
-        irrigation_7d_mm = self.weekly_irrigation_mm(zone_id, as_of)
+        irrigation_7d_mm = self.weekly_irrigation_mm(zone_id, dt_util.now())
         return ZoneBalanceResult(
             zone_id=zone_id,
             day=day,
@@ -295,7 +305,6 @@ class BalanceEngine:
 
         params = self._params[zone_id]
         day_start, day_end = _local_day_bounds(day)
-        as_of = day_end
         prev_deficit = self._deficit[zone_id]
         etc_mm = et0_mm * params.kc
         irrigation_mm = self._irrigation_mm_between(zone_id, day_start, day_end)
@@ -307,7 +316,10 @@ class BalanceEngine:
 
         self._deficit[zone_id] = new_deficit
         self._last_balance_date[zone_id] = day
-        irrigation_7d_mm = self.weekly_irrigation_mm(zone_id, as_of)
+        # Weekly cap: anchored to *now*, deliberately not to `day_end` above
+        # (which only ever advances once/day, at the 05:30 finalization) -
+        # see weekly_irrigation_mm's docstring.
+        irrigation_7d_mm = self.weekly_irrigation_mm(zone_id, dt_util.now())
         result = ZoneBalanceResult(
             zone_id=zone_id,
             day=day,

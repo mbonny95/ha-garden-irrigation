@@ -3,16 +3,19 @@
 Milestone 1 added the single diagnostic `data_quality` sensor. Milestone 5
 completes the platform with the computed decision-support sensors backed by
 data already produced by weather.py/et0.py/balance.py: daily ET0, and the
-per-zone ETc, deficit, TAW, RAW, effective rain and 7-day rolling recorded
-irrigation. Sensors that the approved plan's section 3.1 lists but that
-depend on the recommendation engine or the manual-cycle log (recommended
-mm/minutes, estimated liters, irrigation today/week/month/season, liters
-totals, last_recommendation) are NOT added here - there is no data source for
-them yet (recommendation.py / irrigation_log.py are later milestones).
+per-zone ETc, deficit, TAW, RAW, and effective rain. `irrigation_7d` reads
+irrigation_log.py's event log directly (see Irrigation7dZoneSensor's
+docstring) now that the `record_irrigation` action exists, instead of
+balance.py's own 7-day figure. Sensors that the approved plan's section 3.1
+lists but that depend on the recommendation engine (recommended mm/minutes,
+estimated liters, last_recommendation) or on period-aggregated counters
+(irrigation today/week/month/season, liters totals) are still NOT added here
+- there is no data source for them yet.
 """
 
 from __future__ import annotations
 
+from datetime import timedelta
 from typing import Any
 
 from homeassistant.components.sensor import (
@@ -24,6 +27,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory, UnitOfPrecipitationDepth
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.util import dt as dt_util
 
 from .balance import ZoneBalanceResult
 from .const import (
@@ -37,15 +41,18 @@ from .const import (
     DEFAULT_P_DEPLETION_FRACTION,
     DEFAULT_RAIN_EFFECTIVE_FACTOR,
     DEFAULT_ROOT_DEPTH_MM,
+    DEFAULT_WEEKLY_CAP_MM,
     DEFAULT_ZONE1_NAME,
     DEFAULT_ZONE2_NAME,
     DOMAIN,
+    SOURCES,
     ZONE_1,
     ZONES,
 )
 from .coordinator import GardenIrrigationCoordinator
 from .entity import GardenIrrigationEntity
 from .et0 import ET0Result
+from .irrigation_log import IrrigationAggregate
 
 
 async def async_setup_entry(
@@ -333,31 +340,87 @@ class EffectiveRainZoneSensor(_ZoneBalanceSensor):
         }
 
 
-class Irrigation7dZoneSensor(_ZoneBalanceSensor):
+class Irrigation7dZoneSensor(GardenIrrigationEntity, SensorEntity):
     """User-recorded irrigation over the trailing sliding 7x24h window.
 
+    Reads irrigation_log.py's event log directly
+    (`coordinator.irrigation_log.aggregate(..., since=, until=)`) instead of
+    `coordinator.data["balance"][zone_id].irrigation_7d_mm`. Two reasons:
+
+    - balance.py's own figure is anchored to the end of the last *finalized*
+      day ("yesterday"), not to now - anything recorded today is invisible
+      to it until the next 05:30 rollover (see balance.py's
+      `_unchanged_result`/`pending_result`). Recomputing the window here
+      with `dt_util.now()` on every read means a cycle recorded seconds ago
+      is reflected immediately.
+    - balance.py only tracks a per-zone total, never a per-source split;
+      irrigation_log.py's event log already carries `source` per event, so
+      the breakdown below is a direct read, not a new computation.
+
     Governs the weekly cap on its own (never on effective rain - see
-    CLAUDE.md); there is no recording action yet (irrigation_log.py, a later
-    milestone), so this stays 0 until balance.py's engine-level
-    `record_irrigation` API gets a caller.
+    CLAUDE.md). Uncalibrated-source events are excluded from mm here too
+    (IrrigationAggregate.mm only sums calibrated events - see
+    IrrigationLog.aggregate).
     """
+
+    _attr_native_unit_of_measurement = UnitOfPrecipitationDepth.MILLIMETERS
+    _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_suggested_display_precision = 2
 
     def __init__(
         self, coordinator: GardenIrrigationCoordinator, entry: ConfigEntry, zone_id: str
     ) -> None:
         """Initialize the per-zone 7-day irrigation sensor."""
-        super().__init__(coordinator, entry, zone_id, "irrigation_7d")
+        super().__init__(coordinator, entry)
+        self.zone_id = zone_id
+        self._attr_unique_id = f"{entry.entry_id}_irrigation_7d_{zone_id}"
+        self._attr_translation_key = "irrigation_7d"
+        self._attr_translation_placeholders = {"zone_name": _zone_name(entry, zone_id)}
+
+    def _breakdown(self) -> dict[str, IrrigationAggregate]:
+        """Per-source aggregate over the trailing 7x24h window, as of now."""
+        until = dt_util.now()
+        since = until - timedelta(days=7)
+        return {
+            source: self.coordinator.irrigation_log.aggregate(
+                self.zone_id, source=source, since=since, until=until
+            )
+            for source in SOURCES
+        }
+
+    def _cap_mm(self) -> float:
+        """The configured weekly cap, from the last balance result if known.
+
+        Falls back to the const.py default before the first coordinator
+        refresh - the cap is a static config value, not something that
+        depends on balance.py's own (potentially stale) irrigation figure.
+        """
+        data = self.coordinator.data
+        balance: dict[str, ZoneBalanceResult] = (data or {}).get("balance", {})
+        result = balance.get(self.zone_id)
+        return result.weekly_cap_mm if result is not None else DEFAULT_WEEKLY_CAP_MM
 
     @property
-    def native_value(self) -> float | None:
-        """Recorded irrigation in mm over the trailing 7 days."""
-        result = self._balance_result()
-        return result.irrigation_7d_mm if result is not None else None
+    def native_value(self) -> float:
+        """Recorded irrigation in mm over the trailing 7 days, all sources summed."""
+        return sum(aggregate.mm for aggregate in self._breakdown().values())
 
-    def _extra_attributes(self, result: ZoneBalanceResult) -> dict[str, Any]:
-        remaining_mm = max(result.weekly_cap_mm - result.irrigation_7d_mm, 0.0)
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """Per-source breakdown plus the weekly cap context."""
+        breakdown = self._breakdown()
+        total_mm = sum(aggregate.mm for aggregate in breakdown.values())
+        cap_mm = self._cap_mm()
         return {
-            "cap_mm": result.weekly_cap_mm,
-            "remaining_mm": remaining_mm,
-            "weekly_cap_reached": result.weekly_cap_reached,
+            "breakdown": {
+                source: {
+                    "mm": aggregate.mm,
+                    "liters": aggregate.liters,
+                    "count": aggregate.count,
+                }
+                for source, aggregate in breakdown.items()
+            },
+            "cap_mm": cap_mm,
+            "remaining_mm": max(cap_mm - total_mm, 0.0),
+            "weekly_cap_reached": total_mm >= cap_mm,
         }
