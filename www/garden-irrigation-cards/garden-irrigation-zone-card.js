@@ -31,6 +31,11 @@ import {
   renderBadge,
   STATUS,
 } from "./garden-irrigation-cards-shared.js";
+// Registers <garden-irrigation-zone-card-editor> as a side effect. Only the
+// two main card files need to be added as Lovelace resources - the editor
+// (referenced below via getConfigElement's document.createElement) has no
+// other way to get its own customElements.define() executed by the browser.
+import "./garden-irrigation-zone-card-editor.js";
 
 const REQUIRED_FIELDS = [
   "zone",

@@ -169,6 +169,15 @@ class BalanceEngine:
         self._irrigation: dict[str, list[_IrrigationRecord]] = {
             zone_id: [] for zone_id in ZONES
         }
+        # ETc/effective-rain terms from the last successfully applied day,
+        # for `_unchanged_result` to keep reporting on every later refresh of
+        # the same already-processed day (persisted, not just RAM-cached -
+        # see `_save_data`/`async_setup` below). `irrigation_mm` needs no
+        # such cache: it's always freshly derivable from `self._irrigation`,
+        # which is already persisted on its own.
+        self._last_applied_terms: dict[str, dict[str, float] | None] = dict.fromkeys(
+            ZONES, None
+        )
 
     async def async_setup(self) -> None:
         """Restore persisted deficit/last-balance-date/irrigation ledger."""
@@ -185,6 +194,9 @@ class BalanceEngine:
             self._irrigation[zone_id] = [
                 _IrrigationRecord.from_dict(item) for item in irrigation_data
             ]
+            self._last_applied_terms[zone_id] = stored.get(
+                "last_applied_terms", {}
+            ).get(zone_id)
 
     async def async_shutdown(self) -> None:
         """Force an immediate (non-debounced) persistence flush."""
@@ -240,17 +252,29 @@ class BalanceEngine:
     def _unchanged_result(
         self, zone_id: str, day: date, skipped_reason: str | None
     ) -> ZoneBalanceResult:
-        """Report current stored state for `day` without mutating anything."""
+        """Report current stored state for `day` without mutating anything.
+
+        When `day` was genuinely already applied (`SKIPPED_ALREADY_PROCESSED`
+        - guaranteed by the caller to be the same `day` `_last_applied_terms`
+        was cached for, since both are set together in `process_daily_balance`),
+        `etc_mm`/`eff_rain_mm` come from that cache - otherwise (pending, or
+        ET0 was unavailable) they stay `None`, never fabricated.
+        """
         params = self._params[zone_id]
         day_start, day_end = _local_day_bounds(day)
         irrigation_7d_mm = self.weekly_irrigation_mm(zone_id, dt_util.now())
+        terms = (
+            self._last_applied_terms[zone_id]
+            if skipped_reason == SKIPPED_ALREADY_PROCESSED
+            else None
+        )
         return ZoneBalanceResult(
             zone_id=zone_id,
             day=day,
             applied=False,
             skipped_reason=skipped_reason,
-            etc_mm=None,
-            eff_rain_mm=None,
+            etc_mm=terms["etc_mm"] if terms else None,
+            eff_rain_mm=terms["eff_rain_mm"] if terms else None,
             irrigation_mm=self._irrigation_mm_between(zone_id, day_start, day_end),
             deficit_mm=self._deficit[zone_id],
             taw_mm=params.taw_mm,
@@ -316,6 +340,14 @@ class BalanceEngine:
 
         self._deficit[zone_id] = new_deficit
         self._last_balance_date[zone_id] = day
+        # Cached so `_unchanged_result` can keep reporting these on every
+        # later refresh of this same already-processed day, instead of
+        # reverting to None (the bug this cache fixes - see its own
+        # declaration in __init__ for the full explanation).
+        self._last_applied_terms[zone_id] = {
+            "etc_mm": etc_mm,
+            "eff_rain_mm": eff_rain_mm,
+        }
         # Weekly cap: anchored to *now*, deliberately not to `day_end` above
         # (which only ever advances once/day, at the 05:30 finalization) -
         # see weekly_irrigation_mm's docstring.
@@ -354,6 +386,11 @@ class BalanceEngine:
             "irrigation": {
                 zone_id: [record.to_dict() for record in self._irrigation[zone_id]]
                 for zone_id in ZONES
+            },
+            "last_applied_terms": {
+                zone_id: self._last_applied_terms[zone_id]
+                for zone_id in ZONES
+                if self._last_applied_terms[zone_id] is not None
             },
         }
 

@@ -24,6 +24,9 @@ import {
   statusLabel,
   statusTone,
 } from "./garden-irrigation-cards-shared.js";
+// Registers <garden-irrigation-overview-card-editor> as a side effect - see
+// the identical comment in garden-irrigation-zone-card.js.
+import "./garden-irrigation-overview-card-editor.js";
 
 const REQUIRED_FIELDS = ["mode_entity", "data_quality_entity", "et0_entity", "zones"];
 

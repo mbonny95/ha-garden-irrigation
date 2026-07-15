@@ -176,6 +176,14 @@ async def test_double_processing_same_day_is_ignored(hass: HomeAssistant) -> Non
     assert second.skipped_reason == SKIPPED_ALREADY_PROCESSED
     assert second.deficit_mm == first.deficit_mm
     assert engine.current_deficit_mm(ZONE_1) == first.deficit_mm
+    # Regression: a repeat report for an already-applied day must keep
+    # reporting that day's real etc_mm/eff_rain_mm, not silently revert them
+    # to None just because this call didn't recompute anything - this is
+    # what a coordinator refresh between 05:30 and the next day's rollover
+    # (e.g. the 20:00 preview trigger, or any weather-state-triggered
+    # refresh) does on every subsequent call for the same day.
+    assert second.etc_mm == first.etc_mm
+    assert second.eff_rain_mm == first.eff_rain_mm
 
 
 async def test_et0_unavailable_leaves_deficit_unchanged_and_day_not_marked_processed(
@@ -191,6 +199,10 @@ async def test_et0_unavailable_leaves_deficit_unchanged_and_day_not_marked_proce
 
     assert result.applied is False
     assert result.skipped_reason == SKIPPED_ET0_UNAVAILABLE
+    # The cached etc_mm/eff_rain_mm from day1's successful application must
+    # never leak into a *different*, never-applied day's result.
+    assert result.etc_mm is None
+    assert result.eff_rain_mm is None
     assert result.deficit_mm == deficit_after_day1
     assert engine.current_deficit_mm(ZONE_1) == deficit_after_day1
 
@@ -296,6 +308,9 @@ async def test_pending_result_does_not_mutate_state(hass: HomeAssistant) -> None
     assert pending.applied is False
     assert pending.skipped_reason is None
     assert pending.deficit_mm == 0.0
+    # Never fabricated for a day that was never actually applied.
+    assert pending.etc_mm is None
+    assert pending.eff_rain_mm is None
     # No last_balance_date was set, so a real call for the same day still runs.
     result = engine.process_daily_balance(ZONE_1, day, et0_mm=5.0, rain_mm=0.0)
     assert result.applied is True
@@ -311,7 +326,7 @@ async def test_state_survives_setup_shutdown_roundtrip(hass: HomeAssistant) -> N
     engine1 = BalanceEngine(hass, entry)
     await engine1.async_setup()
     day = date(2026, 6, 1)
-    engine1.process_daily_balance(ZONE_1, day, et0_mm=5.0, rain_mm=0.0)
+    applied = engine1.process_daily_balance(ZONE_1, day, et0_mm=5.0, rain_mm=0.0)
     engine1.record_irrigation(ZONE_1, datetime(2026, 6, 1, 12, tzinfo=UTC), mm=3.0)
     await engine1.async_shutdown()
 
@@ -323,6 +338,11 @@ async def test_state_survives_setup_shutdown_roundtrip(hass: HomeAssistant) -> N
     replay = engine2.process_daily_balance(ZONE_1, day, et0_mm=999.0, rain_mm=0.0)
     assert replay.applied is False
     assert replay.skipped_reason == SKIPPED_ALREADY_PROCESSED
+    # Regression: etc_mm/eff_rain_mm from the day applied by engine1 must
+    # survive the restart too, not just the deficit - a restart before the
+    # next 05:30 rollover must not turn these Unknown on the sensors.
+    assert replay.etc_mm == applied.etc_mm
+    assert replay.eff_rain_mm == applied.eff_rain_mm
     # The irrigation ledger (needed for the rolling cap) survived too.
     as_of = datetime(2026, 6, 1, 23, 59, tzinfo=UTC)
     assert engine2.weekly_irrigation_mm(ZONE_1, as_of) == 3.0
