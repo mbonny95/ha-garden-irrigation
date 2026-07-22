@@ -15,10 +15,9 @@ existing Ecowitt weather-station and WH51 soil-moisture entities.
   manual source switch), you call an action to record what you did; the
   integration updates the water balance and the 7-day recorded-irrigation
   figure.
-- A **Telegram notifier** (optional, degrades gracefully to persistent
-  notifications if not configured), plus Home Assistant Repairs for
-  conditions you need to act on outside the integration (stale sensors,
-  Telegram misconfiguration).
+- Home Assistant **Repairs** for conditions you need to act on outside the
+  integration (stale weather/WH51 data). The integration itself sends no
+  notifications anywhere - everything is read from its entities/attributes.
 
 ## What this integration is NOT (v1)
 
@@ -45,14 +44,10 @@ in terms of an **Ecowitt GW1100 console + two WH51 soil-moisture sensors**
 - One WH51 soil-moisture sensor per zone.
 
 **Optional:**
-- Wind gust (not used by ET0, only by the M8 wind advisory).
+- Wind gust (not used by ET0; kept for a possible future use).
 - 24-hour rainfall and "rain event" (diagnostic-only, never summed into the
   balance).
-- WH51 battery and signal per zone (used only for the M8 battery/signal
-  advisory).
-- Telegram notify target (`entity_id`, or a bot `config_entry_id` + `chat_id`)
-  — can be configured later from the integration's options if skipped during
-  setup.
+- WH51 battery and signal per zone (not currently used by any check).
 
 If a required entity is missing/stale, the affected computation reports
 `unknown` with an explanation — it is never silently guessed (see
@@ -78,11 +73,11 @@ If a required entity is missing/stale, the affected computation reports
 
 The config flow is a guided, multi-step wizard: (1) location + FAO-56 weather
 entities, (2) rain entities, (3) WH51 per-zone entities, (4) zone names/areas/
-`mm per minute` distribution rates, (5) optional Telegram target. Only one
-config entry is allowed. Everything above is validated (entity exists,
-correct domain, compatible unit, currently numeric) before you can proceed.
-Operational thresholds (Kc, caps, wind/staleness thresholds, WH51 sensitivity,
-...) are managed from the integration's **options**, not the initial flow.
+`mm per minute` distribution rates. Only one config entry is allowed.
+Everything above is validated (entity exists, correct domain, compatible
+unit, currently numeric) before you can proceed. Operational thresholds (Kc,
+caps, staleness thresholds, WH51 sensitivity, ...) are managed from the
+integration's **options**, not the initial flow.
 
 ## Key concepts
 
@@ -155,21 +150,16 @@ recommendation, or log entry.
 **declare** that a manual cycle is running, and `binary_sensor.
 irrigation_in_progress` reflects it (with `elapsed_minutes` as a read-only
 attribute). This is entirely declarative — the integration cannot detect a
-real cycle — and using it is optional. While declared active, a "consider
-stopping" advisory is sent if it starts raining. Using it never pre-fills the
+real cycle — and using it is optional. Using it never pre-fills the
 `record_irrigation` action's `duration_minutes`: you always type/confirm the
 actual duration yourself when you log the cycle.
 
-## Telegram / notifications / repairs
+## Repairs
 
-If a Telegram target is configured (entity or bot config entry + chat id),
-the integration sends the morning report, cycle confirmations, and
-wind/staleness/battery/signal/rain-during-cycle advisories via
-`telegram_bot.send_message`. If Telegram isn't configured, its target isn't
-available, or a send fails, delivery **degrades to a persistent notification**
-and a Home Assistant Repair issue is raised explaining why — it never crashes
-the integration or silently drops a message. Stale weather/WH51 data also
-raises a Repair issue instead of a dashboard entity.
+The integration sends no notifications anywhere. Stale weather/WH51 data
+(no new reading within the expected time) raises a Home Assistant Repair
+issue (Settings → System → Repairs) explaining what to check, and clears
+itself automatically once the sensor updates again.
 
 ## Limitations
 
@@ -191,7 +181,7 @@ per minute` rate per zone and source. Only entity states from your existing
 Ecowitt/WH51 sensors are real measurements; everything else (ET0, ETc,
 deficit, recommended mm/minutes/liters) is a **model output**, not a physical
 measurement. **This integration never actuates any hardware in v1** — it only
-reads, computes, recommends, and notifies.
+reads, computes, and recommends.
 
 ## Disclaimer
 
@@ -203,9 +193,12 @@ own judgment about when and how much to water.
 
 Milestones 1–9 are implemented: scaffold, weather aggregation, the FAO-56
 engine, the water balance, the full sensor/binary_sensor platform, manual
-cycle recording, the recommendation engine + scheduler, Telegram notifications
-+ repairs, and mode/calibration/declared-cycle controls. See `CLAUDE.md` for
-architecture invariants and `CHANGELOG.md` for what shipped in each milestone.
+cycle recording, the recommendation engine + scheduler, and
+mode/calibration/declared-cycle controls. The notification system built in
+Milestone 8 was later removed entirely (see `CHANGELOG.md`); stale
+weather/WH51 detection remains, surfaced only via Repairs. See `CLAUDE.md`
+for architecture invariants and `CHANGELOG.md` for what shipped in each
+milestone.
 
 ## Documentation
 

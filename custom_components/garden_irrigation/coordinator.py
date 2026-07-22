@@ -20,13 +20,11 @@ always recomputed on every refresh) and the scheduler
 (`coordinator.scheduler`), which only guarantees a refresh happens at 20:00
 and 05:30 local time - it does not gate what gets computed, since the
 final/preview distinction and the once-per-day balance idempotency already
-make every refresh safe regardless of what triggered it. Milestone 8 adds
-the notifier (`coordinator.notifier`) and a minimal "cycle recorded"
-confirmation: since irrigation_log.py itself is out of scope to touch, new
-events are detected here by diffing `irrigation_log.events_for_zone()` ids
-against the set seen as of the last refresh (seeded at startup so pre-
-existing events are never re-notified) - irrigation_log.py's own semantics
-are completely unchanged. Milestone 9 adds the operational state
+make every refresh safe regardless of what triggered it. The notification
+system (Telegram/persistent_notification, morning report, cycle-recorded
+confirmations, and the notify-only monitor advisories) has been removed
+entirely; `scheduler.py`'s periodic tick and `repairs.py` still surface
+stale weather/WH51 data as Repair issues. Milestone 9 adds the operational state
 (`coordinator.mode`, `coordinator.cycle_zone`/`cycle_started_at`/
 `selected_cycle_zone`) behind its own store (STORAGE_KEY_OPERATIONAL) -
 select.py/button.py/binary_sensor.py read and mutate it through the small
@@ -54,11 +52,7 @@ from .balance import BalanceEngine, ZoneBalanceResult
 from .const import (
     CONF_ALTITUDE,
     CONF_ANEMOMETER_HEIGHT,
-    CONF_ZONE1_NAME,
-    CONF_ZONE2_NAME,
     DATA_QUALITY_INITIALIZING,
-    DEFAULT_ZONE1_NAME,
-    DEFAULT_ZONE2_NAME,
     DOMAIN,
     MODE_CALIBRATION,
     STORAGE_KEY_OPERATIONAL,
@@ -66,25 +60,13 @@ from .const import (
     ZONES,
 )
 from .et0 import compute_et0
-from .irrigation_log import IrrigationAggregate, IrrigationEvent, IrrigationLog
-from .notify import TelegramNotifier, translate
+from .irrigation_log import IrrigationAggregate, IrrigationLog
 from .recommendation import RecommendationEngine, ZoneRecommendationBundle
 from .scheduler import Scheduler
 from .storage import GardenIrrigationStore
 from .weather import WeatherAggregator
 
 _LOGGER = logging.getLogger(__name__)
-
-
-def _zone_name(entry: ConfigEntry, zone_id: str) -> str:
-    """Return the user-configured display name for `zone_id`.
-
-    Re-implemented here (not imported from sensor.py/binary_sensor.py -
-    private helpers, and both are out of scope to touch in M8).
-    """
-    if zone_id == ZONE_1:
-        return str(entry.data.get(CONF_ZONE1_NAME, DEFAULT_ZONE1_NAME))
-    return str(entry.data.get(CONF_ZONE2_NAME, DEFAULT_ZONE2_NAME))
 
 
 class GardenIrrigationCoordinator(DataUpdateCoordinator[dict[str, Any]]):
@@ -111,10 +93,6 @@ class GardenIrrigationCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             hass, entry, self.balance, self.irrigation_log
         )
         self.scheduler = Scheduler(hass, self)
-        self.notifier = TelegramNotifier(hass, entry)
-        self._notified_irrigation_event_ids: dict[str, set[str]] = {
-            zone_id: set() for zone_id in ZONES
-        }
 
         # Milestone 9: operational state (select.mode + the declared cycle).
         # Purely informational/UX - see async_start_cycle/async_end_cycle.
@@ -132,12 +110,6 @@ class GardenIrrigationCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         await self.balance.async_setup()
         await self.irrigation_log.async_setup()
         await self.recommendation.async_setup()
-        # Seed with events that already existed before startup, so restoring
-        # a persisted event log never re-sends a "cycle recorded" confirmation.
-        for zone_id in ZONES:
-            self._notified_irrigation_event_ids[zone_id] = {
-                event.id for event in self.irrigation_log.events_for_zone(zone_id)
-            }
         await self._async_restore_operational_state()
         await self.scheduler.async_setup()
 
@@ -262,8 +234,6 @@ class GardenIrrigationCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             for zone_id in ZONES
         }
 
-        await self._notify_new_irrigation_events()
-
         return {
             "data_quality": DATA_QUALITY_INITIALIZING,
             "et0": et0_result,
@@ -271,45 +241,3 @@ class GardenIrrigationCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             "irrigation": irrigation_totals,
             "recommendation": recommendations,
         }
-
-    async def _notify_new_irrigation_events(self) -> None:
-        """Send a "cycle recorded" confirmation for any event not seen yet.
-
-        Diffs `irrigation_log.events_for_zone()` against the ids already
-        notified (seeded at startup - see async_setup) - irrigation_log.py
-        itself is untouched and has no notify-on-record hook of its own.
-        """
-        for zone_id in ZONES:
-            seen = self._notified_irrigation_event_ids[zone_id]
-            for event in self.irrigation_log.events_for_zone(zone_id):
-                if event.id in seen:
-                    continue
-                seen.add(event.id)
-                await self._notify_cycle_recorded(zone_id, event)
-
-    async def _notify_cycle_recorded(
-        self, zone_id: str, event: IrrigationEvent
-    ) -> None:
-        zone_name = _zone_name(self.entry, zone_id)
-        if event.mm is not None:
-            message = translate(
-                self.hass,
-                "cycle_recorded",
-                zone_id=zone_name,
-                source=event.source,
-                minutes=event.duration_minutes,
-                mm=event.mm,
-            )
-        else:
-            message = translate(
-                self.hass,
-                "cycle_recorded_uncalibrated",
-                zone_id=zone_name,
-                source=event.source,
-                minutes=event.duration_minutes,
-            )
-        await self.notifier.async_send(
-            message,
-            title=translate(self.hass, "cycle_recorded_title"),
-            notification_id=f"cycle_{event.id}",
-        )

@@ -52,15 +52,6 @@
           "zone2_mm_per_minute_tank": "Zone 2 rainwater tank: mm per minute (leave empty if not calibrated)",
           "zone2_flow_rate_mains_lpm": "Zone 2 mains water: estimated flow rate (L/min)"
         }
-      },
-      "telegram": {
-        "title": "Telegram notifications (optional)",
-        "description": "Fully optional and can be skipped now: leave every field empty and submit to finish setup. You can configure or change Telegram later from this integration's options.",
-        "data": {
-          "telegram_entity_id": "Telegram notify target entity (optional)",
-          "telegram_config_entry_id": "Telegram bot config entry id (optional)",
-          "telegram_chat_id": "Telegram chat id (optional)"
-        }
       }
     },
     "error": {
@@ -77,7 +68,7 @@
     "step": {
       "init": {
         "title": "Garden Irrigation options",
-        "description": "The full set of operational options (Kc, thresholds, caps, Telegram, ...) is added in later milestones."
+        "description": "The full set of operational options (Kc, thresholds, caps, ...) is added in later milestones."
       }
     }
   },
@@ -180,31 +171,9 @@
           "description": "Optional: repeating a call with the same key is a no-op (protects against accidental double submission)."
         }
       }
-    },
-    "test_telegram": {
-      "name": "Send Telegram test",
-      "description": "Send a one-off test message through the configured notifier (Telegram, or its persistent-notification fallback) to verify delivery. Does not record any irrigation or change the water balance.",
-      "fields": {
-        "message": {
-          "name": "Message",
-          "description": "Optional custom text; a default test message is used if left empty."
-        }
-      }
     }
   },
   "issues": {
-    "telegram_not_configured": {
-      "title": "Telegram is not configured",
-      "description": "Garden Irrigation could not send a notification because no Telegram target is configured. Reports/advisories are being shown as persistent notifications instead. Configure a Telegram notify entity or a bot config entry and chat id from this integration's setup or options to enable Telegram delivery."
-    },
-    "telegram_target_invalid": {
-      "title": "Telegram target is not available",
-      "description": "Garden Irrigation has a Telegram target configured, but the corresponding service is not available (the Telegram integration or notify entity may not be set up). Reports/advisories are being shown as persistent notifications instead."
-    },
-    "telegram_send_failed": {
-      "title": "Telegram delivery failed",
-      "description": "Garden Irrigation's last attempt to send a Telegram message failed. Reports/advisories are being shown as persistent notifications instead. Check the Telegram bot configuration and connectivity."
-    },
     "wh51_stale": {
       "title": "Soil moisture sensor not updating ({zone_id})",
       "description": "The WH51 soil moisture sensor for {zone_id} has not reported a new value within the expected time. Check the sensor's battery, signal, and connectivity."

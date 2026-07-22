@@ -14,7 +14,6 @@ from custom_components.garden_irrigation.const import (
     DOMAIN,
     STEP_RAIN,
     STEP_SOIL,
-    STEP_TELEGRAM,
     STEP_WEATHER,
     STEP_ZONES,
 )
@@ -24,14 +23,13 @@ from .const import (
     rain_step_input,
     setup_mock_weather_states,
     soil_step_input,
-    telegram_step_input,
     user_step_input,
     zones_step_input,
 )
 
 
 async def _advance_to_create_entry(hass: HomeAssistant) -> dict:
-    """Run all five steps with valid input and return the final flow result."""
+    """Run all four steps with valid input and return the final flow result."""
     result = await hass.config_entries.flow.async_init(
         DOMAIN, context={"source": config_entries.SOURCE_USER}
     )
@@ -56,19 +54,13 @@ async def _advance_to_create_entry(hass: HomeAssistant) -> dict:
     assert result["type"] is FlowResultType.FORM
     assert result["step_id"] == STEP_ZONES
 
-    result = await hass.config_entries.flow.async_configure(
-        result["flow_id"], zones_step_input()
-    )
-    assert result["type"] is FlowResultType.FORM
-    assert result["step_id"] == STEP_TELEGRAM
-
     return await hass.config_entries.flow.async_configure(
-        result["flow_id"], telegram_step_input()
+        result["flow_id"], zones_step_input()
     )
 
 
 async def test_happy_path_creates_entry(hass: HomeAssistant) -> None:
-    """All five steps, valid input, optional fields omitted -> entry created."""
+    """All four steps, valid input, optional fields omitted -> entry created."""
     setup_mock_weather_states(hass)
 
     result = await _advance_to_create_entry(hass)
@@ -80,7 +72,6 @@ async def test_happy_path_creates_entry(hass: HomeAssistant) -> None:
     # Optional fields left empty in the flow must not be required to finish.
     assert "wind_gust_entity" not in result["data"]
     assert "zone1_battery_entity" not in result["data"]
-    assert "telegram_entity_id" not in result["data"]
 
 
 async def test_entity_not_found_blocks_step(hass: HomeAssistant) -> None:

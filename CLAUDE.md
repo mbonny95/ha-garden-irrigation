@@ -5,13 +5,12 @@ Home Assistant custom integration for **irrigation decision support** of two
 
 ## Golden rules (never violate)
 - **v1 NEVER actuates hardware.** No valve/pump/relay control. The integration
-  only reads existing HA entities, computes, recommends, and notifies. Any code
-  that would command real hardware is OUT OF SCOPE for v1 — stop and ask.
+  only reads existing HA entities, computes, and recommends. Any code that
+  would command real hardware is OUT OF SCOPE for v1 — stop and ask.
 - Estimates vs measurements: liters/mm are **estimates** (no flow meter, no tank
-  level). Always label them as estimates in UI, README, and messages.
+  level). Always label them as estimates in UI and README.
 - No cloud services, no external weather providers. All computation is local.
-- No secrets in the repo (no Telegram token/chat id). Telegram target is set via
-  options flow only.
+- No secrets in the repo.
 
 ## Architecture invariants
 - Everything **async**; no blocking I/O in the event loop. DB/recorder access
@@ -31,8 +30,8 @@ Home Assistant custom integration for **irrigation decision support** of two
   (default 0.1 mm), `delta=0` on small decrements, no inference from the first
   post-restart value without backfill/next update, forced flush on midnight roll /
   unload / consolidation.
-- Notifier is an **abstract adapter** (Telegram for MVP, degradable to
-  persistent_notification). Never hard-depend on telegram_bot.
+- No notification system. The integration never sends a message anywhere;
+  stale WH51/weather data is surfaced only as a Repair issue (`repairs.py`).
 
 ## Water/agronomy model (do not "simplify" away)
 - ET0: FAO-56 Penman-Monteith daily. **No automatic fallback** in v1: if core

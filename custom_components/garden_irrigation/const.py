@@ -72,7 +72,6 @@ STEP_WEATHER = "user"
 STEP_RAIN = "rain"
 STEP_SOIL = "soil"
 STEP_ZONES = "zones"
-STEP_TELEGRAM = "telegram"
 
 # --- Config keys: position & FAO-56 weather inputs (step a) -----------------
 CONF_ALTITUDE = "altitude"
@@ -111,11 +110,6 @@ CONF_ZONE2_AREA_M2 = "zone2_area_m2"
 CONF_ZONE2_MM_PER_MIN_MAINS = "zone2_mm_per_minute_mains"
 CONF_ZONE2_MM_PER_MIN_TANK = "zone2_mm_per_minute_tank"  # nullable: not calibrated
 CONF_ZONE2_FLOW_RATE_MAINS_LPM = "zone2_flow_rate_mains_lpm"
-
-# --- Config keys: Telegram (step e, optional/skippable) ----------------------
-CONF_TELEGRAM_ENTITY_ID = "telegram_entity_id"
-CONF_TELEGRAM_CONFIG_ENTRY_ID = "telegram_config_entry_id"
-CONF_TELEGRAM_CHAT_ID = "telegram_chat_id"
 
 # --- Defaults: position -------------------------------------------------
 DEFAULT_ALTITUDE_M = 116

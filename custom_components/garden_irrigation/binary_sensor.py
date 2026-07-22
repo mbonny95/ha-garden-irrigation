@@ -7,9 +7,8 @@ ZoneBalanceResult, no new logic needed). Milestone 9 adds
 `irrigation_in_progress`: a single, zone-agnostic, purely declarative sensor
 reflecting `coordinator.cycle_zone` (set/cleared by button.py's start/end
 cycle buttons) - never inferred from any other sensor. `data_stale` (the
-staleness-threshold monitor built alongside notify.py in M8) has no
-dedicated binary_sensor - M8 exposed it as a repair issue instead, and adding
-one now is out of scope for M9.
+staleness-threshold monitor in scheduler.py) has no dedicated binary_sensor -
+it's exposed as a Repair issue instead (see repairs.py).
 """
 
 from __future__ import annotations

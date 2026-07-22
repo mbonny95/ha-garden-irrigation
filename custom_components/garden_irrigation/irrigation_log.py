@@ -2,9 +2,8 @@
 
 Milestone 6 scope only: the `garden_irrigation.record_irrigation` service, the
 persisted event log (365-day retention, its own Store), and per-source
-aggregates derived on demand from that log. No recommendation/scheduling/
-notification logic happens here - see recommendation.py / scheduler.py /
-notify.py in later milestones.
+aggregates derived on demand from that log. No recommendation/scheduling
+logic happens here - see recommendation.py / scheduler.py.
 
 Idempotency: every event carries an id (a client-supplied `idempotency_key`,
 or an auto-generated UUID if none was given). A repeat call with the same

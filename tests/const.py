@@ -173,7 +173,10 @@ def zones_step_input(**overrides: Any) -> dict[str, Any]:
 
 
 def telegram_step_input(**overrides: Any) -> dict[str, Any]:
-    """Valid (empty/skippable) input for config-flow step (e): Telegram."""
+    """No-op: the config flow no longer has a Telegram step (the whole
+    notification system was removed) - kept only so the many `_full_entry_data()`
+    helpers across the test suite that still spread `**telegram_step_input()`
+    don't all need editing; it always contributes an empty dict."""
     data: dict[str, Any] = {}
     data.update(overrides)
     return data

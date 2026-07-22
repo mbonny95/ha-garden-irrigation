@@ -3,6 +3,26 @@
 All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Removed
+- The entire notification system: `TelegramNotifier`/`PersistentNotificationNotifier`
+  (`notify.py`, removed), the Telegram config-flow step and its config keys,
+  the morning report, the evening preview report, cycle-recorded
+  confirmations, the `test_telegram` service, and the notify-only WH51
+  battery/signal/wind/rain-during-cycle advisories. The integration no longer
+  sends any message anywhere.
+- The `telegram_not_configured`/`telegram_target_invalid`/`telegram_send_failed`
+  Repair issues (nothing left to misconfigure).
+
+### Changed
+- The config flow is now four steps instead of five (no Telegram step).
+- Diagnostics no longer redact a Telegram target (there is none left to redact).
+
+Stale WH51/weather-data detection is unchanged and still surfaces as a
+Repair issue (Settings → System → Repairs) - only the notification/report
+layer on top of it was removed.
+
 ## [0.1.0] - 2026-07-13
 
 Initial decision-support release: reads existing weather/soil-moisture

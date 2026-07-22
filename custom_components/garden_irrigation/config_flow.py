@@ -1,11 +1,11 @@
 """Config flow for garden_irrigation.
 
-Five ordered steps, per the approved plan:
-  (a) user     - position + FAO-56 weather inputs (wind_gust is optional)
-  (b) rain     - daily_rainfall and rain_rate are mandatory; 24h/event optional
-  (c) soil     - WH51 soil moisture per zone (battery/signal optional)
-  (d) zones    - zone names/areas/distribution (mm/min mains + tank, nullable)
-  (e) telegram - fully optional and skippable, completable later from options
+Four ordered steps:
+  (a) user  - position + FAO-56 weather inputs (wind_gust is optional)
+  (b) rain  - daily_rainfall and rain_rate are mandatory; 24h/event optional
+  (c) soil  - WH51 soil moisture per zone (battery/signal optional)
+  (d) zones - zone names/areas/distribution (mm/min mains + tank, nullable);
+              creates the entry directly on submit.
 
 No Ecowitt entity names are hardcoded anywhere in this module: the user always
 picks entities via an EntitySelector.
@@ -30,9 +30,6 @@ from .const import (
     CONF_RAIN_EVENT_ENTITY,
     CONF_RAIN_RATE_ENTITY,
     CONF_SOLAR_RADIATION_ENTITY,
-    CONF_TELEGRAM_CHAT_ID,
-    CONF_TELEGRAM_CONFIG_ENTRY_ID,
-    CONF_TELEGRAM_ENTITY_ID,
     CONF_TEMPERATURE_ENTITY,
     CONF_WIND_GUST_ENTITY,
     CONF_WIND_SPEED_ENTITY,
@@ -65,7 +62,6 @@ from .const import (
     DOMAIN,
     STEP_RAIN,
     STEP_SOIL,
-    STEP_TELEGRAM,
     STEP_WEATHER,
     STEP_ZONES,
     UNIT_HUMIDITY,
@@ -232,7 +228,7 @@ class GardenIrrigationConfigFlow(ConfigFlow, domain=DOMAIN):
         """Step (d): zone names/areas/distribution. Tank rate may be null."""
         if user_input is not None:
             self._data.update(user_input)
-            return await self.async_step_telegram()
+            return self.async_create_entry(title="Garden Irrigation", data=self._data)
 
         schema = vol.Schema(
             {
@@ -266,25 +262,6 @@ class GardenIrrigationConfigFlow(ConfigFlow, domain=DOMAIN):
         )
         return self.async_show_form(step_id=STEP_ZONES, data_schema=schema)
 
-    async def async_step_telegram(
-        self, user_input: dict[str, Any] | None = None
-    ) -> Any:
-        """Step (e): Telegram target, fully optional and skippable."""
-        if user_input is not None:
-            self._data.update(user_input)
-            return self.async_create_entry(title="Garden Irrigation", data=self._data)
-
-        schema = vol.Schema(
-            {
-                vol.Optional(CONF_TELEGRAM_ENTITY_ID): _entity_selector(
-                    domain="notify"
-                ),
-                vol.Optional(CONF_TELEGRAM_CONFIG_ENTRY_ID): str,
-                vol.Optional(CONF_TELEGRAM_CHAT_ID): str,
-            }
-        )
-        return self.async_show_form(step_id=STEP_TELEGRAM, data_schema=schema)
-
     @staticmethod
     @callback
     def async_get_options_flow(
@@ -297,9 +274,8 @@ class GardenIrrigationConfigFlow(ConfigFlow, domain=DOMAIN):
 class GardenIrrigationOptionsFlow(OptionsFlow):
     """Minimal pass-through options flow stub.
 
-    The full operational options set (Kc, thresholds, caps, Telegram, ...)
-    lands in later milestones; Milestone 1 only proves the flow opens and
-    saves.
+    The full operational options set (Kc, thresholds, caps, ...) lands in
+    later milestones; Milestone 1 only proves the flow opens and saves.
     """
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> Any:

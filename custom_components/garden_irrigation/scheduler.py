@@ -1,60 +1,36 @@
 """Scheduler for garden_irrigation.
 
-Milestone 7 added two daily local-time triggers -
-`DEFAULT_EVENING_CHECK_TIME` (20:00) and `DEFAULT_MORNING_CHECK_TIME` (05:30)
-- that each simply request a coordinator refresh. Both the once-per-day
-finalization of "yesterday" (balance.py, idempotent via `last_balance_date`)
-and the always-recomputed, never-persisted "today so far" preview
-(recommendation.py) already happen on EVERY coordinator refresh, regardless
-of what triggered it - so this module does not need to special-case which
-trigger fired to decide what to compute.
+Two daily local-time triggers - `DEFAULT_EVENING_CHECK_TIME` (20:00) and
+`DEFAULT_MORNING_CHECK_TIME` (05:30) - that each simply request a coordinator
+refresh. Both the once-per-day finalization of "yesterday" (balance.py,
+idempotent via `last_balance_date`) and the always-recomputed, never-persisted
+"today so far" preview (recommendation.py) already happen on EVERY
+coordinator refresh, regardless of what triggered it - so this module does
+not need to special-case which trigger fired to decide what to compute.
 
-Milestone 8 adds:
-  - the morning report (sent after the 05:30 refresh, from the just-finalized
-    `coordinator.data["recommendation"]`);
-  - a periodic (`MONITOR_INTERVAL`) advisory tick checking WH51/weather
-    staleness, WH51 battery/signal, and strong wind. A periodic timer is used
-    here deliberately and narrowly: staleness is "nothing happened for N
-    hours", which by definition cannot be noticed by a purely event-driven
-    listener (no new state means no new event to react to). This is a clock
-    heartbeat, not recorder polling - every check reads only the current live
-    state (`hass.states.get`) or already-computed weather.py aggregates,
-    never touching the recorder.
-  - transition-based deduplication: each check tracks its own last-known
-    severity and only notifies/creates-or-clears a repair issue when that
-    severity actually changes, never on every tick while unchanged.
+A periodic (`MONITOR_INTERVAL`) tick checks WH51/weather staleness and
+surfaces it as a Repair issue (see repairs.py). A periodic timer is used here
+deliberately and narrowly: staleness is "nothing happened for N hours", which
+by definition cannot be noticed by a purely event-driven listener (no new
+state means no new event to react to). This is a clock heartbeat, not
+recorder polling - every check reads only the current live state
+(`hass.states.get`), never touching the recorder. `ir.async_create_issue`/
+`async_delete_issue` are themselves idempotent (repairs.py), so this simply
+calls create-or-clear on every tick based on the currently computed level -
+no separate transition-tracking is needed to avoid spamming the Repairs UI.
 
-Milestone 9 adds one more check to the same periodic tick: a rain-rate
-advisory while a manual cycle is declared active (`coordinator.cycle_zone`,
-set/cleared by button.py's start/end cycle buttons - M7/M8 could not add
-this yet since that state did not exist). It follows the exact same
-notify-only, transition-deduplicated pattern as the wind/battery/signal
-checks above (no repair issue - this is a transient advisory, not a
-configuration problem) and reuses `CONF_RAIN_RATE_ENTITY`, already read
-elsewhere for the same "is it raining right now" diagnostic purpose
-(CLAUDE.md). Its message text is a small local IT/EN lookup rather than an
-addition to notify.py's `translate()` table - notify.py is out of scope to
-touch in M9.
-
-This later pass closes the two gaps left against the plan's notification
-block: the 20:00 trigger only ever requested a refresh, never actually
-notifying anyone of the preview it computes (`_send_evening_preview`, new);
-and the morning report only ever named the zone by its raw id and the
-recommended mm, dropping deficit/minutes/reasons that were already sitting
-on `ZoneRecommendationResult` (`_zone_report_line`, shared by both reports
-now, new). Every other check in this file (stale weather/WH51, WH51 battery/
-signal, wind, rain-during-cycle) and the uncalibrated-source warning
-(`coordinator._notify_cycle_recorded`, already dispatching
-`cycle_recorded_uncalibrated` deduplicated by event id) were already
-complete and are unchanged here.
+The notification system (Telegram/persistent_notification, morning report,
+evening preview, cycle-recorded confirmations, and the notify-only WH51
+battery/signal/wind/rain-during-cycle advisories) has been removed entirely.
 """
 
 from __future__ import annotations
 
 import logging
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import CALLBACK_TYPE, HomeAssistant
 from homeassistant.helpers.event import (
     async_track_time_change,
@@ -65,17 +41,10 @@ from . import repairs
 from .const import (
     CONF_HUMIDITY_ENTITY,
     CONF_PRESSURE_ENTITY,
-    CONF_RAIN_RATE_ENTITY,
     CONF_SOLAR_RADIATION_ENTITY,
     CONF_TEMPERATURE_ENTITY,
     CONF_WIND_SPEED_ENTITY,
-    CONF_ZONE1_BATTERY_ENTITY,
-    CONF_ZONE1_NAME,
-    CONF_ZONE1_SIGNAL_ENTITY,
     CONF_ZONE1_SOIL_MOISTURE_ENTITY,
-    CONF_ZONE2_BATTERY_ENTITY,
-    CONF_ZONE2_NAME,
-    CONF_ZONE2_SIGNAL_ENTITY,
     CONF_ZONE2_SOIL_MOISTURE_ENTITY,
     DEFAULT_EVENING_CHECK_TIME,
     DEFAULT_MORNING_CHECK_TIME,
@@ -83,17 +52,9 @@ from .const import (
     DEFAULT_STALE_WEATHER_WARNING_MINUTES,
     DEFAULT_STALE_WH51_ERROR_HOURS,
     DEFAULT_STALE_WH51_WARNING_HOURS,
-    DEFAULT_WH51_BATTERY_WARNING_PERCENT,
-    DEFAULT_WH51_SIGNAL_WARNING,
-    DEFAULT_WIND_WARNING_AVG_KMH,
-    DEFAULT_WIND_WARNING_GUST_KMH,
-    DEFAULT_ZONE1_NAME,
-    DEFAULT_ZONE2_NAME,
-    SOURCE_MAINS_WATER,
     ZONE_1,
     ZONES,
 )
-from .notify import translate
 
 if TYPE_CHECKING:
     from .coordinator import GardenIrrigationCoordinator
@@ -109,7 +70,7 @@ def _parse_hms(value: str) -> tuple[int, int, int]:
     return int(hour_str), int(minute_str), int(second_str)
 
 
-def _soil_moisture_entity_id(entry: Any, zone_id: str) -> str:
+def _soil_moisture_entity_id(entry: ConfigEntry, zone_id: str) -> str:
     key = (
         CONF_ZONE1_SOIL_MOISTURE_ENTITY
         if zone_id == ZONE_1
@@ -118,34 +79,12 @@ def _soil_moisture_entity_id(entry: Any, zone_id: str) -> str:
     return str(entry.data[key])
 
 
-def _battery_entity_id(entry: Any, zone_id: str) -> str | None:
-    key = CONF_ZONE1_BATTERY_ENTITY if zone_id == ZONE_1 else CONF_ZONE2_BATTERY_ENTITY
-    value = entry.data.get(key)
-    return str(value) if value else None
-
-
-def _signal_entity_id(entry: Any, zone_id: str) -> str | None:
-    key = CONF_ZONE1_SIGNAL_ENTITY if zone_id == ZONE_1 else CONF_ZONE2_SIGNAL_ENTITY
-    value = entry.data.get(key)
-    return str(value) if value else None
-
-
 def _entity_age(hass: HomeAssistant, entity_id: str, now: datetime) -> timedelta | None:
     """Age of `entity_id`'s current state, or None if missing/unknown/unavailable."""
     state = hass.states.get(entity_id)
     if state is None or state.state in ("unknown", "unavailable"):
         return None
     return now - state.last_updated
-
-
-def _numeric_state(hass: HomeAssistant, entity_id: str) -> float | None:
-    state = hass.states.get(entity_id)
-    if state is None or state.state in ("unknown", "unavailable"):
-        return None
-    try:
-        return float(state.state)
-    except (TypeError, ValueError):
-        return None
 
 
 def _stale_level(
@@ -159,55 +98,8 @@ def _stale_level(
     return None
 
 
-def _zone_name(entry: Any, zone_id: str) -> str:
-    """Return the user-configured display name for `zone_id`.
-
-    Re-implemented here (not imported from sensor.py/binary_sensor.py/
-    button.py - all out of scope to touch, and each already re-implements
-    this same tiny helper rather than sharing a private one cross-module).
-    """
-    if zone_id == ZONE_1:
-        return str(entry.data.get(CONF_ZONE1_NAME, DEFAULT_ZONE1_NAME))
-    return str(entry.data.get(CONF_ZONE2_NAME, DEFAULT_ZONE2_NAME))
-
-
-def _minutes_text(hass: HomeAssistant, minutes: float | None) -> str:
-    """Pre-formatted minutes for the mains-water source, or a "not available"
-    marker if that source isn't calibrated for the zone."""
-    if minutes is None:
-        return "n/d" if hass.config.language == "it" else "n/a"
-    return f"{minutes:.1f}"
-
-
-def _reasons_text(hass: HomeAssistant, result: Any) -> str:
-    """Compact, bracketed tail listing the recommendation's own internal
-    reason/limit/warning codes - only when there's something to show, so the
-    common case (nothing notable) leaves the report line unchanged."""
-    codes = [*result.reasons, *result.limits_applied, *result.warnings]
-    if not codes:
-        return ""
-    label = "motivi" if hass.config.language == "it" else "notes"
-    return f" [{label}: {', '.join(codes)}]"
-
-
-def _rain_during_cycle_message(
-    hass: HomeAssistant, zone_id: str, rain_rate: float
-) -> str:
-    """Small local IT/EN lookup - notify.py's shared table is out of scope
-    to touch in M9 (see module docstring)."""
-    if hass.config.language == "it":
-        return (
-            f"Sta piovendo (intensità {rain_rate:.1f} mm/h) durante un ciclo "
-            f"dichiarato attivo per {zone_id}: valuta di interrompere l'irrigazione."
-        )
-    return (
-        f"It's raining (rate {rain_rate:.1f} mm/h) during a declared active "
-        f"cycle for {zone_id}: consider stopping irrigation."
-    )
-
-
 class Scheduler:
-    """Owns the daily local-time triggers and the periodic advisory monitor.
+    """Owns the daily local-time triggers and the periodic staleness monitor.
 
     Not an entity: plain domain logic held by the coordinator
     (`coordinator.scheduler`).
@@ -222,7 +114,6 @@ class Scheduler:
         self._unsub_preview: CALLBACK_TYPE | None = None
         self._unsub_finalize: CALLBACK_TYPE | None = None
         self._unsub_monitor: CALLBACK_TYPE | None = None
-        self._monitor_severity: dict[str, str | None] = {}
 
     async def async_setup(self) -> None:
         """Register the 20:00/05:30 triggers and the periodic monitor tick."""
@@ -263,114 +154,19 @@ class Scheduler:
             self._unsub_monitor = None
 
     async def _handle_evening_preview(self, now: datetime) -> None:
-        """20:00 local: refresh, then send the (never-persisted) preview report."""
+        """20:00 local: guarantee a refresh so the preview reflects today so far."""
         await self._coordinator.async_request_refresh()
-        await self._send_evening_preview()
 
     async def _handle_morning_finalize(self, now: datetime) -> None:
-        """05:30 local: guarantee a refresh, then send the morning report."""
+        """05:30 local: guarantee a refresh finalizing the just-completed day."""
         await self._coordinator.async_request_refresh()
-        await self._send_morning_report()
 
-    def _zone_report_line(self, zone_id: str, result: Any) -> str:
-        """One report line for `result` (either a bundle's `final` or
-        `preview` - same shape, see recommendation.py's ZoneRecommendationResult),
-        shared by the morning report and the evening preview so the two never
-        drift apart. Reports "not ready" plainly (no invented numbers) per
-        CLAUDE.md's no-automatic-fallback rule; otherwise always includes the
-        zone name and current deficit, even when no irrigation is needed."""
-        zone_name = _zone_name(self._coordinator.entry, zone_id)
-        if not result.ready:
-            return translate(self.hass, "morning_report_not_ready", zone_name=zone_name)
-        deficit = result.deficit_mm if result.deficit_mm is not None else 0.0
-        if result.needs_irrigation:
-            source = result.sources.get(SOURCE_MAINS_WATER) if result.sources else None
-            minutes = source.minutes if source is not None else None
-            return translate(
-                self.hass,
-                "morning_report_needs",
-                zone_name=zone_name,
-                mm=result.recommended_mm or 0.0,
-                minutes=_minutes_text(self.hass, minutes),
-                deficit=deficit,
-                reasons=_reasons_text(self.hass, result),
-            )
-        return translate(
-            self.hass, "morning_report_ok", zone_name=zone_name, deficit=deficit
-        )
-
-    async def _send_morning_report(self) -> None:
-        """05:30: the FINAL, persisted-balance-based recommendation - what
-        actually happened/is recommended for the just-completed day."""
-        data = self._coordinator.data
-        if not data:
-            return
-        recommendations = data.get("recommendation", {})
-        lines: list[str] = []
-        for zone_id in ZONES:
-            bundle = recommendations.get(zone_id)
-            if bundle is None:
-                continue
-            lines.append(self._zone_report_line(zone_id, bundle.final))
-        if not lines:
-            return
-        await self._coordinator.notifier.async_send(
-            "\n".join(lines),
-            title=translate(self.hass, "morning_report_title"),
-            notification_id="morning_report",
-        )
-
-    async def _send_evening_preview(self) -> None:
-        """20:00: the PREVIEW variant only ("if today ended right now") -
-        recommendation.py never persists this into the deficit, and neither
-        does sending it here; a distinct title/notification_id from the
-        morning report keeps it clearly labeled as a preview."""
-        data = self._coordinator.data
-        if not data:
-            return
-        recommendations = data.get("recommendation", {})
-        lines: list[str] = []
-        for zone_id in ZONES:
-            bundle = recommendations.get(zone_id)
-            if bundle is None:
-                continue
-            lines.append(self._zone_report_line(zone_id, bundle.preview))
-        if not lines:
-            return
-        await self._coordinator.notifier.async_send(
-            "\n".join(lines),
-            title=translate(self.hass, "evening_preview_title"),
-            notification_id="evening_preview",
-        )
-
-    # -- Periodic advisory monitor -----------------------------------------
+    # -- Periodic staleness monitor -----------------------------------------
 
     async def _handle_monitor_tick(self, now: datetime) -> None:
-        """Check WH51/weather staleness, WH51 battery/signal, wind, and
-        rain-rate during a declared active cycle."""
+        """Check WH51/weather staleness and update the matching Repair issues."""
         await self._check_wh51_stale(now)
         await self._check_weather_stale(now)
-        await self._check_wh51_battery_signal()
-        await self._check_wind()
-        await self._check_rain_during_cycle()
-
-    async def _apply_transition(
-        self, key: str, level: str | None, message: str | None
-    ) -> bool:
-        """Update `key`'s tracked severity; return True if it just changed.
-
-        Notifying only happens when `level` differs from the last tick's
-        value for this `key` - the actual dedup mechanism for every check.
-        """
-        previous = self._monitor_severity.get(key)
-        if level == previous:
-            return False
-        self._monitor_severity[key] = level
-        if level is not None and message is not None:
-            await self._coordinator.notifier.async_send(
-                message, title="Garden Irrigation", notification_id=key
-            )
-        return True
 
     async def _check_wh51_stale(self, now: datetime) -> None:
         entry = self._coordinator.entry
@@ -380,16 +176,6 @@ class Scheduler:
             entity_id = _soil_moisture_entity_id(entry, zone_id)
             age = _entity_age(self.hass, entity_id, now)
             level = _stale_level(age, warning, error)
-            message = (
-                translate(self.hass, "wh51_stale", zone_id=zone_id, level=level)
-                if level is not None
-                else None
-            )
-            changed = await self._apply_transition(
-                f"wh51_stale_{zone_id}", level, message
-            )
-            if not changed:
-                continue
             if level is None:
                 repairs.async_clear_wh51_stale_issue(self.hass, zone_id)
             else:
@@ -411,91 +197,7 @@ class Scheduler:
         warning = timedelta(minutes=DEFAULT_STALE_WEATHER_WARNING_MINUTES)
         error = timedelta(hours=DEFAULT_STALE_WEATHER_ERROR_HOURS)
         level = _stale_level(oldest, warning, error)
-        message = (
-            translate(self.hass, "weather_stale", level=level)
-            if level is not None
-            else None
-        )
-        changed = await self._apply_transition("weather_stale", level, message)
-        if not changed:
-            return
         if level is None:
             repairs.async_clear_weather_stale_issue(self.hass)
         else:
             repairs.async_create_weather_stale_issue(self.hass, level)
-
-    async def _check_wh51_battery_signal(self) -> None:
-        entry = self._coordinator.entry
-        for zone_id in ZONES:
-            battery_entity = _battery_entity_id(entry, zone_id)
-            if battery_entity is not None:
-                percent = _numeric_state(self.hass, battery_entity)
-                level = (
-                    "warning"
-                    if percent is not None
-                    and percent < DEFAULT_WH51_BATTERY_WARNING_PERCENT
-                    else None
-                )
-                message = (
-                    translate(
-                        self.hass, "wh51_battery_low", zone_id=zone_id, percent=percent
-                    )
-                    if level is not None
-                    else None
-                )
-                await self._apply_transition(f"wh51_battery_{zone_id}", level, message)
-
-            signal_entity = _signal_entity_id(entry, zone_id)
-            if signal_entity is not None:
-                signal = _numeric_state(self.hass, signal_entity)
-                level = (
-                    "warning"
-                    if signal is not None and signal <= DEFAULT_WH51_SIGNAL_WARNING
-                    else None
-                )
-                message = (
-                    translate(self.hass, "wh51_signal_low", zone_id=zone_id)
-                    if level is not None
-                    else None
-                )
-                await self._apply_transition(f"wh51_signal_{zone_id}", level, message)
-
-    async def _check_wind(self) -> None:
-        snapshot = self._coordinator.weather.today_snapshot()
-        avg = snapshot.wind_mean
-        gust = snapshot.wind_gust_max
-        triggered = (avg is not None and avg >= DEFAULT_WIND_WARNING_AVG_KMH) or (
-            gust is not None and gust >= DEFAULT_WIND_WARNING_GUST_KMH
-        )
-        level = "warning" if triggered else None
-        message = (
-            translate(self.hass, "wind_strong", avg=avg or 0.0, gust=gust or 0.0)
-            if level is not None
-            else None
-        )
-        await self._apply_transition("wind", level, message)
-
-    async def _check_rain_during_cycle(self) -> None:
-        """Rain-rate "stop advisory" while a cycle is declared active.
-
-        No repair issue (see module docstring): this is a transient,
-        situational advisory, not a configuration problem - the same
-        notify-only pattern as wind/battery/signal above.
-        """
-        zone_id = self._coordinator.cycle_zone
-        if zone_id is None:
-            # No active cycle: nothing to check, and silently resolve any
-            # advisory left over from a cycle that has since ended.
-            await self._apply_transition("rain_during_cycle", None, None)
-            return
-
-        rain_rate = _numeric_state(
-            self.hass, self._coordinator.entry.data[CONF_RAIN_RATE_ENTITY]
-        )
-        level = "warning" if rain_rate is not None and rain_rate > 0 else None
-        message = (
-            _rain_during_cycle_message(self.hass, zone_id, rain_rate)
-            if level is not None and rain_rate is not None
-            else None
-        )
-        await self._apply_transition("rain_during_cycle", level, message)

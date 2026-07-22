@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
 from typing import Any
-from unittest.mock import AsyncMock, patch
 
 import pytest
 import voluptuous as vol
@@ -112,55 +111,6 @@ async def test_tank_becomes_calibrated_when_configured(hass: HomeAssistant) -> N
     assert event.calibrated is True
     assert event.mm == pytest.approx(8.0 * ZONE1_TANK_MM_PER_MIN)
     assert event.liters == pytest.approx(event.mm * ZONE1_AREA_M2)
-
-
-# ---------------------------------------------------------------------------
-# Uncalibrated-source warning notification (dedup by event id - coordinator.py's
-# `_notify_cycle_recorded`, triggered by the refresh `async_record_irrigation`
-# already requests; the deficit/recording semantics above are unaffected).
-# ---------------------------------------------------------------------------
-
-
-async def test_uncalibrated_source_notifies_once_per_event(hass: HomeAssistant) -> None:
-    """An uncalibrated-tank cycle sends exactly one notification naming the
-    zone/source/duration, and a later unrelated refresh never repeats it -
-    the dedup is by event id (seeded once per event, not per tick)."""
-    coordinator = _coordinator(hass)
-    log = coordinator.irrigation_log
-
-    with patch.object(coordinator.notifier, "async_send", new=AsyncMock()) as mock_send:
-        event = await log.async_record_irrigation(
-            zone_id=ZONE_1, source=SOURCE_RAINWATER_TANK, duration_minutes=5.0
-        )
-        assert event.calibrated is False
-
-        mock_send.assert_awaited_once()
-        message = mock_send.await_args.args[0]
-        assert "not calibrated" in message or "non calibrata" in message
-        assert mock_send.await_args.kwargs["notification_id"] == f"cycle_{event.id}"
-
-        # A later, unrelated refresh must not re-send the same notification.
-        await coordinator.async_request_refresh()
-        assert mock_send.await_count == 1
-
-
-async def test_calibrated_source_also_notifies_but_with_a_different_message(
-    hass: HomeAssistant,
-) -> None:
-    """Sanity check that the two branches (calibrated/uncalibrated) actually
-    produce different text, not just that something gets sent."""
-    coordinator = _coordinator(hass)
-    log = coordinator.irrigation_log
-
-    with patch.object(coordinator.notifier, "async_send", new=AsyncMock()) as mock_send:
-        await log.async_record_irrigation(
-            zone_id=ZONE_1, source=SOURCE_MAINS_WATER, duration_minutes=5.0
-        )
-
-    mock_send.assert_awaited_once()
-    message = mock_send.await_args.args[0]
-    assert "not calibrated" not in message
-    assert "non calibrata" not in message
 
 
 # ---------------------------------------------------------------------------

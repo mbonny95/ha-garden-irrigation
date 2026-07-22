@@ -254,6 +254,6 @@ views:
               VWC. For the first 14 days after calibration starts it is
               diagnostic-only; afterwards it becomes a soft, explainable
               corroborating signal — never a hard block. See
-              `docs/calibration.md`. Telegram/persistent-notification
-              delivery problems and stale sensor data surface as **Repairs**
-              (Settings → System → Repairs), not as dashboard entities.
+              `docs/calibration.md`. Stale weather/WH51 sensor data surfaces
+              as **Repairs** (Settings → System → Repairs), not as a
+              dashboard entity. This integration sends no notifications.

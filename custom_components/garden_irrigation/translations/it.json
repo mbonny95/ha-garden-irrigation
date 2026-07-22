@@ -52,15 +52,6 @@
           "zone2_mm_per_minute_tank": "Zona 2, vasca: mm al minuto (lascia vuoto se non calibrato)",
           "zone2_flow_rate_mains_lpm": "Zona 2, acquedotto: portata stimata (L/min)"
         }
-      },
-      "telegram": {
-        "title": "Notifiche Telegram (opzionale)",
-        "description": "Completamente opzionale e rinviabile: lascia tutti i campi vuoti e conferma per completare la configurazione. Potrai configurare o modificare Telegram in seguito dalle opzioni dell'integrazione.",
-        "data": {
-          "telegram_entity_id": "Entità target notify Telegram (opzionale)",
-          "telegram_config_entry_id": "ID config entry del bot Telegram (opzionale)",
-          "telegram_chat_id": "Chat ID Telegram (opzionale)"
-        }
       }
     },
     "error": {
@@ -77,7 +68,7 @@
     "step": {
       "init": {
         "title": "Opzioni di Garden Irrigation",
-        "description": "L'insieme completo delle opzioni operative (Kc, soglie, tetti, Telegram, ...) viene aggiunto nelle milestone successive."
+        "description": "L'insieme completo delle opzioni operative (Kc, soglie, tetti, ...) viene aggiunto nelle milestone successive."
       }
     }
   },
@@ -180,31 +171,9 @@
           "description": "Opzionale: ripetere una chiamata con la stessa chiave non ha effetto (protegge da un doppio invio accidentale)."
         }
       }
-    },
-    "test_telegram": {
-      "name": "Invia test Telegram",
-      "description": "Invia un messaggio di prova tramite il notifier configurato (Telegram, o il suo fallback a notifica persistente) per verificarne la consegna. Non registra alcuna irrigazione né modifica il bilancio idrico.",
-      "fields": {
-        "message": {
-          "name": "Messaggio",
-          "description": "Testo personalizzato opzionale; se vuoto viene usato un messaggio di prova predefinito."
-        }
-      }
     }
   },
   "issues": {
-    "telegram_not_configured": {
-      "title": "Telegram non è configurato",
-      "description": "Garden Irrigation non è riuscito a inviare una notifica perché non è configurata nessuna destinazione Telegram. I report/avvisi vengono mostrati come notifiche persistenti. Configura un'entità notify Telegram oppure un config entry del bot e un chat id dalla configurazione o dalle opzioni di questa integrazione per abilitare l'invio via Telegram."
-    },
-    "telegram_target_invalid": {
-      "title": "La destinazione Telegram non è disponibile",
-      "description": "Garden Irrigation ha una destinazione Telegram configurata, ma il servizio corrispondente non è disponibile (l'integrazione Telegram o l'entità notify potrebbero non essere configurate). I report/avvisi vengono mostrati come notifiche persistenti."
-    },
-    "telegram_send_failed": {
-      "title": "Invio Telegram non riuscito",
-      "description": "L'ultimo tentativo di invio di un messaggio Telegram da parte di Garden Irrigation non è riuscito. I report/avvisi vengono mostrati come notifiche persistenti. Verifica la configurazione del bot Telegram e la connettività."
-    },
     "wh51_stale": {
       "title": "Sensore umidità del suolo non aggiornato ({zone_id})",
       "description": "Il sensore di umidità del suolo WH51 per {zone_id} non riporta un nuovo valore entro il tempo atteso. Verifica batteria, segnale e connettività del sensore."
