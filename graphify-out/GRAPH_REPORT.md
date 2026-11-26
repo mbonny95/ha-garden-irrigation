@@ -1,16 +1,16 @@
 # Graph Report - garden-irrigation  (2026-11-26)
 
 ## Corpus Check
-- 65 files · ~35,873 words
+- 65 files · ~36,070 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 898 nodes · 1937 edges · 67 communities (46 shown, 21 thin omitted)
+- 906 nodes · 1958 edges · 65 communities (44 shown, 21 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 74 edges (avg confidence: 0.52)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `54952294`
+- Built from commit: `b5a39b78`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -38,14 +38,12 @@
 - test_services.py
 - __init__.py
 - Irrigation Log: Aggregates
-- services.py
 - .from_subentry
 - .async_schedule_daily_run
 - Integration Manifest
 - InstallationSensor
 - balance.py
 - GardenIrrigationZoneEntity
-- store.py
 - coordinator.py
 - GardenIrrigationEntity
 - Telegram Send Logic
@@ -112,7 +110,7 @@
 - **Cross-linked Project Documentation Set** — readme_readme, docs_readme_docs_readme, docs_agronomy_agronomy_doc, docs_calibration_calibration_doc, docs_fao56_fao56_doc, claude_claude_md [EXTRACTED 1.00]
 - **Milestone 9 Feature Set (modes, calibration override, declared cycle)** — claude_modes_calibration_monitoring, claude_declared_manual_cycle, docs_calibration_wh51_manual_override, changelog_milestone_9_modes_calibration [EXTRACTED 1.00]
 
-## Communities (67 total, 21 thin omitted)
+## Communities (65 total, 21 thin omitted)
 
 ### Community 0 - "Diagnostics & Test Fixtures"
 Cohesion: 0.11
@@ -127,8 +125,8 @@ Cohesion: 0.35
 Nodes (17): _configure(), loaded_entry(), Any, HomeAssistant, MockConfigEntry, Tests for the zone subentry flow., The main entry, set up., _start_add() (+9 more)
 
 ### Community 3 - "Binary Sensor Platform"
-Cohesion: 0.29
-Nodes (7): kc_for_month(), Crop reference data: monthly Kc profiles and depletion fraction p.  Cool-season, Return the Kc of `month` (1 = January) from a 12-value profile., Sanity tests for the agronomic reference tables., test_cool_season_turf_profile(), test_kc_for_month_rejects_invalid_month(), test_kc_for_month_rejects_short_profile()
+Cohesion: 0.19
+Nodes (10): kc_for_month(), Crop reference data: monthly Kc profiles and depletion fraction p.  Cool-season, Return the Kc of `month` (1 = January) from a 12-value profile., Soil reference data.  Available water capacity (AWC) is the midpoint of the θFC, Reference properties of a soil texture class., SoilType, Sanity tests for the agronomic reference tables., test_cool_season_turf_profile() (+2 more)
 
 ### Community 4 - "test_fao56.py"
 Cohesion: 0.07
@@ -147,36 +145,36 @@ Cohesion: 0.09
 Nodes (42): Advisory, Message, StrEnum, Explainable irrigation recommendation for one zone.  Pure function of the zone's, Build the recommendation for one zone., Why the decision is what it is., Advisory conditions shown next to the recommendation., A reason or warning code with the values that explain it. (+34 more)
 
 ### Community 9 - "Config Flow"
-Cohesion: 0.06
-Nodes (39): ConfigFlow, ConfigFlowResult, ConfigSubentryFlow, GardenIrrigationConfigFlow, GardenIrrigationOptionsFlow, _kc_schema(), _number(), Any (+31 more)
+Cohesion: 0.07
+Nodes (36): ConfigFlow, ConfigFlowResult, ConfigSubentryFlow, GardenIrrigationConfigFlow, GardenIrrigationOptionsFlow, _kc_schema(), _number(), Any (+28 more)
 
 ### Community 10 - "Project Governance & Milestones"
 Cohesion: 0.15
 Nodes (13): Declared Manual Cycle In Progress, Rationale: Estimates vs Measurements Labeling, Modes: calibration / monitoring (select.mode), Golden Rule: v1 Never Actuates Hardware, record_irrigation Action, services.yaml (record_irrigation schema), Garden Irrigation Lovelace Dashboard, Weekly Irrigation Cap (30mm default) (+5 more)
 
 ### Community 11 - "Scheduler: Advisory Monitors"
-Cohesion: 0.22
-Nodes (14): DayRecord, IrrigationRecord, Daily balance outcome for one zone (values in mm)., A manually recorded irrigation., _day(), _irrigation(), Any, HomeAssistant (+6 more)
+Cohesion: 0.13
+Nodes (24): Constants shared across the garden_irrigation integration.  Agronomic reference, Typed views of the config entry: site, operating options and zones., One irrigated zone, with presets resolved., ZoneConfig, datetime, HomeAssistant, StrEnum, Soil moisture sensor of a zone (e.g. WH51): device-relative reading.  The percen (+16 more)
 
 ### Community 12 - "test_balance.py"
 Cohesion: 0.11
 Nodes (31): apply_day(), current_deficit(), DayBalance, depletion_fraction(), effective_rain(), FAO-56 root-zone soil water balance, single crop coefficient (chapter 8).  Deple, Deficit right now: last closed day minus irrigation recorded today., Water holding capacity of a zone's root zone (mm). (+23 more)
 
 ### Community 13 - "test_daily_weather.py"
-Cohesion: 0.08
-Nodes (49): aggregate_day(), async_read_day(), DayWeather, _max(), _min(), date, HomeAssistant, StatisticsRow (+41 more)
+Cohesion: 0.14
+Nodes (31): aggregate_day(), async_read_day(), _max(), _min(), date, HomeAssistant, StatisticsRow, Daily FAO-56 weather from the recorder's long-term hourly statistics.  One bound (+23 more)
 
 ### Community 14 - "test_repairs.py"
-Cohesion: 0.15
-Nodes (22): Binary sensor: does a zone need irrigation today., Everything known about a zone right now., ZoneSnapshot, messages_as_attributes(), Any, Base entities: one device for the installation, one per zone., Round for attributes, keeping None., Reason/warning codes with their (rounded) values, for attributes. (+14 more)
+Cohesion: 0.13
+Nodes (25): Binary sensor: does a zone need irrigation today., Everything known about a zone right now., ZoneSnapshot, Runtime data attached to the config entry., GardenIrrigationEntity, messages_as_attributes(), Any, Base entities: one device for the installation, one per zone. (+17 more)
 
 ### Community 15 - "test_coordinator.py"
 Cohesion: 0.23
 Nodes (33): import_day_statistics(), date, Import one local day of hourly statistics shaped like FAO-56 Example 18.      Ra, _coordinator(), expected_et0(), date, DeviceRegistry, FrozenDateTimeFactory (+25 more)
 
 ### Community 16 - "coordinator.py"
-Cohesion: 0.11
-Nodes (20): ConfigSubentry, ConfigEntry, Read the configuration once: any change reloads the entry., _optional_float(), Any, ConfigEntry, Typed views of the config entry: site, operating options and zones., One irrigated zone, with presets resolved. (+12 more)
+Cohesion: 0.14
+Nodes (14): ConfigSubentry, ConfigEntry, Read the configuration once: any change reloads the entry., _optional_float(), Any, ConfigEntry, Build a zone from its subentry data., All zones of the entry, keyed by subentry id. (+6 more)
 
 ### Community 17 - "Repair Issues"
 Cohesion: 0.10
@@ -187,56 +185,48 @@ Cohesion: 0.12
 Nodes (14): CALLBACK_TYPE, GardenIrrigationCoordinator, _local_date(), date, datetime, HomeAssistant, Run daily and after startup; follow the soil moisture sensors., Most recent day that may be closed at `now`.          Yesterday counts as closed (+6 more)
 
 ### Community 19 - "GardenIrrigationStore"
-Cohesion: 0.09
-Nodes (13): GardenIrrigationStore, date, HomeAssistant, Weather of the last closed day that was processed., Return the ids of all zones with persisted state., Drop state of zones that no longer exist. Return True if changed., Drop day/irrigation records older than RETENTION_DAYS., Schedule a debounced save of the current document. (+5 more)
+Cohesion: 0.06
+Nodes (34): DayRecord, _empty_zone(), GardenIrrigationStore, IrrigationRecord, date, HomeAssistant, Single versioned persistence store for the integration.  Holds, per zone (keyed, Weather of the last closed day that was processed. (+26 more)
 
 ### Community 20 - "test_services.py"
-Cohesion: 0.23
-Nodes (21): _call(), Any, DeviceRegistry, FrozenDateTimeFactory, HomeAssistant, MockConfigEntry, Tests for the record_irrigation and set_deficit actions., Italian local time, 7 July 2026 at 18:00. (+13 more)
+Cohesion: 0.10
+Nodes (39): _async_record_irrigation(), _async_set_deficit(), async_setup_services(), device_links(), DeviceEntry, HomeAssistant, Actions: record an irrigation, set a zone's deficit., Register the integration's actions (once, not per entry). (+31 more)
 
 ### Community 21 - "__init__.py"
-Cohesion: 0.18
-Nodes (16): GardenIrrigationRuntimeData, Runtime data attached to the config entry., Objects that live as long as the config entry is loaded., _async_register_devices(), _async_reload_on_update(), async_remove_entry(), async_setup_entry(), async_unload_entry() (+8 more)
+Cohesion: 0.09
+Nodes (36): ConfigType, DayWeather, Weather of one closed local day, with its data coverage., True when every required source covers the day., GardenIrrigationRuntimeData, Objects that live as long as the config entry is loaded., _async_register_devices(), _async_reload_on_update() (+28 more)
 
 ### Community 22 - "Irrigation Log: Aggregates"
 Cohesion: 0.50
 Nodes (3): Configuration, Garden Irrigation — custom cards, Installation
-
-### Community 23 - "services.py"
-Cohesion: 0.21
-Nodes (12): ConfigType, async_setup(), Register the integration's actions., _async_record_irrigation(), _async_set_deficit(), async_setup_services(), HomeAssistant, Register the integration's actions (once, not per entry). (+4 more)
 
 ### Community 24 - ".from_subentry"
 Cohesion: 0.15
 Nodes (11): BinarySensorEntity, async_setup_entry(), NeedsIrrigationSensor, AddConfigEntryEntitiesCallback, Any, GardenIrrigationConfigEntry, HomeAssistant, On when the zone's deficit has reached its RAW. (+3 more)
 
 ### Community 25 - ".async_schedule_daily_run"
-Cohesion: 0.12
-Nodes (42): async_fetch_forecast_rain(), Any, datetime, HomeAssistant, Forecast rain from a user-selected Home Assistant weather entity.  Informational, Ask the weather entity for its forecast and total the rain.      Hourly forecast, _total_rain(), datetime (+34 more)
+Cohesion: 0.16
+Nodes (28): async_fetch_forecast_rain(), Any, datetime, HomeAssistant, Forecast rain from a user-selected Home Assistant weather entity.  Informational, Ask the weather entity for its forecast and total the rain.      Hourly forecast, _total_rain(), entry_with_extras() (+20 more)
 
 ### Community 26 - "Integration Manifest"
 Cohesion: 0.13
 Nodes (14): codeowners, config_flow, dependencies, documentation, domain, integration_type, iot_class, issue_tracker (+6 more)
 
 ### Community 27 - "InstallationSensor"
-Cohesion: 0.17
-Nodes (10): async_setup_entry(), AddConfigEntryEntitiesCallback, datetime, GardenIrrigationConfigEntry, HomeAssistant, Sensor of a zone device., Value from the zone snapshot., Explanation of the value. (+2 more)
+Cohesion: 0.11
+Nodes (15): async_setup_entry(), InstallationSensor, AddConfigEntryEntitiesCallback, datetime, GardenIrrigationConfigEntry, HomeAssistant, Sensor of the installation device., Value from the coordinator data. (+7 more)
 
 ### Community 28 - "balance.py"
 Cohesion: 0.35
 Nodes (17): FrozenDateTimeFactory, HomeAssistant, MockConfigEntry, Tests for the sensor and binary_sensor entities., Italian local time, 7 July 2026 at 06:00 (after the 05:30 run)., rome_time(), _set_deficit(), _setup() (+9 more)
 
 ### Community 29 - "GardenIrrigationZoneEntity"
-Cohesion: 0.10
-Nodes (21): GardenIrrigationEntity, GardenIrrigationZoneEntity, Entity of the installation device., Bind the entity to the installation device., Entity of a zone device., Bind the entity to its zone device., Current data of this entity's zone., InstallationSensor (+13 more)
-
-### Community 30 - "store.py"
-Cohesion: 0.28
-Nodes (7): _empty_zone(), Single versioned persistence store for the integration.  Holds, per zone (keyed, Persisted state of one zone., Top-level persisted document., Return the state of `zone_id`, creating it if needed., StoredData, ZoneState
+Cohesion: 0.16
+Nodes (11): GardenIrrigationZoneEntity, Bind the entity to the installation device., Entity of a zone device., Bind the entity to its zone device., Current data of this entity's zone., InstallationSensorDescription, Sensor of a zone device., Sensor of the installation device. (+3 more)
 
 ### Community 31 - "coordinator.py"
-Cohesion: 0.17
-Nodes (13): Constants shared across the garden_irrigation integration.  Agronomic reference, CoordinatorData, Coordinator: daily water balance, catch-up of missed days, user actions.  Once a, Data shared with the entities., _weather_record(), ForecastRain, Rain expected in the next hours, in mm., _data_quality() (+5 more)
+Cohesion: 0.23
+Nodes (11): CoordinatorData, Coordinator: daily water balance, catch-up of missed days, user actions.  Once a, Data shared with the entities., _weather_record(), ForecastRain, Rain expected in the next hours, in mm., _data_quality(), OperatingOptions (+3 more)
 
 ### Community 32 - "GardenIrrigationEntity"
 Cohesion: 0.20
@@ -294,9 +284,9 @@ Nodes (10): [0.1.0] - 2026-07-13, [2.0.0] - Unreleased, Added, Added, Changed, C
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `GardenIrrigationCoordinator` connect `GardenIrrigationCoordinator` to `Scheduler: Advisory Monitors`, `test_daily_weather.py`, `test_repairs.py`, `test_coordinator.py`, `coordinator.py`, `GardenIrrigationStore`, `__init__.py`, `services.py`, `InstallationSensor`, `GardenIrrigationZoneEntity`, `coordinator.py`?**
-  _High betweenness centrality (0.070) - this node is a cross-community bridge._
-- **Why does `GardenIrrigationStore` connect `GardenIrrigationStore` to `Scheduler: Advisory Monitors`, `test_repairs.py`, `coordinator.py`, `GardenIrrigationCoordinator`, `__init__.py`, `store.py`, `coordinator.py`?**
+- **Why does `GardenIrrigationCoordinator` connect `GardenIrrigationCoordinator` to `Scheduler: Advisory Monitors`, `test_repairs.py`, `test_coordinator.py`, `coordinator.py`, `GardenIrrigationStore`, `test_services.py`, `__init__.py`, `InstallationSensor`, `GardenIrrigationZoneEntity`, `coordinator.py`?**
+  _High betweenness centrality (0.072) - this node is a cross-community bridge._
+- **Why does `GardenIrrigationStore` connect `GardenIrrigationStore` to `test_repairs.py`, `coordinator.py`, `GardenIrrigationCoordinator`, `__init__.py`, `coordinator.py`?**
   _High betweenness centrality (0.051) - this node is a cross-community bridge._
 - **Why does `recommend()` connect `test_recommendation.py` to `GardenIrrigationCoordinator`, `coordinator.py`?**
   _High betweenness centrality (0.032) - this node is a cross-community bridge._

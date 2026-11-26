@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
@@ -14,8 +15,9 @@ from homeassistant.util import dt as dt_util
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.garden_irrigation.const import DOMAIN
+from custom_components.garden_irrigation.services import device_links
 
-from .common import ZONE_ID
+from .common import ZONE_ID, get_device
 
 
 @pytest.fixture(autouse=True)
@@ -34,7 +36,7 @@ async def zone_device(
     """Set up the entry and return the zone's device id."""
     assert await hass.config_entries.async_setup(config_entry.entry_id)
     await hass.async_block_till_done()
-    device = device_registry.async_get_device({(DOMAIN, ZONE_ID)})
+    device = get_device(device_registry, (DOMAIN, ZONE_ID), config_entry.entry_id)
     assert device is not None
     return device.id
 
@@ -110,7 +112,9 @@ async def test_main_device_is_not_a_zone(
     zone_device: str,
     device_registry: dr.DeviceRegistry,
 ) -> None:
-    main = device_registry.async_get_device({(DOMAIN, config_entry.entry_id)})
+    main = get_device(
+        device_registry, (DOMAIN, config_entry.entry_id), config_entry.entry_id
+    )
     assert main is not None
 
     with pytest.raises(ServiceValidationError) as err:
@@ -178,3 +182,10 @@ async def test_set_deficit_above_taw(hass: HomeAssistant, zone_device: str) -> N
 
     assert err.value.translation_key == "deficit_above_taw"
     assert err.value.translation_placeholders == {"taw": "23.2"}
+
+
+def test_device_links_on_single_entry_registries() -> None:
+    # Home Assistant 2026.10+: a device has one config entry and subentry.
+    device = SimpleNamespace(config_entry_id="entry", config_subentry_id="zone")
+
+    assert device_links(device) == {"entry": {"zone"}}  # type: ignore[arg-type]

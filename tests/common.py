@@ -8,6 +8,7 @@ from typing import Any
 from homeassistant.components.recorder.models import StatisticMeanType
 from homeassistant.components.recorder.statistics import async_import_statistics
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import device_registry as dr
 from homeassistant.util import dt as dt_util
 
 TEMPERATURE = "sensor.outdoor_temperature"
@@ -142,3 +143,18 @@ def _import(
         },
         rows,  # type: ignore[arg-type]
     )
+
+
+def get_device(
+    registry: dr.DeviceRegistry, identifier: tuple[str, str], config_entry_id: str
+) -> dr.DeviceEntry | None:
+    """Look a device up by identifier on old and new device registries.
+
+    Home Assistant 2026.10 deprecated async_get_device in favour of
+    async_get_device_by_identifier (scoped to a config entry).
+    """
+    lookup = getattr(registry, "async_get_device_by_identifier", None)
+    if lookup is not None:
+        device: dr.DeviceEntry | None = lookup(identifier, config_entry_id)
+        return device
+    return registry.async_get_device({identifier})

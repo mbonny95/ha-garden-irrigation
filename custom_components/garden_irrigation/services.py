@@ -56,13 +56,30 @@ SET_DEFICIT_SCHEMA = vol.Schema(
 )
 
 
+def device_links(device: dr.DeviceEntry) -> dict[str, set[str | None]]:
+    """Config entry and subentries a device belongs to.
+
+    Home Assistant 2026.10 gives each device a single config entry and
+    subentry (config_entry_id / config_subentry_id) and deprecates
+    config_entries_subentries; both registries are supported.
+    """
+    if hasattr(device, "config_subentry_id"):
+        entry_id: str = getattr(device, "config_entry_id")  # noqa: B009
+        subentry_id: str | None = getattr(device, "config_subentry_id")  # noqa: B009
+        return {entry_id: {subentry_id}}
+    return {
+        entry_id: set(subentry_ids)
+        for entry_id, subentry_ids in device.config_entries_subentries.items()
+    }
+
+
 def _resolve_zone(
     hass: HomeAssistant, device_id: str
 ) -> tuple[GardenIrrigationCoordinator, str]:
     """Map a zone device to its loaded coordinator and zone (subentry) id."""
     device = dr.async_get(hass).async_get(device_id)
     if device is not None:
-        for entry_id, subentry_ids in device.config_entries_subentries.items():
+        for entry_id, subentry_ids in device_links(device).items():
             entry = hass.config_entries.async_get_entry(entry_id)
             if entry is None or entry.domain != DOMAIN:
                 continue

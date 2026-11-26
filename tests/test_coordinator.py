@@ -26,8 +26,9 @@ from custom_components.garden_irrigation.coordinator import (
 from custom_components.garden_irrigation.daily_weather import DailyWeather
 from custom_components.garden_irrigation.model.fao56 import Site, compute_et0
 from custom_components.garden_irrigation.model.recommendation import Reason
+from custom_components.garden_irrigation.services import device_links
 
-from .common import RAIN, ZONE_ID, ZONE_INPUT, import_day_statistics
+from .common import RAIN, ZONE_ID, ZONE_INPUT, get_device, import_day_statistics
 
 TAW = 23.25  # 150 mm × 155 mm/m (loam)
 RAW = 9.3  # p = 0.40
@@ -319,13 +320,15 @@ async def test_devices_for_installation_and_zones(
 ) -> None:
     await _setup(hass, config_entry)
 
-    main = device_registry.async_get_device({(DOMAIN, config_entry.entry_id)})
-    zone = device_registry.async_get_device({(DOMAIN, ZONE_ID)})
+    main = get_device(
+        device_registry, (DOMAIN, config_entry.entry_id), config_entry.entry_id
+    )
+    zone = get_device(device_registry, (DOMAIN, ZONE_ID), config_entry.entry_id)
     assert main is not None
     assert zone is not None
     assert zone.name == ZONE_INPUT["name"]
     assert zone.via_device_id == main.id
-    assert zone.config_entries_subentries == {config_entry.entry_id: {ZONE_ID}}
+    assert device_links(zone) == {config_entry.entry_id: {ZONE_ID}}
 
 
 async def test_retention_limits_catch_up(
@@ -366,6 +369,6 @@ async def test_renamed_zone_renames_its_device(
     )
     await hass.async_block_till_done()
 
-    zone = device_registry.async_get_device({(DOMAIN, ZONE_ID)})
+    zone = get_device(device_registry, (DOMAIN, ZONE_ID), config_entry.entry_id)
     assert zone is not None
     assert zone.name == "Front lawn"
