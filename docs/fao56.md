@@ -1,96 +1,58 @@
-# FAO-56 Penman–Monteith ET0, as implemented
+# FAO-56 reference evapotranspiration (ET0)
 
-Reference: Allen, R.G., Pereira, L.S., Raes, D., Smith, M. (1998). *Crop
-evapotranspiration — Guidelines for computing crop water requirements.* FAO
-Irrigation and Drainage Paper 56, chapter 3. Equation numbers below match
-that document, and match the comments in `et0.py`.
+Implemented in `custom_components/garden_irrigation/model/fao56.py`, a pure
+Python module with no Home Assistant dependency. Equation numbers refer to
+*FAO Irrigation and Drainage Paper No. 56* (Allen et al., 1998).
 
-## The equation
+## Penman-Monteith, daily (eq. 6)
 
 ```
-        0.408·Δ·Rn + γ·(900/(T+273))·u2·(es − ea)
-ET0 = ─────────────────────────────────────────────
-              Δ + γ·(1 + 0.34·u2)
+ET0 = [0.408 Δ (Rn − G) + γ 900/(T + 273) u2 (es − ea)] / [Δ + γ (1 + 0.34 u2)]
 ```
 
-`G` (soil heat flux) is taken as 0 — an accepted simplification on a daily
-timestep (FAO-56 §3.2.2), not something the integration tries to estimate.
+| Term | How it is obtained |
+|---|---|
+| T | (Tmax + Tmin) / 2 |
+| es | mean of e°(Tmax), e°(Tmin) (eqs. 11–12) |
+| ea | from RHmax and RHmin (eq. 17); RHmax only (eq. 18); RHmean (eq. 19) |
+| Δ | slope of the vapour pressure curve at T (eq. 13) |
+| P, γ | measured pressure, or from elevation (eq. 7); γ = 0.665·10⁻³ P (eq. 8) |
+| u2 | wind at the anemometer height converted to 2 m (eq. 47), at least 0.5 m/s |
+| Ra | extraterrestrial radiation from latitude and day of year (eqs. 21–25) |
+| Rso | (0.75 + 2·10⁻⁵ z) Ra (eq. 37) |
+| Rns | (1 − 0.23) Rs (eq. 38) |
+| Rnl | eq. 39, with Rs/Rso limited to 1 |
+| G | 0 for a daily step (eq. 42) |
 
-## Required daily inputs
+ET0 is never negative. If an input is missing, ET0 is `unknown` and the
+missing inputs are reported (`missing_inputs` attribute of *ET0 yesterday*).
 
-Computed from one day's aggregated weather (`weather.py`'s
-`DailyWeatherSnapshot` — either the just-finalized previous day, or today's
-still-in-progress snapshot for the 20:00 preview):
+Validated against the manual's worked examples: Example 18 (Brussels,
+6 July: every intermediate term and ET0 = 3.9 mm/day), Example 8 (Ra at
+20°S), Example 2 (pressure at 1800 m).
 
-| Symbol | From | Fallback if the ideal input is missing |
-|---|---|---|
-| `T_max`, `T_min` | daily temperature min/max | **none** — fundamental, ET0 is `unknown` without it |
-| `RH_max`, `RH_min` (preferred) or `RH_mean` | daily humidity extremes/mean | if only mean RH is available, `ea` uses Eq. 19 instead of Eq. 17 (see below) |
-| wind speed | daily time-weighted mean | **none** — fundamental |
-| solar irradiance | integral of instantaneous W/m² over the day → MJ/m²/day | **none** — fundamental |
-| pressure | daily mean absolute pressure | if not configured/available, estimated from configured altitude (Eq. 7) |
-| latitude | `hass.config.latitude` | — |
-| altitude | configured (default 116 m) | — |
-| anemometer height | configured (default 2.0 m ⇒ no correction) | — |
+## Hargreaves (eq. 52), optional
 
-If temperature, wind, solar irradiance, or **both** humidity forms are
-missing, `et0.py` returns `incomplete=True` with the exact list of
-`missing_inputs` and `et0_mm=None` — **no automatic fallback** (e.g.
-Hargreaves–Samani) is applied in v1; a future opt-in method would be
-disabled by default even once added.
+`ET0 = 0.0023 (T + 17.8) (Tmax − Tmin)^0.5 · 0.408 Ra`
 
-## Step by step (matching `et0.py`)
+Used only when the *Hargreaves fallback* option is on (off by default) and
+Penman-Monteith inputs are missing. The result is flagged as an estimate.
 
-1. `T_mean = (T_max + T_min) / 2`.
-2. `es = (e°(T_max) + e°(T_min)) / 2`, with `e°(T) = 0.6108 · exp(17.27·T /
-   (T+237.3))` (Eq. 11).
-3. `ea`:
-   - preferred (Eq. 17), when both `RH_min`/`RH_max` are available:
-     `ea = (e°(T_min)·RH_max/100 + e°(T_max)·RH_min/100) / 2`;
-   - fallback (Eq. 19), from mean RH only: `ea = (RH_mean/100) · es`.
-4. `Δ = 4098 · e°(T_mean) / (T_mean + 237.3)²` (Eq. 13).
-5. `γ = 0.000665 · P` (Eq. 8), with `P` in kPa either measured (absolute
-   pressure ÷ 10, hPa → kPa) or, if not available, estimated from altitude
-   (Eq. 7): `P = 101.3 · ((293 − 0.0065·z)/293)^5.26`.
-6. `u2`: wind speed converted km/h → m/s, then corrected to 2 m height (Eq.
-   47) only if the configured anemometer height isn't already 2 m:
-   `u2 = u_z · 4.87 / ln(67.8·z − 5.42)`.
-7. Radiation:
-   - `Rs`: the configured solar-irradiance entity, **integrated** over the
-     day (W/m² × elapsed seconds, summed, ÷ 1e6 → MJ/m²/day) — not a single
-     instantaneous sample.
-   - `Ra` (extraterrestrial radiation, Eq. 21): computed **astronomically**
-     from `hass.config.latitude` and day-of-year (solar declination,
-     inverse relative Earth–Sun distance, sunset hour angle) — no measured
-     input needed.
-   - `Rso = (0.75 + 2×10⁻⁵·z) · Ra` (clear-sky radiation).
-   - `Rns = (1 − α) · Rs`, with `α = 0.23` (FAO-56 reference grass albedo,
-     Eq. 38 — fixed, not configurable).
-   - `Rnl = σ · ((T_max,K⁴ + T_min,K⁴)/2) · (0.34 − 0.14·√ea) · (1.35·min(Rs/Rso,
-     1) − 0.35)` (Eq. 39), `σ = 4.903×10⁻⁹`.
-   - `Rn = Rns − Rnl`.
-8. `ET0` from the equation above.
+## Daily weather from Home Assistant statistics
 
-Every intermediate term (`t_mean_c`, `es_kpa`, `ea_kpa`, `delta_kpa_per_c`,
-`gamma_kpa_per_c`, `pressure_kpa` + its source, `u2_ms`, `rs_mj`, `ra_mj`,
-`rso_mj`, `rns_mj`, `rnl_mj`, `rn_mj`) is kept on the result and surfaced as
-`sensor.et0_daily`'s attributes, specifically so the computation is
-auditable, not a black box.
+`daily_weather.py` reads, once per closed local day, the recorder's
+**hourly long-term statistics** of the source sensors, converted by the
+recorder to °C, m/s, kPa and mm:
 
-## Practical approximations and limits, stated plainly
+| FAO-56 input | From the hourly statistics |
+|---|---|
+| Tmax / Tmin | max of hourly max / min of hourly min |
+| RHmax / RHmin / RHmean | max of max / min of min / mean of means |
+| Rs (MJ m⁻² day⁻¹) | mean of hourly mean W/m² × 0.0864 |
+| u (m/s), P (kPa) | mean of hourly means |
+| Rain (mm) | sum of hourly changes of the rain counter |
 
-- **G = 0** daily — standard FAO-56 simplification, not zone-specific soil
-  heat modeling.
-- **Rs from instantaneous samples**: accuracy depends on how often your
-  weather station reports solar irradiance; sparse updates make the
-  time-weighted integral a rougher approximation of the true daily total.
-- **α = 0.23 fixed**: the FAO-56 *reference grass* albedo is used, not a
-  measured or lawn-specific value.
-- **Ra is purely astronomical**: it does not account for real atmospheric
-  turbidity/aerosols — this is exactly what FAO-56 itself specifies for
-  reference ET0, not a shortcut specific to this integration.
-- **Anemometer height is a configured assumption**: if the real installation
-  height is wrong, `u2` will be systematically off. The default (2.0 m)
-  applies no correction at all.
-- **No sub-daily/hourly ET0**: this is a once-per-day computation on daily
-  aggregates, consistent with FAO-56's daily method (not the hourly variant).
+A source with fewer than 20 hourly rows does not cover the day: the day is
+marked **incomplete**, a Repair is raised and that input is treated as
+missing (no value is invented). Rain uses whatever hours exist. Pressure is
+optional and never makes a day incomplete.

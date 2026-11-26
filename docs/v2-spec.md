@@ -4,7 +4,7 @@ Riscrittura pulita dell'integrazione. Stesso dominio `garden_irrigation`,
 nessuna migrazione dei dati v1: si riparte da zero e il deficit iniziale si
 imposta a mano (vedi §8).
 
-Stato: **bozza**. I punti marcati ❓ aspettano una decisione.
+Stato: **approvata e implementata** (fasi 1–7, branch `v2-rewrite`).
 
 ---
 
@@ -58,7 +58,7 @@ custom_components/garden_irrigation/
 Regola: tutto ciò che è agronomia/calcolo sta in `model/`, è puro e testato
 con vettori di riferimento. Il resto è "colla" con Home Assistant.
 
-## 4. Dati meteo giornalieri — ❓ decisione
+## 4. Dati meteo giornalieri
 
 **Proposta:** non più accumulatori locali. Ogni mattina l'integrazione chiede
 al recorder le **statistiche orarie** (mean/min/max, e `change` per la pioggia)

@@ -1,59 +1,20 @@
 /**
- * <garden-irrigation-zone-card-editor>
- *
- * GUI config editor for garden-irrigation-zone-card, built on HA's own
- * <ha-form> (per the handoff's instruction to reuse ha-form/ha-entity-picker
- * rather than hand-rolling entity pickers). Light DOM: <ha-form> is a
- * globally-registered element supplied by the HA frontend at runtime, not
- * bundled by this card.
+ * <garden-irrigation-zone-card-editor>: GUI editor built on <ha-form>.
  */
 
 const SCHEMA = [
-  { name: "zone", required: true, selector: { text: {} } },
+  {
+    name: "device_id",
+    required: true,
+    selector: { device: { integration: "garden_irrigation" } },
+  },
   { name: "name", selector: { text: {} } },
-  {
-    name: "needs_irrigation_entity",
-    required: true,
-    selector: { entity: { domain: "binary_sensor" } },
-  },
-  { name: "deficit_entity", required: true, selector: { entity: { domain: "sensor" } } },
-  { name: "raw_entity", required: true, selector: { entity: { domain: "sensor" } } },
-  { name: "taw_entity", required: true, selector: { entity: { domain: "sensor" } } },
-  {
-    name: "irrigation_7d_entity",
-    required: true,
-    selector: { entity: { domain: "sensor" } },
-  },
-  {
-    name: "weekly_cap_entity",
-    required: true,
-    selector: { entity: { domain: "binary_sensor" } },
-  },
-  {
-    name: "in_progress_entity",
-    selector: { entity: { domain: "binary_sensor" } },
-  },
-  {
-    name: "default_variant",
-    selector: { select: { options: ["final", "preview"], mode: "dropdown" } },
-  },
-  { name: "show_technical_row", selector: { boolean: {} } },
-  { name: "show_wh51", selector: { boolean: {} } },
+  { name: "show_record_form", selector: { boolean: {} } },
 ];
 
 const LABELS = {
-  zone: "Zone id (matches backend zone_1/zone_2)",
-  name: "Display name (optional)",
-  needs_irrigation_entity: "Needs-irrigation entity",
-  deficit_entity: "Deficit entity",
-  raw_entity: "RAW entity",
-  taw_entity: "TAW entity",
-  irrigation_7d_entity: "Irrigation (7d) entity",
-  weekly_cap_entity: "Weekly cap reached entity",
-  in_progress_entity: "Irrigation-in-progress entity (optional)",
-  default_variant: "Default variant",
-  show_technical_row: "Show technical row",
-  show_wh51: "Show soil sensor row",
+  en: { device_id: "Zone", name: "Name (optional)", show_record_form: "Show the record form" },
+  it: { device_id: "Zona", name: "Nome (facoltativo)", show_record_form: "Mostra il modulo di registrazione" },
 };
 
 class GardenIrrigationZoneCardEditor extends HTMLElement {
@@ -69,13 +30,14 @@ class GardenIrrigationZoneCardEditor extends HTMLElement {
 
   _render() {
     if (!this._hass) return;
+    const language = String(this._hass.locale?.language ?? "en").slice(0, 2);
+    const labels = LABELS[language] ?? LABELS.en;
     if (!this._form) {
       this._form = document.createElement("ha-form");
-      this._form.computeLabel = (schemaItem) => LABELS[schemaItem.name] ?? schemaItem.name;
       this._form.addEventListener("value-changed", (event) => {
         this.dispatchEvent(
           new CustomEvent("config-changed", {
-            detail: { config: event.detail.value },
+            detail: { config: { ...this._config, ...event.detail.value } },
             bubbles: true,
             composed: true,
           }),
@@ -83,14 +45,10 @@ class GardenIrrigationZoneCardEditor extends HTMLElement {
       });
       this.appendChild(this._form);
     }
+    this._form.computeLabel = (item) => labels[item.name] ?? item.name;
     this._form.hass = this._hass;
     this._form.schema = SCHEMA;
-    this._form.data = {
-      show_technical_row: true,
-      show_wh51: true,
-      default_variant: "final",
-      ...this._config,
-    };
+    this._form.data = { show_record_form: true, ...(this._config ?? {}) };
   }
 }
 

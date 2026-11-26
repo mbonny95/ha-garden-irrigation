@@ -1,70 +1,62 @@
-# WH51 calibration: device-relative, not absolute soil moisture
+# Calibration
 
-## Why calibration exists
+Three things are yours to measure: the application rate of each water
+source, the starting deficit, and (optionally) the soil moisture thresholds.
 
-The WH51 is a **capacitive** soil-moisture probe. Its reported `%` depends on
-the specific soil, probe depth/contact, and installation — it is **not** an
-absolute volumetric water content (VWC) comparable across probes or gardens.
-What *is* meaningful is where a current reading sits **relative to the range
-this specific probe has actually observed** for this specific zone.
+## Application rate (mm/min) per water source
 
-## The automatic 14-day window (Milestone 7)
+Each zone has one rate per source, because pressure and flow differ between
+mains water and a rainwater-tank pump.
 
-For each zone, the integration keeps a persisted baseline:
-`first_seen` (timestamp), `baseline_min`, `baseline_max` (the widest range of
-`%` values observed so far). This baseline widens every time a recommendation
-is built and a valid reading is available — it is **sampled at refresh time**
-(event-driven), not a continuous accumulator, which is an accepted
-approximation consistent with the rest of this integration's architecture.
+**Catch-cup test** (recommended, one run per source):
 
-- `first_seen` is set automatically to the timestamp of the **first ever
-  valid reading** observed for that zone — no user action required.
-- For 14 days (`DEFAULT_CALIBRATION_DAYS`) from `first_seen`, the zone's WH51
-  status is `diagnostic` only: informative, but never used to corroborate or
-  contradict the deficit-based recommendation.
-- Once 14 days have elapsed **and** a non-degenerate range has been observed
-  (`baseline_max > baseline_min`), the zone is **calibrated**. The current
-  reading's position within `[baseline_min, baseline_max]` (0 = driest ever
-  seen, 1 = wettest ever seen) is classified as:
+1. Place 6–10 straight-sided cups or tins across the zone, including edges
+   and the area between sprinklers.
+2. Run the zone for a fixed time, e.g. 15 minutes, from one source.
+3. Measure the water depth in each cup (mm), take the average.
+4. Rate = average depth ÷ minutes. Example: 3.75 mm in 15 min → 0.25 mm/min.
 
-  | position          | status     |
-  |-------------------|------------|
-  | ≤ 0.1 (default)    | `critical` |
-  | ≤ 0.3 (default)    | `dry`      |
-  | 0.3 – 0.7 (default)| `moderate` |
-  | ≥ 0.7 (default)    | `wet`      |
+With mains water you can cross-check with the meter: liters used ÷ area
+(m²) ÷ minutes = mm/min (1 L over 1 m² = 1 mm). Mixed rotors and fixed
+sprays in one zone spread water unevenly: the cup average is the honest
+figure.
 
-  (Thresholds are configurable defaults, not hardcoded constants.)
+Leave a source empty if the zone is never watered from it: no minutes are
+shown for it and recording with minutes is refused (millimeters still work).
 
-## The explicit override (Milestone 9)
+## Starting deficit
 
-Waiting out an automatic 14-day window is not always what you want — e.g.
-after re-installing a probe, or when you already trust an observed range and
-want to shorten the wait. Two per-zone buttons let you override the marker
-directly, with no migration and no change to the classification logic above:
+A new zone waits until you set its deficit with
+`garden_irrigation.set_deficit` (zone device, `deficit_mm`). The value is
+the deficit **now**.
 
-- **`button.start_calibration_<zone>`** — restarts the window from *now* and
-  **clears** the previously observed baseline (`baseline_min`/`baseline_max`
-  reset to unset). Use this when you want a clean slate, e.g. after
-  reinstalling a probe: readings observed before the old baseline are not
-  representative of the new installation.
-- **`button.finish_calibration_<zone>`** — forces the zone to be considered
-  calibrated **now**, keeping whatever `baseline_min`/`baseline_max` has
-  already been observed. If nothing has been observed yet, this is a no-op
-  with respect to calibrated status — there is no range to classify a
-  position against, so no baseline is invented.
+1. **Simplest**: the day after a soaking rain (more than TAW, e.g. > 25 mm)
+   or a deep irrigation, set `0`.
+2. **Estimate**: from the last soaking, add up each day's ETc minus
+   effective rain and irrigation, never below 0 nor above TAW. Example with
+   TAW = 23 mm: three dry days at ETc 4 mm → about 12 mm.
+3. **The lawn as a hint**: footprints that stay, blue-grey colour → around
+   or beyond RAW.
 
-Both act on the **same** persisted marker the automatic window in Milestone 7
-uses — there are two ways to set it (automatic-on-first-reading, or this
-explicit override), not two separate mechanisms.
+## Soil moisture sensor thresholds (e.g. WH51)
 
-## What calibration is NOT
+The percentage of these sensors is **device-relative**, not volumetric water
+content: it depends on the probe, the soil and how it was inserted. It is
+never converted into millimeters. The integration only compares it with two
+thresholds that you choose per zone, and only to add warnings.
 
-- It is **never a hard block**. Even a fully calibrated, "critical" WH51
-  reading only ever **corroborates or contradicts** (with an explicit
-  `warnings`/`reasons` entry) the deficit/RAW-based decision — it cannot flip
-  `needs_irrigation` on its own.
-- It does **not** produce an absolute VWC percentage anywhere in the UI. Every
-  place WH51 status is shown, it is explicitly labeled relative
-  (`wh51_status`, `wh51_percent`, `wh51_calibrated` — see
-  `binary_sensor.needs_irrigation_<zone>`'s attributes).
+Read the thresholds from the sensor's history in Home Assistant:
+
+| When | What you see | Use it as |
+|---|---|---|
+| Day of a heavy rain | the highest value (saturated) | upper reference |
+| 24–48 h later, when the decline slows | field capacity | **wet** threshold, slightly below it |
+| First lawn stress signs | the dry end | **dry** threshold |
+
+Real example (26/11/2026, 67 mm of rain): 75 % on the small zone and 78 % on
+the big one — the saturated values; the wet thresholds come from the
+readings a day or two later. Each zone gets its own thresholds.
+
+The sensor status entity shows *dry*, *between thresholds*, *wet*, *no
+thresholds set*, *not updated* (no reading for 6 h) or *unavailable*. Stale
+or unavailable readings are ignored.

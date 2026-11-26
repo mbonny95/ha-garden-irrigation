@@ -3,7 +3,41 @@
 All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [2.0.0] - Unreleased
+
+Complete rewrite. v1 configuration and data are not migrated: remove the v1
+integration before installing. Design: `docs/v2-spec.md`.
+
+### Added
+- Any number of zones, as config subentries (add/edit from the integration
+  page); one device per zone.
+- FAO-56 model as a pure Python package (`model/`): Penman-Monteith ET0
+  validated against the manual's examples, optional Hargreaves fallback,
+  monthly Kc profiles, FAO-56 soil table, optional p adjustment for ETc.
+- Daily weather from the recorder's long-term hourly statistics, with unit
+  conversion (°F, mph, inHg, in… supported) and catch-up of missed days.
+- Application rate per water source (mains, rainwater tank) per zone;
+  minutes per source and cycle-and-soak blocks sized by soil.
+- Actions `record_irrigation` (minutes or mm) and `set_deficit`.
+- Optional soil moisture sensor with user dry/wet thresholds and optional
+  forecast rain from a `weather` entity, both as warnings only.
+- Repairs for weather sources that did not cover a day.
+- Rewritten custom cards (overview + zone with record form) and example
+  dashboard.
+
+### Changed
+- Minimum interval, weekly cap and block size are warnings, not
+  constraints; the weekly cap is off by default.
+- A day without ET0 is applied with ETc = 0 (rain and irrigation only) and
+  flagged incomplete.
+- One storage file per installation (365-day history).
+- Minimum Home Assistant version 2026.2.
+
+### Removed
+- Local weather accumulators, calibration/monitoring modes, the 14-day
+  WH51 calibration, the 20:00 preview, start/end cycle buttons and selects.
+
+## [v1, unreleased changes]
 
 ### Removed
 - The entire notification system: `TelegramNotifier`/`PersistentNotificationNotifier`

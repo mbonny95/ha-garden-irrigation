@@ -1,224 +1,154 @@
-# garden-irrigation
+# Garden Irrigation
 
-Custom Home Assistant integration (`garden_irrigation`) that provides
-**irrigation decision support** for two *Festuca arundinacea* lawn zones,
-based on a FAO-56 Penman–Monteith daily water balance computed locally from
-existing Ecowitt weather-station and WH51 soil-moisture entities.
+Home Assistant custom integration (`garden_irrigation`) for **irrigation
+decision support** based on the **FAO-56** daily soil water balance. It reads
+your weather station from Home Assistant, computes the reference
+evapotranspiration (ET0, Penman-Monteith) and a root-zone water deficit for
+each lawn or garden zone, and tells you **when to water and how much**, in
+millimeters and in minutes for each water source you use.
 
-## What this integration is
+Everything is computed locally. Millimeters, minutes and liters are
+**estimates** of the model, not measurements.
 
-- A **decision-support tool**: it reads existing Home Assistant entities,
-  computes ET0/ETc and a per-zone soil water deficit, and **recommends**
-  irrigation (mm, minutes per source, estimated liters), with the reasons and
-  limits behind every recommendation exposed as entity attributes.
-- A **manual logbook**: after you physically water a zone (manual taps,
-  manual source switch), you call an action to record what you did; the
-  integration updates the water balance and the 7-day recorded-irrigation
-  figure.
-- Home Assistant **Repairs** for conditions you need to act on outside the
-  integration (stale weather/WH51 data). The integration itself sends no
-  notifications anywhere - everything is read from its entities/attributes.
+## What it does
 
-## What this integration is NOT (v1)
+- **Daily balance, FAO-56.** Every morning (05:30 by default) the previous day
+  is closed: its weather is read from Home Assistant's long-term statistics,
+  ET0 is computed and each zone's deficit is updated:
+  `deficit = clamp(previous + ET0 × Kc − effective rain − irrigation, 0, TAW)`.
+  Days missed while Home Assistant was off are caught up in order.
+- **Recommendation per zone.** Irrigate when the deficit reaches the readily
+  available water (RAW = p × TAW); the recommended amount refills the deficit,
+  split into cycle-and-soak blocks sized for your soil, with minutes for each
+  water source (e.g. mains and rainwater tank, each with its own measured
+  application rate).
+- **Explanations and warnings.** Every recommendation carries its reason and
+  advisory warnings: minimum interval, optional weekly amount, soil moisture
+  sensor disagreeing with the model, rain in the forecast. Warnings never
+  change the amount.
+- **Manual logbook.** After watering you record what you did (minutes or mm,
+  source); the deficit and the recommendation update immediately.
+- **Repairs** when a weather sensor did not cover a day. No notifications are
+  ever sent.
 
-- **It does not control any hardware.** There are no valves, relays, flow
-  meters, or tank-level sensors in this setup. Taps and the source switch
-  (rainwater tank / mains water) are operated **manually** by the user.
-  Nothing in this integration ever opens/closes a valve or starts a pump —
-  not now, and no hidden "automation" mode is planned for v1.
-- **It does not use cloud services or external weather forecasts.** All
-  computation is local, from entities you already have in Home Assistant.
+## What it does NOT do
 
-## Prerequisites
+- **It never controls hardware.** No valves, pumps or relays: taps and the
+  water source are operated by you.
+- It does not call cloud services. An optional Home Assistant `weather`
+  entity can be selected to show forecast rain, informationally.
 
-You need an existing weather station and two soil-moisture probes already
-exposed as Home Assistant entities. The config flow asks for **entity_ids** —
-it never hardcodes a brand — but this was built against and is described here
-in terms of an **Ecowitt GW1100 console + two WH51 soil-moisture sensors**
-(one per zone) as a concrete example.
+## Requirements
 
-**Required** (ET0 cannot be computed without these):
-- Outdoor temperature, humidity, absolute pressure, solar irradiance, wind
-  speed (all `sensor` domain, numeric, with a compatible unit).
-- Daily rainfall and rain rate.
-- One WH51 soil-moisture sensor per zone.
+- Home Assistant **2026.2** or newer, with the recorder (default).
+- Weather station sensors in Home Assistant, each with a unit and a
+  **state class** (the integration reads their long-term statistics):
 
-**Optional:**
-- Wind gust (not used by ET0; kept for a possible future use).
-- 24-hour rainfall and "rain event" (diagnostic-only, never summed into the
-  balance).
-- WH51 battery and signal per zone (not currently used by any check).
+  | Input | Unit (any convertible) | State class |
+  |---|---|---|
+  | Air temperature | °C, °F, K | `measurement` |
+  | Relative humidity | % | `measurement` |
+  | Solar radiation | W/m² | `measurement` |
+  | Wind speed | m/s, km/h, mph, kn… | `measurement` |
+  | Daily rain | mm, cm, in | `total` or `total_increasing` |
+  | Pressure (optional) | hPa, kPa, inHg… | `measurement` |
 
-If a required entity is missing/stale, the affected computation reports
-`unknown` with an explanation — it is never silently guessed (see
-`docs/fao56.md`).
+- Optional: a soil moisture sensor per zone (e.g. Ecowitt WH51) and a
+  `weather` entity for forecasts.
+
+Developed with an Ecowitt GW1100 and two WH51 probes, but no brand is
+assumed: you pick the entities.
 
 ## Installation
 
 ### HACS
 
-1. HACS → Integrations → ⋮ → **Custom repositories** → add this repository
-   URL as an **Integration**.
-2. Install **Garden Irrigation**, then restart Home Assistant.
+1. HACS → ⋮ → **Custom repositories** → add this repository as an
+   **Integration**.
+2. Install **Garden Irrigation** and restart Home Assistant.
 3. Settings → Devices & services → **Add integration** → *Garden Irrigation*.
 
 ### Manual
 
-1. Copy `custom_components/garden_irrigation` into your Home Assistant
-   `config/custom_components/` directory.
-2. Restart Home Assistant.
-3. Settings → Devices & services → **Add integration** → *Garden Irrigation*.
+Copy `custom_components/garden_irrigation` into `config/custom_components/`,
+restart, then add the integration.
 
-## Initial configuration
+> Upgrading from v1: remove the v1 integration first. v2 does not migrate v1
+> configuration or data (Home Assistant reports an old entry as a migration
+> error).
 
-The config flow is a guided, multi-step wizard: (1) location + FAO-56 weather
-entities, (2) rain entities, (3) WH51 per-zone entities, (4) zone names/areas/
-`mm per minute` distribution rates. Only one config entry is allowed.
-Everything above is validated (entity exists, correct domain, compatible
-unit, currently numeric) before you can proceed. Operational thresholds (Kc,
-caps, staleness thresholds, WH51 sensitivity, ...) are managed from the
-integration's **options**, not the initial flow.
+## Setup
 
-## Key concepts
+1. **Weather sources and site**: pick the sensors above, the anemometer
+   height (wind is converted to 2 m) and check latitude/elevation.
+2. **Add a zone** (integration page → *Add zone*), once per zone:
+   - name and area (m²);
+   - crop: *cool-season turf* (monthly Kc, FAO-56) or a custom 12-month Kc;
+   - soil type (FAO-56 texture classes) or custom available water capacity;
+   - root depth and depletion fraction p (0.40 for cool-season turf);
+   - **application rate per water source** in mm/min (catch-cup test, see
+     [docs/calibration.md](docs/calibration.md)); leave a source empty if
+     the zone never uses it;
+   - optional soil moisture sensor with your own dry/wet thresholds.
+3. **Set the starting deficit** of each zone with the action
+   `garden_irrigation.set_deficit` — `0` the day after a soaking rain. Until
+   then the zone shows "starting deficit not set".
+4. **Options** (any time): effective rain factor and threshold, daily run
+   time, Hargreaves fallback, p adjustment for ETc, forecast entity, warning
+   thresholds, pause between blocks.
 
-### ET0 / ETc
+## Entities
 
-`ET0` is the FAO-56 Penman–Monteith daily reference evapotranspiration,
-computed **locally**, once per day, from your weather entities. `ETc = ET0 ×
-Kc` is the crop-specific evapotranspiration for the configured grass. See
-`docs/fao56.md` for the full formula, the data actually used, and the
-approximations made when a refinement (e.g. RHmin/RHmax, measured pressure)
-isn't available.
+**Garden Irrigation device**: ET0 yesterday, rain yesterday, weather data
+quality (`ok` / `incomplete` / `waiting`), forecast rain (if configured).
 
-### Water deficit
+**Each zone device**:
 
-Each zone keeps a persisted `deficit` (mm) — how much water the lawn is
-"behind" — updated once per completed day: `deficit = clamp(prev_deficit +
-ETc − effective_rain − recorded_irrigation, 0, TAW)`. See `docs/agronomy.md`
-for `TAW`/`RAW`, effective rain, and the weekly cap.
+| Entity | Meaning |
+|---|---|
+| Soil water deficit | mm missing to field capacity, now |
+| Needs irrigation | on when the deficit reached RAW |
+| Recommended irrigation | mm to apply (attributes: liters, blocks, pause, reasons, warnings) |
+| Recommended minutes (mains / tank) | per configured source (attributes: minutes per block) |
+| Irrigation last 7 days, Last irrigation | from your records |
+| Diagnostics | TAW, RAW, Kc, ETc and effective rain of the last closed day, soil moisture sensor status |
 
-### Recommendation: preview vs. final
+Reasons and warnings are codes with values (e.g.
+`{"code": "deficit_reached_raw", "deficit_mm": 12.0, "raw_mm": 9.3}`); the
+custom cards turn them into sentences.
 
-- The **05:30** job finalizes the **previous** full calendar day (00:00:00 to
-  23:59:59.999999) exactly once (idempotent) and produces the **final**
-  recommendation you should act on.
-- The **20:00** job only refreshes a **preview**: a projection of "if today
-  ended right now" from today's still-in-progress ET0/rain/irrigation. It is
-  clearly labeled as a preview and is **never persisted** into the deficit.
+## Actions
 
-Both are exposed as attributes on `binary_sensor.needs_irrigation_<zone>`
-(`recommended_mm` is currently the final value; `preview_needs_irrigation`
-carries the 20:00 projection).
+- `garden_irrigation.record_irrigation` — `zone` (device), `source`
+  (`mains`/`tank`), `minutes` **or** `mm`, optional `note`. Timestamp is now;
+  returns the stored record.
+- `garden_irrigation.set_deficit` — `zone` (device), `deficit_mm` (0 to TAW).
 
-### WH51 is device-relative, not absolute soil moisture
+## Dashboard
 
-The WH51 capacitive sensor's `%` reading is **not** an absolute volumetric
-water content — it is relative to that specific probe's own installation.
-For the first 14 days after calibration starts, its status is
-diagnostic-only. Afterwards, it becomes a soft, explainable **corroborating
-signal** (`wh51_status`: critical/dry/moderate/wet) — it never blocks or
-overrides the deficit-based decision by itself. See `docs/calibration.md`.
-
-### Manual irrigation, recorded
-
-There is no native input form (no `input_number`/`input_select` workarounds,
-by design). Call the `garden_irrigation.record_irrigation` action — from
-Developer tools → Actions, a script, an automation, or a dashboard button —
-with `zone`, `source`, `duration_minutes` (> 0, ≤ 15 per call) and optional
-`notes`. It always uses the **current timestamp** (no backdating in v1). If
-the chosen source has no calibrated `mm per minute` for that zone, the event
-is still logged (for the record), but the deficit is **not** decremented and
-a warning is raised.
-
-### Weekly cap
-
-The 30 mm (default) weekly cap limits **only the irrigation you record**,
-over a sliding 7×24h window — not effective rain. Rain still reduces the
-deficit; it just doesn't count against (or get limited by) the cap. See
-`docs/agronomy.md`.
-
-### Modes: calibration / monitoring
-
-`select.mode` exposes exactly **`calibration`** and **`monitoring`** — there
-is no `automation` mode in v1, not even as a hidden placeholder. It is purely
-an operational/UX indicator: changing it never alters a past balance,
-recommendation, or log entry.
-
-### Declared cycle in progress (optional)
-
-`select.active_cycle_zone` + `button.start_cycle`/`button.end_cycle` let you
-**declare** that a manual cycle is running, and `binary_sensor.
-irrigation_in_progress` reflects it (with `elapsed_minutes` as a read-only
-attribute). This is entirely declarative — the integration cannot detect a
-real cycle — and using it is optional. Using it never pre-fills the
-`record_irrigation` action's `duration_minutes`: you always type/confirm the
-actual duration yourself when you log the cycle.
-
-## Repairs
-
-The integration sends no notifications anywhere. Stale weather/WH51 data
-(no new reading within the expected time) raises a Home Assistant Repair
-issue (Settings → System → Repairs) explaining what to check, and clears
-itself automatically once the sensor updates again.
-
-## Limitations
-
-- Two fixed zones in v1 (modeled as a list internally, but not user-extensible
-  yet).
-- No automatic ET0 fallback (e.g. Hargreaves–Samani) if core weather inputs
-  are missing — a future, opt-in, disabled-by-default option.
-- No backdating of recorded irrigation, and no retroactive recalculation of
-  past balances when a previously uncalibrated source is later calibrated.
-- Soil heat flux (G) is assumed 0 on a daily basis, per FAO-56.
-- Solar radiation is an integral of instantaneous samples — its accuracy
-  depends on your station's update frequency.
-
-## ⚠️ Estimates vs. measurements
-
-There is no flow meter and no tank level sensor. Every liter/mm figure shown
-by this integration is an **estimate**, derived from a user-calibrated `mm
-per minute` rate per zone and source. Only entity states from your existing
-Ecowitt/WH51 sensors are real measurements; everything else (ET0, ETc,
-deficit, recommended mm/minutes/liters) is a **model output**, not a physical
-measurement. **This integration never actuates any hardware in v1** — it only
-reads, computes, and recommends.
-
-## Disclaimer
-
-This integration is a decision-support aid. It does not replace visual
-inspection of the lawn, manual verification of the hydraulic system, or your
-own judgment about when and how much to water.
-
-## Status
-
-Milestones 1–9 are implemented: scaffold, weather aggregation, the FAO-56
-engine, the water balance, the full sensor/binary_sensor platform, manual
-cycle recording, the recommendation engine + scheduler, and
-mode/calibration/declared-cycle controls. The notification system built in
-Milestone 8 was later removed entirely (see `CHANGELOG.md`); stale
-weather/WH51 detection remains, surfaced only via Repairs. See `CLAUDE.md`
-for architecture invariants and `CHANGELOG.md` for what shipped in each
-milestone.
+`www/garden-irrigation-cards/` contains two custom cards (overview and
+zone, with a record form); `dashboards/gardenirrigation.yaml` is an example
+dashboard using them.
 
 ## Documentation
 
-- `docs/agronomy.md` — the water balance: deficit, TAW/RAW, effective rain,
-  the weekly cap.
-- `docs/calibration.md` — the WH51 calibration window and its explicit
-  start/finish override.
-- `docs/fao56.md` — the FAO-56 ET0 formula as implemented, inputs, and
-  approximations.
-- `dashboards/gardenirrigation.yaml` — an example Lovelace dashboard (core
-  cards only).
+- [docs/fao56.md](docs/fao56.md) — ET0, inputs, daily weather from statistics.
+- [docs/agronomy.md](docs/agronomy.md) — water balance, soils, Kc, recommendation, warnings.
+- [docs/calibration.md](docs/calibration.md) — application rates, starting deficit, soil sensor thresholds.
+- [docs/v2-spec.md](docs/v2-spec.md) — design specification (Italian).
+
+## Disclaimer
+
+A decision-support aid: it does not replace looking at your lawn or your own
+judgment about when and how much to water.
 
 ## Development
 
 ```bash
-uv sync --extra test
+uv sync --extra test --extra dev
 uv run pytest
 uv run ruff check .
 uv run mypy custom_components
 ```
 
-See `CLAUDE.md` for project-wide rules and invariants that must not be
-violated when contributing.
+See `CLAUDE.md` for the project rules.

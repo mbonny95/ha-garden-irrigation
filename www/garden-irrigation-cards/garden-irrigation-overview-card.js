@@ -1,85 +1,44 @@
 /**
  * <garden-irrigation-overview-card>
  *
- * Read-only whole-garden summary: mode chip, ET0/data-quality status strip,
- * and one navigable row per zone. See
- * design_handoff_garden_irrigation_cards/README.md §3/§5 (rows 14-16) for the
- * authoritative spec; this folder's own README documents the gaps found
- * against the real backend (custom_components/garden_irrigation).
+ * Whole-garden summary: yesterday's ET0 and rain, forecast rain (if
+ * configured), weather data quality with a link to Repairs, and one row per
+ * zone (status, recommended amount, deficit). Zones are discovered
+ * automatically from the Garden Irrigation devices.
+ *
+ * Configuration:
+ *   type: custom:garden-irrigation-overview-card
+ *   title: Garden                     # optional
  */
 
 import {
   BASE_CSS,
-  attr,
   classifyZoneStatus,
+  deviceName,
   escapeHtml,
+  findEntity,
+  findZoneDevices,
   fireMoreInfo,
   formatMm,
+  formatState,
   getState,
   icon,
-  isUnavailable,
   navigate,
   numericState,
   renderBadge,
-  statusLabel,
-  statusTone,
+  STATUS,
+  texts,
 } from "./garden-irrigation-cards-shared.js";
-// Registers <garden-irrigation-overview-card-editor> as a side effect - see
-// the identical comment in garden-irrigation-zone-card.js.
+// Registers <garden-irrigation-overview-card-editor> as a side effect.
 import "./garden-irrigation-overview-card-editor.js";
-
-const REQUIRED_FIELDS = ["mode_entity", "data_quality_entity", "et0_entity", "zones"];
-
-const MODE_LABEL = {
-  monitoring: "Monitoring",
-  calibration: "Calibration",
-};
-
-/**
- * Today's backend only ever emits "initializing"/"not_configured" for
- * data_quality (see const.py DATA_QUALITY_STATES) - both are normal startup
- * placeholders, not failures, so this banner condition is effectively
- * dormant except for genuine entity unavailability. See this folder's
- * README, "Data-quality / Repairs banner" for the full explanation and what
- * a future backend milestone would need to add for this to do more.
- */
-function isDataQualityDegraded(state) {
-  return isUnavailable(state);
-}
 
 class GardenIrrigationOverviewCard extends HTMLElement {
   static getConfigElement() {
     return document.createElement("garden-irrigation-overview-card-editor");
   }
 
-  static getStubConfig(hass) {
-    const entityIds = Object.keys(hass?.states ?? {});
-    const modeEntity = entityIds.find((id) => id.startsWith("select.") && id.includes("mode"));
-    const dataQualityEntity = entityIds.find(
-      (id) => id.startsWith("sensor.") && id.includes("data_quality"),
-    );
-    const et0Entity = entityIds.find(
-      (id) => id.startsWith("sensor.") && id.includes("et0_daily"),
-    );
-    const inProgressEntity = entityIds.find(
-      (id) => id.startsWith("binary_sensor.") && id.includes("irrigation_in_progress"),
-    );
-    const needsIrrigationEntities = entityIds.filter(
-      (id) => id.startsWith("binary_sensor.") && id.includes("needs_irrigation"),
-    );
-
-    return {
-      type: "custom:garden-irrigation-overview-card",
-      mode_entity: modeEntity ?? "",
-      data_quality_entity: dataQualityEntity ?? "",
-      et0_entity: et0Entity ?? "",
-      in_progress_entity: inProgressEntity ?? "",
-      zones: needsIrrigationEntities.slice(0, 2).map((id, index) => ({
-        zone: `zone_${index + 1}`,
-        name: `Zone ${index + 1}`,
-        needs_irrigation_entity: id,
-      })),
-    };
+  static getStubConfig() {
+    return { type: "custom:garden-irrigation-overview-card" };
   }
 
   constructor() {
@@ -91,18 +50,7 @@ class GardenIrrigationOverviewCard extends HTMLElement {
 
   setConfig(config) {
     if (!config) throw new Error("Invalid configuration");
-    for (const field of REQUIRED_FIELDS) {
-      if (!config[field]) throw new Error(`Missing required field: ${field}`);
-    }
-    if (!Array.isArray(config.zones) || config.zones.length === 0) {
-      throw new Error("Missing required field: zones");
-    }
-    for (const zone of config.zones) {
-      if (!zone.zone || !zone.needs_irrigation_entity) {
-        throw new Error("Each zones[] entry needs zone and needs_irrigation_entity");
-      }
-    }
-    this._config = config;
+    this._config = { ...config };
     this._render();
   }
 
@@ -111,198 +59,138 @@ class GardenIrrigationOverviewCard extends HTMLElement {
     this._render();
   }
 
-  get hass() {
-    return this._hass;
-  }
-
   getCardSize() {
-    return 4;
-  }
-
-  connectedCallback() {
-    this._render();
+    return 2 + findZoneDevices(this._hass).length;
   }
 
   _render() {
     if (!this._config || !this._hass) return;
-
-    const inProgressState = this._config.in_progress_entity
-      ? getState(this._hass, this._config.in_progress_entity)
-      : null;
-    const dataQualityState = getState(this._hass, this._config.data_quality_entity);
-    const et0State = getState(this._hass, this._config.et0_entity);
-    const modeState = getState(this._hass, this._config.mode_entity);
+    const t = texts(this._hass);
+    const zones = findZoneDevices(this._hass);
 
     this.shadowRoot.innerHTML = `
       <style>${BASE_CSS}${this._css()}</style>
       <div class="gi-card" part="card">
         <div class="gi-body">
-          ${this._renderBanner(inProgressState, dataQualityState)}
-          ${this._renderHeader(modeState)}
-          ${this._renderStatusStrip(et0State, dataQualityState)}
-          <div class="gi-zone-rows">
-            ${this._config.zones.map((zoneConfig) => this._renderZoneRow(zoneConfig)).join("")}
-          </div>
+          ${this._config.title ? `<h2 class="gi-title">${escapeHtml(this._config.title)}</h2>` : ""}
+          ${this._renderWeather(t)}
+          ${this._renderDataQuality(t)}
+          ${
+            zones.length
+              ? `<ul class="gi-zones">${zones.map((id) => this._renderZone(t, id)).join("")}</ul>`
+              : `<p class="gi-muted">${escapeHtml(t.no_zones)}</p>`
+          }
         </div>
       </div>
     `;
-
     this._bindEvents();
   }
 
-  _renderBanner(inProgressState, dataQualityState) {
-    if (inProgressState?.state === "on") {
-      const zone = attr(inProgressState, "zone", null);
-      const elapsed = attr(inProgressState, "elapsed_minutes", null);
-      const elapsedText =
-        elapsed === null || elapsed === undefined ? "" : ` · ${Math.round(elapsed)} min elapsed`;
-      return `
-        <div class="gi-banner gi-banner-info" role="status">
-          <span>Cycle running${zone ? ` (${escapeHtml(zone)})` : ""}${escapeHtml(elapsedText)}</span>
-        </div>
-      `;
-    }
-    if (isDataQualityDegraded(dataQualityState)) {
-      return `
-        <button type="button" class="gi-banner gi-banner-warning gi-repairs-banner">
-          ${icon("alert-triangle", 16)}
-          <span>Data quality needs attention - open Repairs</span>
-        </button>
-      `;
-    }
-    return "";
+  _renderWeather(t) {
+    const items = [
+      ["et0_yesterday", t.et0_yesterday],
+      ["rain_yesterday", t.rain_yesterday],
+      ["forecast_rain", t.forecast],
+    ]
+      .map(([key, label]) => {
+        const entityId = findEntity(this._hass, undefined, key);
+        if (!entityId) return "";
+        const value = numericState(getState(this._hass, entityId));
+        return `
+          <button type="button" class="gi-stat" data-entity="${escapeHtml(entityId)}">
+            <span class="gi-small-note gi-muted">${escapeHtml(label)}</span>
+            <span class="gi-tabular gi-stat-value">${escapeHtml(formatMm(value))}</span>
+          </button>
+        `;
+      })
+      .join("");
+    return `<div class="gi-stats">${items}</div>`;
   }
 
-  _renderHeader(modeState) {
-    const mode = modeState?.state ?? null;
-    const modeLabel = MODE_LABEL[mode] ?? "Unknown";
+  _renderDataQuality(t) {
+    const entityId = findEntity(this._hass, undefined, "data_quality");
+    const state = getState(this._hass, entityId);
+    if (!state || state.state === "ok") return "";
+    const repairs =
+      state.state === "incomplete"
+        ? `<button type="button" class="gi-link gi-repairs">${escapeHtml(t.open_repairs)}</button>`
+        : "";
     return `
-      <div class="gi-header">
-        <h2 class="gi-title">Garden Irrigation</h2>
-        <span class="gi-mode-chip gi-chip">${escapeHtml(modeLabel)}</span>
-      </div>
-    `;
-  }
-
-  _renderStatusStrip(et0State, dataQualityState) {
-    const et0 = numericState(et0State);
-    const et0Text = et0 === null ? "—" : `${et0.toFixed(1)} mm`;
-    const dataQualityText = dataQualityState?.attributes?.friendly_name
-      ? (dataQualityState.state ?? "—")
-      : "—";
-    return `
-      <p class="gi-status-strip gi-muted gi-tabular">
-        ET0 today: ${escapeHtml(et0Text)} (in progress) · Data: ${escapeHtml(dataQualityText)}
+      <p class="gi-quality gi-warning-text">
+        ${icon("alert-triangle", 14)}
+        <span>${escapeHtml(`${t.data_quality}: ${formatState(this._hass, state)}`)}</span>
+        ${repairs}
       </p>
     `;
   }
 
-  _renderZoneRow(zoneConfig) {
-    const needsState = getState(this._hass, zoneConfig.needs_irrigation_entity);
-    const { status } = classifyZoneStatus(needsState);
-    const tone = statusTone(status);
-    const label = statusLabel(status);
-    const recommendedMm =
-      attr(needsState, "ready", null) === true ? attr(needsState, "recommended_mm", null) : null;
-    const mmText = formatMm(recommendedMm);
-    const name = zoneConfig.name || zoneConfig.zone;
-
+  _renderZone(t, deviceId) {
+    const needsId = findEntity(this._hass, deviceId, "needs_irrigation");
+    const status = classifyZoneStatus(getState(this._hass, needsId));
+    const recommended = numericState(
+      getState(this._hass, findEntity(this._hass, deviceId, "recommended_irrigation")),
+    );
+    const deficit = numericState(
+      getState(this._hass, findEntity(this._hass, deviceId, "deficit")),
+    );
+    const detail =
+      status === STATUS.NEEDS_WATER
+        ? formatMm(recommended)
+        : deficit !== null
+          ? `${t.deficit} ${formatMm(deficit)}`
+          : "";
     return `
-      <button
-        type="button"
-        class="gi-zone-row gi-tap-target"
-        data-zone="${escapeHtml(zoneConfig.zone)}"
-        aria-label="${escapeHtml(`${name}: ${label}, ${mmText === "—" ? "not available" : mmText + " recommended"}`)}"
-      >
-        <span class="gi-zone-dot" style="background:${tone.dot};" aria-hidden="true"></span>
-        <span class="gi-zone-name">${escapeHtml(name)}</span>
-        <span class="gi-zone-chip gi-chip" style="background:${tone.bg};color:${tone.fg};">${escapeHtml(label)}</span>
-        <span class="gi-zone-mm gi-tabular">${escapeHtml(mmText)}</span>
-        <span class="gi-zone-chevron" aria-hidden="true">${icon("chevron-right", 18)}</span>
-      </button>
+      <li>
+        <button type="button" class="gi-zone gi-tap-target" data-entity="${escapeHtml(
+          findEntity(this._hass, deviceId, "recommended_irrigation") ?? needsId,
+        )}">
+          <span class="gi-zone-name">${escapeHtml(deviceName(this._hass, deviceId))}</span>
+          ${renderBadge(status, t)}
+          <span class="gi-tabular gi-zone-detail">${escapeHtml(detail)}</span>
+          <span class="gi-muted" aria-hidden="true">${icon("chevron-right", 16)}</span>
+        </button>
+      </li>
     `;
   }
 
   _css() {
     return `
-      .gi-body { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
-      .gi-banner {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 16px;
-        margin: -16px -16px 0 -16px;
-        font-size: 13px;
-        font-weight: 600;
-        border: none;
-        width: calc(100% + 32px);
-        text-align: left;
-        font-family: inherit;
-        cursor: default;
+      .gi-body { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+      .gi-title { font-family: var(--gi-font-heading); font-size: 20px; margin: 0; font-weight: 400; }
+      .gi-small-note { font-size: 12px; }
+      .gi-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 8px; }
+      .gi-stat {
+        display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 8px 10px;
+        border: none; border-radius: var(--gi-radius-sm); background: var(--gi-color-neutral-200);
+        color: inherit; font: inherit; cursor: pointer; text-align: left;
       }
-      .gi-banner-info {
-        background: var(--gi-color-accent-100);
-        color: var(--gi-color-accent-700);
+      .gi-stat-value { font-size: 18px; font-weight: 700; }
+      .gi-quality { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 13px; margin: 0; }
+      .gi-link {
+        background: none; border: none; padding: 0; color: inherit; font: inherit;
+        text-decoration: underline; cursor: pointer;
       }
-      .gi-banner-warning {
-        background: var(--gi-color-neutral-200);
-        color: var(--gi-color-accent-800);
-        cursor: pointer;
+      .gi-zones { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+      .gi-zones li + li { border-top: 1px solid var(--gi-color-divider); }
+      .gi-zone {
+        width: 100%; display: grid; grid-template-columns: 1fr auto auto 16px; gap: 8px; align-items: center;
+        background: none; border: none; padding: 8px 0; color: inherit; font: inherit; cursor: pointer; text-align: left;
       }
-      .gi-repairs-banner { min-height: 44px; }
-      .gi-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
+      .gi-zone-name { font-weight: 600; }
+      .gi-zone-detail { font-size: 13px; }
+      @container (max-width: 340px) {
+        .gi-zone { grid-template-columns: 1fr 16px; }
+        .gi-zone .gi-badge, .gi-zone-detail { grid-column: 1; }
       }
-      .gi-title {
-        font-family: var(--gi-font-heading);
-        font-size: 20px;
-        margin: 0;
-        font-weight: normal;
-      }
-      .gi-mode-chip { font-size: 12px; }
-      .gi-status-strip { font-size: 13px; margin: 0; }
-      .gi-zone-rows { display: flex; flex-direction: column; gap: 8px; }
-      .gi-zone-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        width: 100%;
-        min-height: 44px;
-        padding: 8px 10px;
-        border: 1px solid var(--gi-color-divider);
-        border-radius: var(--gi-radius-sm);
-        background: var(--gi-color-bg);
-        color: inherit;
-        font-family: inherit;
-        cursor: pointer;
-        text-align: left;
-      }
-      .gi-zone-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
-      .gi-zone-name { flex: 1 1 auto; font-size: 14px; font-weight: 600; }
-      .gi-zone-chip { font-size: 11px; flex: none; }
-      .gi-zone-mm { font-size: 13px; flex: none; }
-      .gi-zone-chevron { flex: none; display: flex; }
     `;
   }
 
   _bindEvents() {
-    const banner = this.shadowRoot.querySelector(".gi-repairs-banner");
-    banner?.addEventListener("click", () => navigate(this, "/config/repairs"));
-
-    const rows = this.shadowRoot.querySelectorAll(".gi-zone-row");
-    rows.forEach((row) => {
-      row.addEventListener("click", () => {
-        const zoneId = row.dataset.zone;
-        const zoneConfig = this._config.zones.find((zone) => zone.zone === zoneId);
-        if (zoneConfig?.navigate_to) {
-          navigate(this, zoneConfig.navigate_to);
-        } else {
-          fireMoreInfo(this, zoneConfig?.needs_irrigation_entity);
-        }
-      });
+    this.shadowRoot.querySelectorAll("[data-entity]").forEach((el) => {
+      el.addEventListener("click", () => fireMoreInfo(this, el.dataset.entity));
+    });
+    this.shadowRoot.querySelector(".gi-repairs")?.addEventListener("click", () => {
+      navigate(this, "/config/repairs");
     });
   }
 }
@@ -312,7 +200,7 @@ customElements.define("garden-irrigation-overview-card", GardenIrrigationOvervie
 window.customCards = window.customCards || [];
 window.customCards.push({
   type: "garden-irrigation-overview-card",
-  name: "Garden Irrigation - Overview Card",
-  description: "Read-only whole-garden irrigation status summary.",
+  name: "Garden Irrigation - Overview",
+  description: "Yesterday's weather, data quality and the status of every zone.",
   preview: true,
 });

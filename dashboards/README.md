@@ -1,12 +1,14 @@
 # Dashboards
 
-`gardenirrigation.yaml` is an example Lovelace dashboard (Milestone 10),
-built entirely from core Home Assistant cards (no custom cards). It only
-displays entities that actually exist after Milestones 1–9: sensors,
-binary_sensors, the `mode`/`active_cycle_zone` selects, and the
-cycle/calibration buttons. There is no native manual-record form (no
-`number`/`text` platform in this integration by design); the dashboard notes
-how to call the `garden_irrigation.record_irrigation` action instead.
+`gardenirrigation.yaml` is an example dashboard for the v2 integration:
 
-See the comment header in `gardenirrigation.yaml` for the entity_id
-assumptions (default zone names) — adjust them if your instance differs.
+- the **overview card** (yesterday's ET0 and rain, forecast, data quality
+  with a link to Repairs, status of every zone);
+- one **zone card** per zone (decision, recommended mm and minutes per
+  source, deficit vs RAW/TAW, warnings, record-irrigation form);
+- two buttons that set a zone's starting deficit to 0 (field capacity).
+
+It needs the custom cards from `www/garden-irrigation-cards/` and the zone
+device ids: replace the `REPLACE_WITH_ZONE_*_DEVICE_ID` placeholders, or
+simply add the cards from the dashboard UI and pick each zone in the card
+editor.

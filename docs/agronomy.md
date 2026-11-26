@@ -1,105 +1,85 @@
-# Agronomy: water balance, TAW/RAW, effective rain, weekly cap
+# Water balance and recommendation
 
-This describes exactly what `balance.py`/`recommendation.py` compute — not a
-generic irrigation-theory primer.
+Implemented in `model/balance.py`, `model/recommendation.py`,
+`model/soils.py` and `model/crops.py` (pure Python), orchestrated by
+`coordinator.py`.
 
-## Deficit
+## Root-zone water
 
-Each zone (`zone_1`, `zone_2`) keeps a single persisted number: `deficit_mm`
-— how far the root zone is below field capacity. It starts at 0 and is
-updated **at most once per completed local calendar day**, at 05:30, for the
-day that just ended (D-1, 00:00:00–23:59:59.999999):
+- **TAW** (total available water) = root depth (m) × AWC (mm/m).
+- **RAW** (readily available water) = p × TAW. Below RAW the lawn is not
+  stressed; at RAW it is time to water.
+- **p** defaults to 0.40 (FAO-56 Table 22, cool-season turf). Optionally
+  adjusted for the evaporative demand: p = p + 0.04 (5 − ETc), limited to
+  0.1–0.8.
 
-```
-ETc         = ET0 * Kc                                   # Kc = 0.95 (default)
-eff_rain    = min(daily_rain * rain_factor, prev_deficit + ETc)
-new_deficit = clamp(prev_deficit + ETc - eff_rain - recorded_irrigation_mm,
-                     0, TAW)
-```
+### Soils (FAO-56 Table 19, midpoint of θFC − θWP)
 
-- `ET0` comes from `et0.py` (see `fao56.md`); if it's unavailable for that
-  day, the balance is **left untouched** and the day is **not** marked
-  processed — it can still be applied later once the data is available. No
-  guessed `ETc` is ever substituted.
-- `recorded_irrigation_mm` is the sum of `garden_irrigation.record_irrigation`
-  calls for that zone on that day, **only counting calibrated sources** (see
-  below).
-- The result is clamped to `[0, TAW]`: it can never go negative (over-full)
-  or exceed the total available water.
-- Idempotency: a second attempt to process an already-finalized day is a
-  no-op that just reports the stored result (tracked via a per-zone
-  `last_balance_date` marker) — the 20:00 job re-triggering a refresh, a
-  Home Assistant restart, or a manual `recalculate` never double-applies a
-  day.
+| Soil | AWC (mm/m) | Max block (mm) |
+|---|---|---|
+| Sand | 80 | 12 |
+| Loamy sand | 90 | 10 |
+| Sandy loam | 130 | 8 |
+| Loam | 155 | 6 |
+| Silt loam | 160 | 6 |
+| Silt | 180 | 5 |
+| Silty clay loam | 155 | 5 |
+| Silty clay | 160 | 4 |
+| Clay | 160 | 4 |
 
-## TAW / RAW
+The *max block* (water per block before a soak pause) is a practical
+starting point, not a FAO-56 value. Both values can be overridden per zone.
 
-```
-TAW = (root_depth_mm / 1000) * AWC_mm_per_m     # defaults: 150 mm, 200 mm/m
-RAW = TAW * p                                   # p = 0.5 (default)
-```
+### Crop coefficient (Kc)
 
-- **TAW** (Total Available Water): the maximum water the root zone can hold
-  above wilting point, in mm.
-- **RAW** (Readily Available Water): the fraction of TAW the plant can
-  extract without stress. Irrigation is recommended once `deficit >= RAW`,
-  not only once the soil is fully depleted at `TAW`.
+Cool-season turf (e.g. *Festuca arundinacea*), monthly:
 
-`root_depth_mm`/`AWC_mm_per_m`/`p` are currently shared defaults (not yet a
-per-zone options-flow override).
+| Jan | Feb | Mar | Apr | May | Jun | Jul | Aug | Sep | Oct | Nov | Dec |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0.70 | 0.70 | 0.80 | 0.95 | 0.95 | 0.95 | 0.95 | 0.95 | 0.95 | 0.80 | 0.70 | 0.70 |
 
-## Effective rain
+0.95 in active growth is FAO-56 Table 12; the cold-season reductions are a
+starting assumption to validate in the field. A custom 12-month profile can
+be entered per zone.
 
-`eff_rain = min(daily_rain * rain_factor, prev_deficit + ETc)` — two things
-worth noting:
+## Daily step
 
-- **`rain_factor` (default 0.8)**: not all measured rainfall reaches and
-  stays in the root zone (runoff, interception); this factor is a simple,
-  documented approximation of that loss.
-- **The cap at `prev_deficit + ETc`**: effective rain can never make the
-  *new* deficit go negative — a very large rain event doesn't create
-  "negative debt" that offsets future days: it's capped at whatever the zone
-  actually needed that day, no more.
-
-`24h_rainfall` and `rain_event` (if configured) are **diagnostic-only** and
-are never summed into `eff_rain` — they would double-count against the
-`daily_rainfall` accumulator that already covers the same period (see
-`weather.py`'s reset-aware accumulator).
-
-## Recorded irrigation and the weekly cap
-
-`irrigation_7d_mm` is the sum of **user-recorded** irrigation for a zone over
-a **sliding 7×24h window** (not the calendar week) — this is what the 30 mm
-(default) weekly cap governs:
+For each closed day:
 
 ```
-cap_remaining_mm = max(weekly_cap_mm - irrigation_7d_mm, 0)
-recommended_mm   = min(deficit_mm, cap_remaining_mm)   # once deficit >= RAW
+ETc            = ET0 × Kc(month)
+effective rain = 0                                   if rain < threshold (2 mm)
+               = min(rain × factor (0.8), deficit + ETc)   otherwise
+deficit        = clamp(deficit + ETc − effective rain − irrigation, 0, TAW)
 ```
 
-**Effective rain is deliberately excluded from the cap.** Rain is not
-something the user controls, so limiting it would be meaningless; the cap's
-actual purpose is to prevent the *operator* from over-watering. Effective
-rain still reduces the deficit (see above) — it just isn't counted against,
-or limited by, this cap. Both figures are shown side by side
-(`sensor.irrigation_7d_<zone>` and `sensor.effective_rain_<zone>`) precisely
-so this distinction is visible, not implied.
+- Applied once per day (idempotent), at the daily run time, for the previous
+  day; missed days are processed in order (up to 365).
+- **Day without ET0** (weather incomplete): the day is still applied with
+  ETc = 0, so its rain and irrigation are not lost, and it is flagged
+  incomplete.
+- **Current deficit** = deficit of the last closed day − irrigation recorded
+  after it, so recording an irrigation updates the recommendation at once.
 
-A **48-hour minimum interval** between recorded irrigations on the same zone
-is also enforced as a limit on the recommendation (`min_interval_not_elapsed`
-in `limits_applied`) — it does not block `record_irrigation` itself (you can
-always log what you actually did), only the *recommendation* that would
-suggest watering again too soon.
+## Recommendation
 
-## Uncalibrated sources
+- **Needs irrigation** when current deficit ≥ RAW.
+- **Amount** = current deficit (refill to field capacity).
+- **Blocks**: the fewest equal blocks not larger than the zone's max block,
+  separated by the configured pause (30 min by default).
+- **Minutes per source** = mm ÷ that source's application rate; **liters** =
+  mm × area. All are estimates.
 
-If `mm_per_minute` is not set for a given zone+source (the rainwater tank is
-the common case — no flow meter to calibrate it against), a recorded cycle
-on that source is still logged (minutes, source, timestamp, notes preserved)
-but:
+### Warnings (never change the amount)
 
-- mm/liters are reported as **not calibrated** rather than a guessed number;
-- the deficit is **not** decremented for that event.
+| Code | When |
+|---|---|
+| `min_interval` | last irrigation more recent than the minimum interval (48 h) |
+| `weekly_cap` | last 7 days + this amount above your optional weekly limit |
+| `soil_sensor_wet` | model says water, soil sensor above your wet threshold |
+| `soil_sensor_dry` | model says no, soil sensor at or below your dry threshold |
+| `rain_forecast` | forecast rain in the next 24 h ≥ the effective-rain threshold |
+| `no_source_rate` | no water source has an application rate |
 
-Calibrating the source later does not retroactively recompute past events —
-history is not rewritten.
+The weekly limit is off by default: in summer a cool-season lawn can use
+about 40 mm a week, so a fixed 30 mm cap would under-irrigate.
