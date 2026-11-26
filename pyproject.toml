@@ -1,6 +1,6 @@
 [project]
 name = "garden-irrigation"
-version = "0.1.0"
+version = "2.0.0"
 description = "Home Assistant custom integration: irrigation decision support (garden_irrigation)"
 readme = "README.md"
 license = { text = "MIT" }

@@ -1,285 +1,505 @@
 """Config flow for garden_irrigation.
 
-Four ordered steps:
-  (a) user  - position + FAO-56 weather inputs (wind_gust is optional)
-  (b) rain  - daily_rainfall and rain_rate are mandatory; 24h/event optional
-  (c) soil  - WH51 soil moisture per zone (battery/signal optional)
-  (d) zones - zone names/areas/distribution (mm/min mains + tank, nullable);
-              creates the entry directly on submit.
+- Main entry: weather source sensors and site parameters (one per install).
+- Zone subentries: one per irrigated zone, added/edited from the
+  integration page.
+- Options: operational parameters, editable at any time.
 
-No Ecowitt entity names are hardcoded anywhere in this module: the user always
-picks entities via an EntitySelector.
+Source sensors are validated for existence, a convertible unit and the
+state_class the daily weather reader needs (it uses long-term statistics).
 """
 
 from __future__ import annotations
 
-from typing import Any
+from collections.abc import Iterable, Mapping
+from dataclasses import dataclass
+from typing import Any, Literal
 
 import voluptuous as vol
-from homeassistant.config_entries import ConfigEntry, ConfigFlow, OptionsFlow
-from homeassistant.core import callback
+from homeassistant.components.sensor import ATTR_STATE_CLASS, SensorStateClass
+from homeassistant.config_entries import (
+    SOURCE_RECONFIGURE,
+    ConfigEntry,
+    ConfigFlow,
+    ConfigFlowResult,
+    ConfigSubentryFlow,
+    OptionsFlow,
+    SubentryFlowResult,
+)
+from homeassistant.const import (
+    ATTR_UNIT_OF_MEASUREMENT,
+    CONF_ELEVATION,
+    CONF_LATITUDE,
+    CONF_NAME,
+    PERCENTAGE,
+    STATE_UNAVAILABLE,
+    STATE_UNKNOWN,
+    UnitOfIrradiance,
+    UnitOfPrecipitationDepth,
+    UnitOfSpeed,
+)
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import selector
+from homeassistant.util.unit_conversion import (
+    PressureConverter,
+    SpeedConverter,
+    TemperatureConverter,
+)
 
 from .const import (
-    CONF_ALTITUDE,
+    CONF_ADJUST_P_FOR_ETC,
     CONF_ANEMOMETER_HEIGHT,
-    CONF_DAILY_RAINFALL_ENTITY,
+    CONF_AREA,
+    CONF_AWC,
+    CONF_BLOCK_PAUSE,
+    CONF_CROP_PROFILE,
+    CONF_DEPLETION_FRACTION,
+    CONF_FORECAST_ENTITY,
+    CONF_HARGREAVES_FALLBACK,
     CONF_HUMIDITY_ENTITY,
+    CONF_KC_MONTHLY,
+    CONF_MAX_BLOCK,
+    CONF_MIN_INTERVAL_HOURS,
     CONF_PRESSURE_ENTITY,
-    CONF_RAIN_24H_ENTITY,
-    CONF_RAIN_EVENT_ENTITY,
-    CONF_RAIN_RATE_ENTITY,
+    CONF_RAIN_ENTITY,
+    CONF_RAIN_FACTOR,
+    CONF_RAIN_THRESHOLD,
+    CONF_RATE_MAINS,
+    CONF_RATE_TANK,
+    CONF_ROOT_DEPTH,
+    CONF_RUN_TIME,
+    CONF_SOIL_MOISTURE_DRY,
+    CONF_SOIL_MOISTURE_ENTITY,
+    CONF_SOIL_MOISTURE_WET,
+    CONF_SOIL_TYPE,
     CONF_SOLAR_RADIATION_ENTITY,
     CONF_TEMPERATURE_ENTITY,
-    CONF_WIND_GUST_ENTITY,
+    CONF_WEEKLY_CAP,
     CONF_WIND_SPEED_ENTITY,
-    CONF_ZONE1_AREA_M2,
-    CONF_ZONE1_BATTERY_ENTITY,
-    CONF_ZONE1_FLOW_RATE_MAINS_LPM,
-    CONF_ZONE1_MM_PER_MIN_MAINS,
-    CONF_ZONE1_MM_PER_MIN_TANK,
-    CONF_ZONE1_NAME,
-    CONF_ZONE1_SIGNAL_ENTITY,
-    CONF_ZONE1_SOIL_MOISTURE_ENTITY,
-    CONF_ZONE2_AREA_M2,
-    CONF_ZONE2_BATTERY_ENTITY,
-    CONF_ZONE2_FLOW_RATE_MAINS_LPM,
-    CONF_ZONE2_MM_PER_MIN_MAINS,
-    CONF_ZONE2_MM_PER_MIN_TANK,
-    CONF_ZONE2_NAME,
-    CONF_ZONE2_SIGNAL_ENTITY,
-    CONF_ZONE2_SOIL_MOISTURE_ENTITY,
-    DEFAULT_ALTITUDE_M,
+    DEFAULT_ADJUST_P_FOR_ETC,
     DEFAULT_ANEMOMETER_HEIGHT_M,
-    DEFAULT_ZONE1_AREA_M2,
-    DEFAULT_ZONE1_FLOW_RATE_MAINS_LPM,
-    DEFAULT_ZONE1_MM_PER_MIN_MAINS,
-    DEFAULT_ZONE1_NAME,
-    DEFAULT_ZONE2_AREA_M2,
-    DEFAULT_ZONE2_FLOW_RATE_MAINS_LPM,
-    DEFAULT_ZONE2_MM_PER_MIN_MAINS,
-    DEFAULT_ZONE2_NAME,
+    DEFAULT_BLOCK_PAUSE_MINUTES,
+    DEFAULT_HARGREAVES_FALLBACK,
+    DEFAULT_MIN_INTERVAL_HOURS,
+    DEFAULT_RAIN_FACTOR,
+    DEFAULT_RAIN_THRESHOLD_MM,
+    DEFAULT_RUN_TIME,
     DOMAIN,
-    STEP_RAIN,
-    STEP_SOIL,
-    STEP_WEATHER,
-    STEP_ZONES,
-    UNIT_HUMIDITY,
-    UNIT_IRRADIANCE,
-    UNIT_PRESSURE,
-    UNIT_RAIN_DEPTH,
-    UNIT_RAIN_RATE,
-    UNIT_SPEED,
-    UNIT_TEMPERATURE,
+    KC_MONTH_FIELDS,
+    SUBENTRY_TYPE_ZONE,
 )
-from .validation import EntityValidationError, validate_sensor_entity
+from .model.crops import (
+    CROP_CUSTOM,
+    DEFAULT_CROP,
+    DEFAULT_DEPLETION_FRACTION,
+    DEFAULT_ROOT_DEPTH_MM,
+    KC_PROFILES,
+)
+from .model.soils import DEFAULT_SOIL, SOIL_CUSTOM, SOILS
+
+ENTRY_TITLE = "Garden Irrigation"
 
 
-def _entity_selector(domain: str | None = None) -> selector.EntitySelector:
-    """Build an entity picker.
-
-    No domain filter by default: the selector itself must not hard-reject a
-    wrong-domain entity_id (it would raise a raw schema exception before our
-    step handler runs). Domain/unit/existence are instead enforced by
-    validate_sensor_entity(), which produces a friendly per-field form error.
-    """
-    config: selector.EntitySelectorConfig = {}
-    if domain is not None:
-        config["domain"] = domain
-    return selector.EntitySelector(config)
+# --- Source sensor validation -------------------------------------------------
 
 
-def _validate_fields(
-    hass: Any,
-    user_input: dict[str, Any],
-    field_units: dict[str, set[str] | None],
-) -> dict[str, str]:
-    """Validate a set of entity_id fields; return an errors dict for the form."""
-    errors: dict[str, str] = {}
-    for field, expected_units in field_units.items():
-        entity_id = user_input.get(field)
-        if not entity_id:
-            continue
+@dataclass(frozen=True, slots=True)
+class SensorSpec:
+    """What a source sensor must provide to be usable."""
+
+    units: frozenset[str]
+    # Empty = any state_class (or none) is accepted.
+    state_classes: frozenset[str] = frozenset()
+
+
+_MEASUREMENT = frozenset({SensorStateClass.MEASUREMENT})
+
+
+def _units(valid_units: Iterable[str | None]) -> frozenset[str]:
+    return frozenset(unit for unit in valid_units if unit is not None)
+
+
+WEATHER_SENSOR_SPECS: dict[str, SensorSpec] = {
+    CONF_TEMPERATURE_ENTITY: SensorSpec(
+        _units(TemperatureConverter.VALID_UNITS), _MEASUREMENT
+    ),
+    CONF_HUMIDITY_ENTITY: SensorSpec(frozenset({PERCENTAGE}), _MEASUREMENT),
+    CONF_SOLAR_RADIATION_ENTITY: SensorSpec(
+        frozenset({UnitOfIrradiance.WATTS_PER_SQUARE_METER}), _MEASUREMENT
+    ),
+    CONF_WIND_SPEED_ENTITY: SensorSpec(
+        frozenset(u for u in UnitOfSpeed if u in SpeedConverter.VALID_UNITS),
+        _MEASUREMENT,
+    ),
+    CONF_RAIN_ENTITY: SensorSpec(
+        frozenset(
+            {
+                UnitOfPrecipitationDepth.MILLIMETERS,
+                UnitOfPrecipitationDepth.CENTIMETERS,
+                UnitOfPrecipitationDepth.INCHES,
+            }
+        ),
+        frozenset({SensorStateClass.TOTAL, SensorStateClass.TOTAL_INCREASING}),
+    ),
+    CONF_PRESSURE_ENTITY: SensorSpec(
+        _units(PressureConverter.VALID_UNITS), _MEASUREMENT
+    ),
+}
+
+SOIL_MOISTURE_SPEC = SensorSpec(frozenset({PERCENTAGE}))
+
+
+def validate_sensor(
+    hass: HomeAssistant, entity_id: str, spec: SensorSpec
+) -> str | None:
+    """Return an error key if `entity_id` does not satisfy `spec`, else None."""
+    state = hass.states.get(entity_id)
+    if state is None:
+        return "entity_not_found"
+    if state.attributes.get(ATTR_UNIT_OF_MEASUREMENT) not in spec.units:
+        return "wrong_unit"
+    if spec.state_classes and state.attributes.get(ATTR_STATE_CLASS) not in (
+        spec.state_classes
+    ):
+        return "wrong_state_class"
+    if state.state not in (STATE_UNKNOWN, STATE_UNAVAILABLE):
         try:
-            validate_sensor_entity(hass, entity_id, expected_units=expected_units)
-        except EntityValidationError as err:
-            errors[field] = err.reason
+            float(state.state)
+        except ValueError:
+            return "not_numeric"
+    return None
+
+
+def _validate_weather_sensors(
+    hass: HomeAssistant, user_input: Mapping[str, Any]
+) -> dict[str, str]:
+    errors: dict[str, str] = {}
+    for field, spec in WEATHER_SENSOR_SPECS.items():
+        entity_id = user_input.get(field)
+        if entity_id and (error := validate_sensor(hass, entity_id, spec)):
+            errors[field] = error
     return errors
 
 
+# --- Selector helpers --------------------------------------------------------------
+
+
+def _number(
+    minimum: float,
+    maximum: float,
+    step: float | Literal["any"],
+    unit: str | None = None,
+) -> selector.NumberSelector:
+    config = selector.NumberSelectorConfig(
+        min=minimum, max=maximum, step=step, mode=selector.NumberSelectorMode.BOX
+    )
+    if unit is not None:
+        config["unit_of_measurement"] = unit
+    return selector.NumberSelector(config)
+
+
+def _select(options: list[str], translation_key: str) -> selector.SelectSelector:
+    return selector.SelectSelector(
+        selector.SelectSelectorConfig(
+            options=options,
+            translation_key=translation_key,
+            mode=selector.SelectSelectorMode.DROPDOWN,
+        )
+    )
+
+
+_SENSOR_SELECTOR = selector.EntitySelector(
+    selector.EntitySelectorConfig(domain="sensor")
+)
+
+
+# --- Main entry ---------------------------------------------------------------------
+
+
+def _site_schema(hass: HomeAssistant) -> vol.Schema:
+    return vol.Schema(
+        {
+            vol.Required(CONF_TEMPERATURE_ENTITY): _SENSOR_SELECTOR,
+            vol.Required(CONF_HUMIDITY_ENTITY): _SENSOR_SELECTOR,
+            vol.Required(CONF_SOLAR_RADIATION_ENTITY): _SENSOR_SELECTOR,
+            vol.Required(CONF_WIND_SPEED_ENTITY): _SENSOR_SELECTOR,
+            vol.Required(CONF_RAIN_ENTITY): _SENSOR_SELECTOR,
+            vol.Optional(CONF_PRESSURE_ENTITY): _SENSOR_SELECTOR,
+            vol.Required(
+                CONF_ANEMOMETER_HEIGHT, default=DEFAULT_ANEMOMETER_HEIGHT_M
+            ): _number(0.5, 20, 0.1, "m"),
+            vol.Required(CONF_LATITUDE, default=hass.config.latitude): _number(
+                -90, 90, "any", "°"
+            ),
+            vol.Required(CONF_ELEVATION, default=hass.config.elevation): _number(
+                -500, 9000, 1, "m"
+            ),
+        }
+    )
+
+
 class GardenIrrigationConfigFlow(ConfigFlow, domain=DOMAIN):
-    """Handle the guided, multi-step setup of garden_irrigation."""
+    """Set up the weather sources and site of the installation."""
 
-    VERSION = 1
-
-    def __init__(self) -> None:
-        """Initialize the accumulator for data collected across steps."""
-        self._data: dict[str, Any] = {}
-
-    async def async_step_user(self, user_input: dict[str, Any] | None = None) -> Any:
-        """Step (a): position + FAO-56 weather inputs."""
-        if self._async_current_entries():
-            return self.async_abort(reason="single_instance_allowed")
-
-        errors: dict[str, str] = {}
-        if user_input is not None:
-            errors = _validate_fields(
-                self.hass,
-                user_input,
-                {
-                    CONF_TEMPERATURE_ENTITY: UNIT_TEMPERATURE,
-                    CONF_HUMIDITY_ENTITY: UNIT_HUMIDITY,
-                    CONF_PRESSURE_ENTITY: UNIT_PRESSURE,
-                    CONF_SOLAR_RADIATION_ENTITY: UNIT_IRRADIANCE,
-                    CONF_WIND_SPEED_ENTITY: UNIT_SPEED,
-                    CONF_WIND_GUST_ENTITY: UNIT_SPEED,
-                },
-            )
-            if not errors:
-                self._data.update(user_input)
-                return await self.async_step_rain()
-
-        default_altitude = self.hass.config.elevation or DEFAULT_ALTITUDE_M
-        schema = vol.Schema(
-            {
-                vol.Required(CONF_ALTITUDE, default=default_altitude): vol.Coerce(
-                    float
-                ),
-                vol.Required(
-                    CONF_ANEMOMETER_HEIGHT, default=DEFAULT_ANEMOMETER_HEIGHT_M
-                ): vol.Coerce(float),
-                vol.Required(CONF_TEMPERATURE_ENTITY): _entity_selector(),
-                vol.Required(CONF_HUMIDITY_ENTITY): _entity_selector(),
-                vol.Required(CONF_PRESSURE_ENTITY): _entity_selector(),
-                vol.Required(CONF_SOLAR_RADIATION_ENTITY): _entity_selector(),
-                vol.Required(CONF_WIND_SPEED_ENTITY): _entity_selector(),
-                vol.Optional(CONF_WIND_GUST_ENTITY): _entity_selector(),
-            }
-        )
-        return self.async_show_form(
-            step_id=STEP_WEATHER, data_schema=schema, errors=errors
-        )
-
-    async def async_step_rain(self, user_input: dict[str, Any] | None = None) -> Any:
-        """Step (b): rain entities. daily_rainfall and rain_rate are mandatory."""
-        errors: dict[str, str] = {}
-        if user_input is not None:
-            errors = _validate_fields(
-                self.hass,
-                user_input,
-                {
-                    CONF_DAILY_RAINFALL_ENTITY: UNIT_RAIN_DEPTH,
-                    CONF_RAIN_RATE_ENTITY: UNIT_RAIN_RATE,
-                    CONF_RAIN_24H_ENTITY: UNIT_RAIN_DEPTH,
-                    CONF_RAIN_EVENT_ENTITY: UNIT_RAIN_DEPTH,
-                },
-            )
-            if not errors:
-                self._data.update(user_input)
-                return await self.async_step_soil()
-
-        schema = vol.Schema(
-            {
-                vol.Required(CONF_DAILY_RAINFALL_ENTITY): _entity_selector(),
-                vol.Required(CONF_RAIN_RATE_ENTITY): _entity_selector(),
-                vol.Optional(CONF_RAIN_24H_ENTITY): _entity_selector(),
-                vol.Optional(CONF_RAIN_EVENT_ENTITY): _entity_selector(),
-            }
-        )
-        return self.async_show_form(
-            step_id=STEP_RAIN, data_schema=schema, errors=errors
-        )
-
-    async def async_step_soil(self, user_input: dict[str, Any] | None = None) -> Any:
-        """Step (c): WH51 soil moisture per zone; battery/signal optional."""
-        errors: dict[str, str] = {}
-        if user_input is not None:
-            errors = _validate_fields(
-                self.hass,
-                user_input,
-                {
-                    CONF_ZONE1_SOIL_MOISTURE_ENTITY: UNIT_HUMIDITY,
-                    CONF_ZONE1_BATTERY_ENTITY: None,
-                    CONF_ZONE1_SIGNAL_ENTITY: None,
-                    CONF_ZONE2_SOIL_MOISTURE_ENTITY: UNIT_HUMIDITY,
-                    CONF_ZONE2_BATTERY_ENTITY: None,
-                    CONF_ZONE2_SIGNAL_ENTITY: None,
-                },
-            )
-            if not errors:
-                self._data.update(user_input)
-                return await self.async_step_zones()
-
-        schema = vol.Schema(
-            {
-                vol.Required(CONF_ZONE1_SOIL_MOISTURE_ENTITY): _entity_selector(),
-                vol.Optional(CONF_ZONE1_BATTERY_ENTITY): _entity_selector(),
-                vol.Optional(CONF_ZONE1_SIGNAL_ENTITY): _entity_selector(),
-                vol.Required(CONF_ZONE2_SOIL_MOISTURE_ENTITY): _entity_selector(),
-                vol.Optional(CONF_ZONE2_BATTERY_ENTITY): _entity_selector(),
-                vol.Optional(CONF_ZONE2_SIGNAL_ENTITY): _entity_selector(),
-            }
-        )
-        return self.async_show_form(
-            step_id=STEP_SOIL, data_schema=schema, errors=errors
-        )
-
-    async def async_step_zones(self, user_input: dict[str, Any] | None = None) -> Any:
-        """Step (d): zone names/areas/distribution. Tank rate may be null."""
-        if user_input is not None:
-            self._data.update(user_input)
-            return self.async_create_entry(title="Garden Irrigation", data=self._data)
-
-        schema = vol.Schema(
-            {
-                vol.Required(CONF_ZONE1_NAME, default=DEFAULT_ZONE1_NAME): str,
-                vol.Required(
-                    CONF_ZONE1_AREA_M2, default=DEFAULT_ZONE1_AREA_M2
-                ): vol.Coerce(float),
-                vol.Required(
-                    CONF_ZONE1_MM_PER_MIN_MAINS,
-                    default=DEFAULT_ZONE1_MM_PER_MIN_MAINS,
-                ): vol.Coerce(float),
-                vol.Optional(CONF_ZONE1_MM_PER_MIN_TANK): vol.Coerce(float),
-                vol.Required(
-                    CONF_ZONE1_FLOW_RATE_MAINS_LPM,
-                    default=DEFAULT_ZONE1_FLOW_RATE_MAINS_LPM,
-                ): vol.Coerce(float),
-                vol.Required(CONF_ZONE2_NAME, default=DEFAULT_ZONE2_NAME): str,
-                vol.Required(
-                    CONF_ZONE2_AREA_M2, default=DEFAULT_ZONE2_AREA_M2
-                ): vol.Coerce(float),
-                vol.Required(
-                    CONF_ZONE2_MM_PER_MIN_MAINS,
-                    default=DEFAULT_ZONE2_MM_PER_MIN_MAINS,
-                ): vol.Coerce(float),
-                vol.Optional(CONF_ZONE2_MM_PER_MIN_TANK): vol.Coerce(float),
-                vol.Required(
-                    CONF_ZONE2_FLOW_RATE_MAINS_LPM,
-                    default=DEFAULT_ZONE2_FLOW_RATE_MAINS_LPM,
-                ): vol.Coerce(float),
-            }
-        )
-        return self.async_show_form(step_id=STEP_ZONES, data_schema=schema)
+    # v2 is a clean rewrite: v1 entries (VERSION 1) are intentionally not
+    # migrated, so Home Assistant reports them instead of loading stale keys.
+    VERSION = 2
+    MINOR_VERSION = 1
 
     @staticmethod
     @callback
-    def async_get_options_flow(
-        config_entry: ConfigEntry,
-    ) -> GardenIrrigationOptionsFlow:
-        """Return the options flow handler for this config entry."""
+    def async_get_options_flow(config_entry: ConfigEntry) -> OptionsFlow:
+        """Return the options flow."""
         return GardenIrrigationOptionsFlow()
+
+    @classmethod
+    @callback
+    def async_get_supported_subentry_types(
+        cls, config_entry: ConfigEntry
+    ) -> dict[str, type[ConfigSubentryFlow]]:
+        """Zones are subentries of the main entry."""
+        return {SUBENTRY_TYPE_ZONE: ZoneSubentryFlow}
+
+    async def async_step_user(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Ask for the weather sensors and site parameters."""
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            errors = _validate_weather_sensors(self.hass, user_input)
+            if not errors:
+                return self.async_create_entry(title=ENTRY_TITLE, data=user_input)
+        return self.async_show_form(
+            step_id="user",
+            data_schema=self.add_suggested_values_to_schema(
+                _site_schema(self.hass), user_input or {}
+            ),
+            errors=errors,
+        )
+
+    async def async_step_reconfigure(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Change the weather sensors or site parameters."""
+        entry = self._get_reconfigure_entry()
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            errors = _validate_weather_sensors(self.hass, user_input)
+            if not errors:
+                return self.async_update_and_abort(entry, data=user_input)
+        return self.async_show_form(
+            step_id="reconfigure",
+            data_schema=self.add_suggested_values_to_schema(
+                _site_schema(self.hass), user_input or entry.data
+            ),
+            errors=errors,
+        )
+
+
+# --- Zone subentries ------------------------------------------------------------------
+
+
+def _zone_schema() -> vol.Schema:
+    return vol.Schema(
+        {
+            vol.Required(CONF_NAME): selector.TextSelector(),
+            vol.Required(CONF_AREA): _number(0.1, 100000, 0.1, "m²"),
+            vol.Required(CONF_CROP_PROFILE, default=DEFAULT_CROP): _select(
+                [*KC_PROFILES, CROP_CUSTOM], CONF_CROP_PROFILE
+            ),
+            vol.Required(CONF_SOIL_TYPE, default=DEFAULT_SOIL): _select(
+                [*SOILS, SOIL_CUSTOM], CONF_SOIL_TYPE
+            ),
+            vol.Optional(CONF_AWC): _number(10, 400, 1, "mm/m"),
+            vol.Optional(CONF_MAX_BLOCK): _number(1, 50, 0.5, "mm"),
+            vol.Required(CONF_ROOT_DEPTH, default=DEFAULT_ROOT_DEPTH_MM): _number(
+                20, 2000, 5, "mm"
+            ),
+            vol.Required(
+                CONF_DEPLETION_FRACTION, default=DEFAULT_DEPLETION_FRACTION
+            ): _number(0.1, 0.9, 0.05),
+            vol.Optional(CONF_RATE_MAINS): _number(0.01, 10, 0.005, "mm/min"),
+            vol.Optional(CONF_RATE_TANK): _number(0.01, 10, 0.005, "mm/min"),
+            vol.Optional(CONF_SOIL_MOISTURE_ENTITY): _SENSOR_SELECTOR,
+            vol.Optional(CONF_SOIL_MOISTURE_DRY): _number(0, 100, 1, "%"),
+            vol.Optional(CONF_SOIL_MOISTURE_WET): _number(0, 100, 1, "%"),
+        }
+    )
+
+
+def _kc_schema(defaults: list[float]) -> vol.Schema:
+    return vol.Schema(
+        {
+            vol.Required(field, default=defaults[index]): _number(0.1, 1.5, 0.01)
+            for index, field in enumerate(KC_MONTH_FIELDS)
+        }
+    )
+
+
+class ZoneSubentryFlow(ConfigSubentryFlow):
+    """Add or edit an irrigated zone."""
+
+    def __init__(self) -> None:
+        """Hold the zone data collected across steps."""
+        self._zone: dict[str, Any] = {}
+
+    @property
+    def _is_reconfigure(self) -> bool:
+        return self.source == SOURCE_RECONFIGURE
+
+    def _current(self) -> dict[str, Any]:
+        if self._is_reconfigure:
+            return dict(self._get_reconfigure_subentry().data)
+        return {}
+
+    async def async_step_user(
+        self, user_input: dict[str, Any] | None = None
+    ) -> SubentryFlowResult:
+        """Add a new zone."""
+        return await self._async_step_zone("user", user_input)
+
+    async def async_step_reconfigure(
+        self, user_input: dict[str, Any] | None = None
+    ) -> SubentryFlowResult:
+        """Edit an existing zone."""
+        return await self._async_step_zone("reconfigure", user_input)
+
+    async def _async_step_zone(
+        self, step_id: str, user_input: dict[str, Any] | None
+    ) -> SubentryFlowResult:
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            user_input[CONF_NAME] = user_input[CONF_NAME].strip()
+            errors = self._validate_zone(user_input)
+            if not errors:
+                self._zone = dict(user_input)
+                if user_input[CONF_CROP_PROFILE] == CROP_CUSTOM:
+                    return await self.async_step_kc()
+                return self._async_finish()
+        return self.async_show_form(
+            step_id=step_id,
+            data_schema=self.add_suggested_values_to_schema(
+                _zone_schema(),
+                user_input if user_input is not None else self._current(),
+            ),
+            errors=errors,
+        )
+
+    async def async_step_kc(
+        self, user_input: dict[str, Any] | None = None
+    ) -> SubentryFlowResult:
+        """Enter a custom monthly Kc profile."""
+        if user_input is not None:
+            self._zone[CONF_KC_MONTHLY] = [
+                float(user_input[field]) for field in KC_MONTH_FIELDS
+            ]
+            return self._async_finish()
+        defaults = self._current().get(CONF_KC_MONTHLY) or list(
+            KC_PROFILES[DEFAULT_CROP]
+        )
+        return self.async_show_form(step_id="kc", data_schema=_kc_schema(defaults))
+
+    def _validate_zone(self, user_input: Mapping[str, Any]) -> dict[str, str]:
+        errors: dict[str, str] = {}
+
+        name: str = user_input[CONF_NAME]
+        own_id = (
+            self._get_reconfigure_subentry().subentry_id
+            if (self._is_reconfigure)
+            else None
+        )
+        other_names = {
+            subentry.title.casefold()
+            for subentry_id, subentry in self._get_entry().subentries.items()
+            if subentry.subentry_type == SUBENTRY_TYPE_ZONE and subentry_id != own_id
+        }
+        if not name:
+            errors[CONF_NAME] = "name_required"
+        elif name.casefold() in other_names:
+            errors[CONF_NAME] = "name_exists"
+
+        if user_input[CONF_SOIL_TYPE] == SOIL_CUSTOM:
+            for field in (CONF_AWC, CONF_MAX_BLOCK):
+                if user_input.get(field) is None:
+                    errors[field] = "required_for_custom_soil"
+
+        if user_input.get(CONF_RATE_MAINS) is None and (
+            user_input.get(CONF_RATE_TANK) is None
+        ):
+            errors["base"] = "no_rate"
+
+        sensor = user_input.get(CONF_SOIL_MOISTURE_ENTITY)
+        dry = user_input.get(CONF_SOIL_MOISTURE_DRY)
+        wet = user_input.get(CONF_SOIL_MOISTURE_WET)
+        if sensor:
+            if error := validate_sensor(self.hass, sensor, SOIL_MOISTURE_SPEC):
+                errors[CONF_SOIL_MOISTURE_ENTITY] = error
+        elif dry is not None or wet is not None:
+            errors[CONF_SOIL_MOISTURE_ENTITY] = "thresholds_without_sensor"
+        if dry is not None and wet is not None and dry >= wet:
+            errors[CONF_SOIL_MOISTURE_DRY] = "dry_not_below_wet"
+
+        return errors
+
+    def _async_finish(self) -> SubentryFlowResult:
+        if self._zone[CONF_CROP_PROFILE] != CROP_CUSTOM:
+            # Preset profiles are resolved at runtime, so improved defaults
+            # reach existing zones without a migration.
+            self._zone.pop(CONF_KC_MONTHLY, None)
+        title: str = self._zone[CONF_NAME]
+        if self._is_reconfigure:
+            return self.async_update_and_abort(
+                self._get_entry(),
+                self._get_reconfigure_subentry(),
+                title=title,
+                data=self._zone,
+            )
+        return self.async_create_entry(title=title, data=self._zone)
+
+
+# --- Options ------------------------------------------------------------------------
+
+OPTIONS_SCHEMA = vol.Schema(
+    {
+        vol.Required(CONF_RAIN_FACTOR, default=DEFAULT_RAIN_FACTOR): _number(
+            0, 1, 0.05
+        ),
+        vol.Required(CONF_RAIN_THRESHOLD, default=DEFAULT_RAIN_THRESHOLD_MM): _number(
+            0, 20, 0.5, "mm"
+        ),
+        vol.Required(CONF_RUN_TIME, default=DEFAULT_RUN_TIME): selector.TimeSelector(),
+        vol.Required(
+            CONF_HARGREAVES_FALLBACK, default=DEFAULT_HARGREAVES_FALLBACK
+        ): selector.BooleanSelector(),
+        vol.Required(
+            CONF_ADJUST_P_FOR_ETC, default=DEFAULT_ADJUST_P_FOR_ETC
+        ): selector.BooleanSelector(),
+        vol.Optional(CONF_FORECAST_ENTITY): selector.EntitySelector(
+            selector.EntitySelectorConfig(domain="weather")
+        ),
+        vol.Required(
+            CONF_MIN_INTERVAL_HOURS, default=DEFAULT_MIN_INTERVAL_HOURS
+        ): _number(0, 336, 1, "h"),
+        vol.Optional(CONF_WEEKLY_CAP): _number(1, 200, 1, "mm"),
+        vol.Required(CONF_BLOCK_PAUSE, default=DEFAULT_BLOCK_PAUSE_MINUTES): _number(
+            0, 240, 5, "min"
+        ),
+    }
+)
 
 
 class GardenIrrigationOptionsFlow(OptionsFlow):
-    """Minimal pass-through options flow stub.
+    """Edit the operational parameters."""
 
-    The full operational options set (Kc, thresholds, caps, ...) lands in
-    later milestones; Milestone 1 only proves the flow opens and saves.
-    """
-
-    async def async_step_init(self, user_input: dict[str, Any] | None = None) -> Any:
-        """Show an (empty, for now) options form and save on submit."""
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Show and save the options form."""
         if user_input is not None:
-            return self.async_create_entry(title="", data=user_input)
-        return self.async_show_form(step_id="init", data_schema=vol.Schema({}))
+            return self.async_create_entry(data=user_input)
+        return self.async_show_form(
+            step_id="init",
+            data_schema=self.add_suggested_values_to_schema(
+                OPTIONS_SCHEMA, self.config_entry.options
+            ),
+        )

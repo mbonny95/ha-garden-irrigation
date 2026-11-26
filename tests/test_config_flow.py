@@ -1,165 +1,155 @@
-"""Tests for the garden_irrigation multi-step config flow."""
+"""Tests for the main config flow (weather sources and site)."""
 
 from __future__ import annotations
 
-from homeassistant import config_entries
-from homeassistant.const import UnitOfTemperature
+import pytest
+from homeassistant.config_entries import SOURCE_USER
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.garden_irrigation.const import (
-    CONF_HUMIDITY_ENTITY,
-    CONF_TEMPERATURE_ENTITY,
-    DOMAIN,
-    STEP_RAIN,
-    STEP_SOIL,
-    STEP_WEATHER,
-    STEP_ZONES,
-)
+from custom_components.garden_irrigation.const import DOMAIN
 
-from .const import (
-    MOCK_ZONE1_SOIL_ENTITY,
-    rain_step_input,
-    setup_mock_weather_states,
-    soil_step_input,
-    user_step_input,
-    zones_step_input,
+from .common import (
+    HUMIDITY,
+    PRESSURE,
+    RAIN,
+    TEMPERATURE,
+    WEATHER_INPUT,
+    WIND,
+    set_sensor,
 )
 
 
-async def _advance_to_create_entry(hass: HomeAssistant) -> dict:
-    """Run all four steps with valid input and return the final flow result."""
+async def _start(hass: HomeAssistant) -> str:
     result = await hass.config_entries.flow.async_init(
-        DOMAIN, context={"source": config_entries.SOURCE_USER}
+        DOMAIN, context={"source": SOURCE_USER}
     )
     assert result["type"] is FlowResultType.FORM
-    assert result["step_id"] == STEP_WEATHER
-
-    result = await hass.config_entries.flow.async_configure(
-        result["flow_id"], user_step_input()
-    )
-    assert result["type"] is FlowResultType.FORM
-    assert result["step_id"] == STEP_RAIN
-
-    result = await hass.config_entries.flow.async_configure(
-        result["flow_id"], rain_step_input()
-    )
-    assert result["type"] is FlowResultType.FORM
-    assert result["step_id"] == STEP_SOIL
-
-    result = await hass.config_entries.flow.async_configure(
-        result["flow_id"], soil_step_input()
-    )
-    assert result["type"] is FlowResultType.FORM
-    assert result["step_id"] == STEP_ZONES
-
-    return await hass.config_entries.flow.async_configure(
-        result["flow_id"], zones_step_input()
-    )
+    assert result["step_id"] == "user"
+    return result["flow_id"]
 
 
-async def test_happy_path_creates_entry(hass: HomeAssistant) -> None:
-    """All four steps, valid input, optional fields omitted -> entry created."""
-    setup_mock_weather_states(hass)
-
-    result = await _advance_to_create_entry(hass)
+@pytest.mark.usefixtures("weather_states")
+async def test_user_flow_creates_entry(hass: HomeAssistant) -> None:
+    flow_id = await _start(hass)
+    result = await hass.config_entries.flow.async_configure(flow_id, WEATHER_INPUT)
 
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert result["title"] == "Garden Irrigation"
-    assert result["data"][CONF_TEMPERATURE_ENTITY]
-    assert result["data"]["zone1_soil_moisture_entity"] == MOCK_ZONE1_SOIL_ENTITY
-    # Optional fields left empty in the flow must not be required to finish.
-    assert "wind_gust_entity" not in result["data"]
-    assert "zone1_battery_entity" not in result["data"]
+    assert result["data"] == WEATHER_INPUT
 
 
-async def test_entity_not_found_blocks_step(hass: HomeAssistant) -> None:
-    """A nonexistent entity_id must be rejected with entity_not_found."""
-    setup_mock_weather_states(hass)
+@pytest.mark.usefixtures("weather_states")
+async def test_pressure_is_optional(hass: HomeAssistant) -> None:
+    flow_id = await _start(hass)
+    user_input = {k: v for k, v in WEATHER_INPUT.items() if k != "pressure_entity"}
+    result = await hass.config_entries.flow.async_configure(flow_id, user_input)
 
-    result = await hass.config_entries.flow.async_init(
-        DOMAIN, context={"source": config_entries.SOURCE_USER}
-    )
-    result = await hass.config_entries.flow.async_configure(
-        result["flow_id"],
-        user_step_input(**{CONF_TEMPERATURE_ENTITY: "sensor.does_not_exist_at_all"}),
-    )
-
-    assert result["type"] is FlowResultType.FORM
-    assert result["step_id"] == STEP_WEATHER
-    assert result["errors"][CONF_TEMPERATURE_ENTITY] == "entity_not_found"
+    assert result["type"] is FlowResultType.CREATE_ENTRY
+    assert "pressure_entity" not in result["data"]
 
 
-async def test_entity_wrong_domain_blocks_step(hass: HomeAssistant) -> None:
-    """A non-sensor entity_id must be rejected with entity_wrong_domain."""
-    setup_mock_weather_states(hass)
-    hass.states.async_set("light.mock_light", "on")
-
-    result = await hass.config_entries.flow.async_init(
-        DOMAIN, context={"source": config_entries.SOURCE_USER}
-    )
-    result = await hass.config_entries.flow.async_configure(
-        result["flow_id"],
-        user_step_input(**{CONF_TEMPERATURE_ENTITY: "light.mock_light"}),
-    )
-
-    assert result["type"] is FlowResultType.FORM
-    assert result["step_id"] == STEP_WEATHER
-    assert result["errors"][CONF_TEMPERATURE_ENTITY] == "entity_wrong_domain"
-
-
-async def test_entity_wrong_unit_blocks_step(hass: HomeAssistant) -> None:
-    """An incompatible unit_of_measurement must be rejected."""
-    setup_mock_weather_states(hass)
-    hass.states.async_set(
-        "sensor.mock_humidity_wrong_unit",
-        "62",
-        {"unit_of_measurement": UnitOfTemperature.CELSIUS},
-    )
-
-    result = await hass.config_entries.flow.async_init(
-        DOMAIN, context={"source": config_entries.SOURCE_USER}
-    )
-    result = await hass.config_entries.flow.async_configure(
-        result["flow_id"],
-        user_step_input(**{CONF_HUMIDITY_ENTITY: "sensor.mock_humidity_wrong_unit"}),
-    )
-
-    assert result["type"] is FlowResultType.FORM
-    assert result["step_id"] == STEP_WEATHER
-    assert result["errors"][CONF_HUMIDITY_ENTITY] == "entity_wrong_unit"
-
-
-async def test_optional_entities_can_be_omitted(hass: HomeAssistant) -> None:
-    """Battery/signal/wind_gust are optional: omitting them is not an error."""
-    setup_mock_weather_states(hass)
-
-    result = await _advance_to_create_entry(hass)
+@pytest.mark.usefixtures("weather_states")
+async def test_other_units_are_accepted(hass: HomeAssistant) -> None:
+    set_sensor(hass, TEMPERATURE, "64.8", "°F")
+    set_sensor(hass, WIND, "3.8", "mph")
+    set_sensor(hass, PRESSURE, "29.9", "inHg")
+    set_sensor(hass, RAIN, "0.05", "in", "total")
+    flow_id = await _start(hass)
+    result = await hass.config_entries.flow.async_configure(flow_id, WEATHER_INPUT)
 
     assert result["type"] is FlowResultType.CREATE_ENTRY
 
 
-async def test_duplicate_instance_is_aborted(hass: HomeAssistant) -> None:
-    """single_config_entry: a second flow must abort, not create a 2nd entry."""
-    MockConfigEntry(domain=DOMAIN, data={}).add_to_hass(hass)
+@pytest.mark.usefixtures("weather_states")
+async def test_unavailable_source_is_accepted(hass: HomeAssistant) -> None:
+    set_sensor(hass, HUMIDITY, "unavailable", "%")
+    flow_id = await _start(hass)
+    result = await hass.config_entries.flow.async_configure(flow_id, WEATHER_INPUT)
 
+    assert result["type"] is FlowResultType.CREATE_ENTRY
+
+
+@pytest.mark.parametrize(
+    ("entity_id", "state", "unit", "state_class", "field", "error"),
+    [
+        (TEMPERATURE, "18", "kWh", "measurement", "temperature_entity", "wrong_unit"),
+        (TEMPERATURE, "18", None, "measurement", "temperature_entity", "wrong_unit"),
+        (HUMIDITY, "71", "%", None, "humidity_entity", "wrong_state_class"),
+        (RAIN, "1.2", "mm", "measurement", "rain_entity", "wrong_state_class"),
+        (WIND, "calm", "km/h", "measurement", "wind_speed_entity", "not_numeric"),
+    ],
+)
+@pytest.mark.usefixtures("weather_states")
+async def test_invalid_sources_show_errors(
+    hass: HomeAssistant,
+    entity_id: str,
+    state: str,
+    unit: str | None,
+    state_class: str | None,
+    field: str,
+    error: str,
+) -> None:
+    set_sensor(hass, entity_id, state, unit, state_class)
+    flow_id = await _start(hass)
+    result = await hass.config_entries.flow.async_configure(flow_id, WEATHER_INPUT)
+
+    assert result["type"] is FlowResultType.FORM
+    assert result["errors"] == {field: error}
+
+
+@pytest.mark.usefixtures("weather_states")
+async def test_missing_entity(hass: HomeAssistant) -> None:
+    flow_id = await _start(hass)
+    result = await hass.config_entries.flow.async_configure(
+        flow_id, {**WEATHER_INPUT, "pressure_entity": "sensor.does_not_exist"}
+    )
+
+    assert result["type"] is FlowResultType.FORM
+    assert result["errors"] == {"pressure_entity": "entity_not_found"}
+
+
+async def test_single_instance(
+    hass: HomeAssistant, config_entry: MockConfigEntry
+) -> None:
     result = await hass.config_entries.flow.async_init(
-        DOMAIN, context={"source": config_entries.SOURCE_USER}
+        DOMAIN, context={"source": SOURCE_USER}
     )
 
     assert result["type"] is FlowResultType.ABORT
     assert result["reason"] == "single_instance_allowed"
 
 
-async def test_options_flow_is_pass_through(hass: HomeAssistant) -> None:
-    """Milestone 1 options flow stub: opens and saves with no required fields."""
-    entry = MockConfigEntry(domain=DOMAIN, data={})
-    entry.add_to_hass(hass)
+async def test_reconfigure_updates_sources(
+    hass: HomeAssistant, config_entry: MockConfigEntry
+) -> None:
+    await hass.config_entries.async_setup(config_entry.entry_id)
+    await hass.async_block_till_done()
+    set_sensor(hass, "sensor.other_temperature", "17", "°C")
 
-    result = await hass.config_entries.options.async_init(entry.entry_id)
+    result = await config_entry.start_reconfigure_flow(hass)
     assert result["type"] is FlowResultType.FORM
-    assert result["step_id"] == "init"
+    assert result["step_id"] == "reconfigure"
 
-    result = await hass.config_entries.options.async_configure(result["flow_id"], {})
-    assert result["type"] is FlowResultType.CREATE_ENTRY
+    new_input = {**WEATHER_INPUT, "temperature_entity": "sensor.other_temperature"}
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"], new_input
+    )
+    await hass.async_block_till_done()
+
+    assert result["type"] is FlowResultType.ABORT
+    assert result["reason"] == "reconfigure_successful"
+    assert config_entry.data["temperature_entity"] == "sensor.other_temperature"
+
+
+async def test_reconfigure_validates(
+    hass: HomeAssistant, config_entry: MockConfigEntry
+) -> None:
+    result = await config_entry.start_reconfigure_flow(hass)
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {**WEATHER_INPUT, "rain_entity": "sensor.nope"}
+    )
+
+    assert result["type"] is FlowResultType.FORM
+    assert result["errors"] == {"rain_entity": "entity_not_found"}

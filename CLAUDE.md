@@ -1,83 +1,80 @@
-# CLAUDE.md — garden_irrigation
+# CLAUDE.md — garden_irrigation (v2)
 
-Home Assistant custom integration for **irrigation decision support** of two
-*Festuca arundinacea* lawn zones. Domain: `garden_irrigation`.
+Home Assistant custom integration for **FAO-56 irrigation decision support**.
+Domain: `garden_irrigation`. Meant to be shareable via HACS.
+
+The authoritative design is **`docs/v2-spec.md`**. Read it before changing
+behavior; if code and spec disagree, stop and ask.
 
 ## Golden rules (never violate)
-- **v1 NEVER actuates hardware.** No valve/pump/relay control. The integration
-  only reads existing HA entities, computes, and recommends. Any code that
-  would command real hardware is OUT OF SCOPE for v1 — stop and ask.
-- Estimates vs measurements: liters/mm are **estimates** (no flow meter, no tank
-  level). Always label them as estimates in UI and README.
-- No cloud services, no external weather providers. All computation is local.
+- **v2.0 NEVER actuates hardware.** No valve/pump/relay commands. Reading a
+  valve entity is a future, separately approved step (spec §11).
+- Liters/mm/minutes are **estimates**: label them so in UI and docs.
+- No cloud calls by the integration. The only external-origin data allowed is
+  an **optional, user-selected HA `weather` entity**, informational only: it
+  never changes numbers or the recommendation.
+- No notifications. Problems surface only as **Repairs**.
 - No secrets in the repo.
 
 ## Architecture invariants
-- Everything **async**; no blocking I/O in the event loop. DB/recorder access
-  only via `recorder.get_instance(hass).async_add_executor_job(...)`, **bounded
-  one-shot** queries only — never continuous polling of history.
-- Daily weather aggregation = **local persistent accumulators first**
-  (`async_track_state_change_event`), recorder used only for backfill/recovery.
-- Single source of truth = `GardenIrrigationCoordinator` (event-driven).
-- Persistence via `helpers.storage.Store` (versioned, debounced). Two stores:
-  `state` and `events` (365-day retention).
-- All entities: `has_entity_name = True`, stable `unique_id`, `translation_key`,
-  correct `device_info` and `availability`.
-- Zones modeled as a **list** even though v1 has 2 fixed zones (phase-2 ready).
-- Modes: only `calibration` and `monitoring` in v1. **No `automation` mode** — do
-  not add or simulate it.
-- Rain accumulator: strictly increasing timestamps, configurable reset tolerance
-  (default 0.1 mm), `delta=0` on small decrements, no inference from the first
-  post-restart value without backfill/next update, forced flush on midnight roll /
-  unload / consolidation.
-- No notification system. The integration never sends a message anywhere;
-  stale WH51/weather data is surfaced only as a Repair issue (`repairs.py`).
+- Agronomy lives in `model/`: pure Python, **no Home Assistant imports**,
+  fully unit-tested.
+- Everything async; no blocking I/O in the event loop. Recorder access only via
+  `recorder.get_instance(hass).async_add_executor_job(...)`, bounded one-shot
+  queries.
+- Daily weather comes from recorder **long-term hourly statistics** of the
+  source sensors (mean/min/max, `change` for rain), read once per day for the
+  closed day; missed days are caught up in order. A day with < 20 h of
+  statistics is incomplete: ET0 `unknown`, balance not applied, no invented
+  values.
+- **One** versioned `Store` per config entry (`store.py`), 365-day retention.
+- Zones are **config subentries** (`SUBENTRY_TYPE_ZONE`), any number. Entity
+  `unique_id`s are derived from the subentry id.
+- Preset Kc profiles are resolved at runtime (not copied into zone data);
+  only custom profiles store `kc_monthly`.
+- All entities: `has_entity_name = True`, stable `unique_id`,
+  `translation_key`, correct `device_info` (one device per zone + one main).
+- No modes (no calibration/monitoring/automation).
 
 ## Water/agronomy model (do not "simplify" away)
-- ET0: FAO-56 Penman-Monteith daily. **No automatic fallback** in v1: if core
-  inputs are missing/stale, ET0 and the recommendation are `unknown` + warning.
-  (Hargreaves is a future opt-in, disabled by default.)
-- `ETc = ET0 * Kc`; `TAW=(root_depth/1000)*AWC`; `RAW=TAW*p`.
-- `eff_rain = min(daily_rain*factor, deficit+ETc)`.
-- `deficit = clamp(prev + ETc - eff_rain - irrigation_mm, 0, TAW)`.
-- Balance applied once/day at **05:30** finalizing **D-1 00:00:00–23:59:59.999999**
-  (idempotent via `last_balance_date`); the 20:00 job is a labeled **preview** only.
-- Rain: reset-aware accumulator anchored to HA local day. `24h_rainfall` and
-  `rain_event` are diagnostic only — never summed into the balance.
-- WH51 % is **device-relative, not VWC**. Diagnostic-only for first 14 days;
-  afterwards a soft corroborating signal with configurable thresholds and always
-  a textual explanation. Never a hard block, never presented as universal VWC.
-- Manual cycles: max 15 min per record; block plan (≤15 min blocks + pause) when
-  more is needed; min 48h between irrigations per zone. `record_irrigation` uses
-  **current timestamp only** (no backdating in MVP; a future correction action
-  with audit trail). Weekly cap 30 mm limits **only user-recorded
-  `irrigation_7d_mm` over a sliding 7×24h window**; effective rain is shown
-  separately (affects deficit, does NOT consume the cap).
-- Declared manual cycle ("start/end cycle"): elapsed time is exposed **only**
-  as the read-only diagnostic sensor `elapsed_manual_cycle_minutes`. **Never**
-  prefill the manual-record form's minutes field from it — the user always
-  types/confirms the duration manually.
-
-## Config
-- Config flow: guided source entity_ids with validation (exists, domain, unit,
-  numeric). No hardcoded Ecowitt entity names. Global params (lat/elev/anemometer
-  height), zone names/areas/mm_per_minute matrix (zone×source, tank nullable).
-- Everything operational lives in **options flow**.
+- ET0: FAO-56 Penman-Monteith daily. Hargreaves only if the user enables the
+  fallback option (off by default), always flagged as estimate.
+- `ETc = ET0 * Kc(month)`; `TAW = (root_depth/1000) * AWC`; `RAW = p * TAW`
+  (optional FAO-56 p adjustment for ETc, off by default).
+- Effective rain: `0` below the threshold, else
+  `min(rain * factor, prev_deficit + ETc)`.
+- `deficit = clamp(prev + ETc - eff_rain - irrigation_mm, 0, TAW)`, applied
+  once per closed day, idempotent via `last_balance_date`.
+- Current deficit shown = last closed-day deficit − irrigation recorded today.
+- Recommendation: irrigate when current deficit ≥ RAW; amount = current
+  deficit; minutes per configured source = mm / source rate; split into
+  blocks of at most the soil's max block mm, with the configured pause.
+- Min interval, weekly cap and block limits are **warnings, never hard
+  constraints**.
+- Soil moisture sensors (e.g. WH51) are device-relative, **not VWC**:
+  diagnostic, plus a soft confirmation against user-set dry/wet thresholds.
+  Never changes numbers, never blocks.
+- `record_irrigation` uses the current timestamp only (no backdating);
+  the user always types the duration/amount. `set_deficit` sets the starting
+  deficit.
 
 ## Conventions
-- Python target **3.13** (test 3.13). Ruff + mypy clean. Type-hint everything.
-- Tests: `pytest` + `pytest-homeassistant-custom-component`. Every engine
-  (et0/balance/weather/rain-reset/limits/stale/persistence/manual-record) has
-  unit tests. FAO-56 validated against reference vectors.
-- i18n: Italian default + English. All user-facing strings translated.
+- HA minimum **2026.2.0**; Python 3.13 (CI also 3.14). Ruff + mypy strict clean.
+- Tests: `pytest` + `pytest-homeassistant-custom-component`
+  (`recorder_mock` is autouse in `tests/conftest.py`). FAO-56 validated
+  against the manual's worked examples.
+- i18n: English base (`strings.json` = `translations/en.json`) + Italian.
+  All user-facing strings translated.
+- Comments/docstrings describe the code as it is, never its development
+  history (no "Milestone N" notes).
 - Conventional Commits. Never commit/push without explicit user consent.
-- Never invent HA APIs — verify against installed HA version before using.
+- Never invent HA APIs — verify against the installed HA version first.
 
 ## Workflow guardrails
-- Implement **one milestone at a time**; keep CI green before moving on.
-- Stop and ask before: anything that actuates hardware, schema/storage
-  migrations, deleting data, changing the balance semantics, or anything outside
-  this spec.
+- Implement **one phase of spec §16 at a time**; keep CI green before moving on.
+- Stop and ask before: anything that actuates hardware, storage schema
+  changes once released, deleting user data, changing the balance semantics,
+  or anything outside the spec.
 
 ## graphify
 

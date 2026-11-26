@@ -1,14 +1,14 @@
 {
   "domain": "garden_irrigation",
   "name": "Garden Irrigation",
-  "after_dependencies": ["recorder"],
   "codeowners": ["@mbonny95"],
   "config_flow": true,
+  "dependencies": ["recorder"],
   "documentation": "https://github.com/mbonny95/ha-garden-irrigation",
   "integration_type": "hub",
   "iot_class": "calculated",
   "issue_tracker": "https://github.com/mbonny95/ha-garden-irrigation/issues",
   "requirements": [],
   "single_config_entry": true,
-  "version": "0.1.4"
+  "version": "2.0.0"
 }

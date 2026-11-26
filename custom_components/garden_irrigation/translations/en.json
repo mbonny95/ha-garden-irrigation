@@ -2,185 +2,205 @@
   "config": {
     "step": {
       "user": {
-        "title": "Position and weather data (FAO-56)",
-        "description": "Global parameters and the weather entities used to compute daily ET0. Wind gust is optional and is not required for ET0.",
+        "title": "Weather sources and site",
+        "description": "Pick the weather station sensors used for the FAO-56 daily calculation. They need a unit and a state class (they are read from Home Assistant's long-term statistics). Add zones afterwards from the integration page.",
         "data": {
-          "altitude": "Altitude (m)",
-          "anemometer_height": "Anemometer height (m)",
-          "temperature_entity": "Outdoor temperature entity",
-          "humidity_entity": "Outdoor humidity entity",
-          "pressure_entity": "Absolute pressure entity",
-          "solar_radiation_entity": "Solar irradiance entity",
-          "wind_speed_entity": "Wind speed entity",
-          "wind_gust_entity": "Wind gust entity (optional)"
+          "temperature_entity": "Air temperature",
+          "humidity_entity": "Relative humidity",
+          "solar_radiation_entity": "Solar radiation (W/m²)",
+          "wind_speed_entity": "Wind speed",
+          "rain_entity": "Daily rainfall",
+          "pressure_entity": "Atmospheric pressure (optional)",
+          "anemometer_height_m": "Anemometer height",
+          "latitude": "Latitude",
+          "elevation": "Elevation"
+        },
+        "data_description": {
+          "rain_entity": "A rain total sensor (state class total or total increasing), e.g. the station's daily rain.",
+          "pressure_entity": "If omitted, pressure is estimated from elevation (FAO-56 eq. 7).",
+          "anemometer_height_m": "Height of the wind sensor above the ground: wind is converted to 2 m (FAO-56 eq. 47)."
         }
       },
-      "rain": {
-        "title": "Rain",
-        "description": "Daily rainfall and rain rate are required. 24h rainfall and rain event are optional/diagnostic only.",
+      "reconfigure": {
+        "title": "Change weather sources and site",
         "data": {
-          "daily_rainfall_entity": "Daily rainfall entity",
-          "rain_rate_entity": "Rain rate entity",
-          "rain_24h_entity": "24-hour rainfall entity (optional, diagnostic)",
-          "rain_event_entity": "Rain event entity (optional, diagnostic)"
-        }
-      },
-      "soil": {
-        "title": "WH51 soil moisture (per zone)",
-        "description": "Battery and signal entities are optional.",
-        "data": {
-          "zone1_soil_moisture_entity": "Zone 1 soil moisture entity",
-          "zone1_battery_entity": "Zone 1 WH51 battery entity (optional)",
-          "zone1_signal_entity": "Zone 1 WH51 signal entity (optional)",
-          "zone2_soil_moisture_entity": "Zone 2 soil moisture entity",
-          "zone2_battery_entity": "Zone 2 WH51 battery entity (optional)",
-          "zone2_signal_entity": "Zone 2 WH51 signal entity (optional)"
-        }
-      },
-      "zones": {
-        "title": "Zones and distribution",
-        "description": "Rainwater tank mm/minute may be left empty if not yet calibrated.",
-        "data": {
-          "zone1_name": "Zone 1 name",
-          "zone1_area_m2": "Zone 1 area (m²)",
-          "zone1_mm_per_minute_mains": "Zone 1 mains water: mm per minute",
-          "zone1_mm_per_minute_tank": "Zone 1 rainwater tank: mm per minute (leave empty if not calibrated)",
-          "zone1_flow_rate_mains_lpm": "Zone 1 mains water: estimated flow rate (L/min)",
-          "zone2_name": "Zone 2 name",
-          "zone2_area_m2": "Zone 2 area (m²)",
-          "zone2_mm_per_minute_mains": "Zone 2 mains water: mm per minute",
-          "zone2_mm_per_minute_tank": "Zone 2 rainwater tank: mm per minute (leave empty if not calibrated)",
-          "zone2_flow_rate_mains_lpm": "Zone 2 mains water: estimated flow rate (L/min)"
+          "temperature_entity": "Air temperature",
+          "humidity_entity": "Relative humidity",
+          "solar_radiation_entity": "Solar radiation (W/m²)",
+          "wind_speed_entity": "Wind speed",
+          "rain_entity": "Daily rainfall",
+          "pressure_entity": "Atmospheric pressure (optional)",
+          "anemometer_height_m": "Anemometer height",
+          "latitude": "Latitude",
+          "elevation": "Elevation"
+        },
+        "data_description": {
+          "rain_entity": "A rain total sensor (state class total or total increasing), e.g. the station's daily rain.",
+          "pressure_entity": "If omitted, pressure is estimated from elevation (FAO-56 eq. 7).",
+          "anemometer_height_m": "Height of the wind sensor above the ground: wind is converted to 2 m (FAO-56 eq. 47)."
         }
       }
     },
     "error": {
-      "entity_not_found": "This entity does not exist.",
-      "entity_wrong_domain": "This entity must be a sensor entity.",
-      "entity_wrong_unit": "This entity's unit of measurement is not compatible.",
-      "entity_not_numeric": "This entity's current state is not a numeric value."
+      "entity_not_found": "Entity not found.",
+      "wrong_unit": "Unsupported or missing unit of measurement.",
+      "wrong_state_class": "The sensor has no suitable state class, so Home Assistant keeps no statistics for it.",
+      "not_numeric": "The sensor state is not numeric."
     },
     "abort": {
-      "single_instance_allowed": "Garden Irrigation is already configured; only one instance is allowed."
+      "single_instance_allowed": "Garden Irrigation is already configured. Add zones from the integration page.",
+      "reconfigure_successful": "Configuration updated."
+    }
+  },
+  "config_subentries": {
+    "zone": {
+      "entry_type": "Zone",
+      "initiate_flow": {
+        "user": "Add zone",
+        "reconfigure": "Edit zone"
+      },
+      "step": {
+        "user": {
+          "title": "Irrigation zone",
+          "description": "Agronomic data of the zone. Water amounts and liters are estimates.",
+          "data": {
+            "name": "Name",
+            "area_m2": "Area",
+            "crop_profile": "Crop (Kc profile)",
+            "soil_type": "Soil type",
+            "awc_mm_per_m": "Available water capacity (override)",
+            "max_block_mm": "Max water per block (override)",
+            "root_depth_mm": "Root depth",
+            "depletion_fraction": "Allowed depletion fraction (p)",
+            "rate_mains_mm_per_min": "Application rate – mains water",
+            "rate_tank_mm_per_min": "Application rate – rainwater tank",
+            "soil_moisture_entity": "Soil moisture sensor (optional)",
+            "soil_moisture_dry": "Soil moisture 'dry' threshold",
+            "soil_moisture_wet": "Soil moisture 'wet' threshold"
+          },
+          "data_description": {
+            "awc_mm_per_m": "Leave empty to use the soil type value (FAO-56 Table 19). Required for a custom soil.",
+            "max_block_mm": "Most water a single block should apply before a soak pause. Leave empty to use the soil type value. Required for a custom soil.",
+            "depletion_fraction": "Fraction of the available water that can be used before the lawn is stressed (FAO-56 Table 22: 0.40 for cool-season turf).",
+            "rate_mains_mm_per_min": "Millimeters per minute measured with a catch-cup test using this source. Leave empty if this zone is never watered from it.",
+            "rate_tank_mm_per_min": "Millimeters per minute measured with a catch-cup test using this source. Leave empty if this zone is never watered from it.",
+            "soil_moisture_entity": "Device-relative reading, not volumetric water content. Used only as a soft confirmation.",
+            "soil_moisture_dry": "Your own threshold, read from the sensor's history (see the documentation).",
+            "soil_moisture_wet": "Your own threshold, read from the sensor's history (see the documentation)."
+          }
+        },
+        "reconfigure": {
+          "title": "Edit zone",
+          "description": "Agronomic data of the zone. Water amounts and liters are estimates.",
+          "data": {
+            "name": "Name",
+            "area_m2": "Area",
+            "crop_profile": "Crop (Kc profile)",
+            "soil_type": "Soil type",
+            "awc_mm_per_m": "Available water capacity (override)",
+            "max_block_mm": "Max water per block (override)",
+            "root_depth_mm": "Root depth",
+            "depletion_fraction": "Allowed depletion fraction (p)",
+            "rate_mains_mm_per_min": "Application rate – mains water",
+            "rate_tank_mm_per_min": "Application rate – rainwater tank",
+            "soil_moisture_entity": "Soil moisture sensor (optional)",
+            "soil_moisture_dry": "Soil moisture 'dry' threshold",
+            "soil_moisture_wet": "Soil moisture 'wet' threshold"
+          },
+          "data_description": {
+            "awc_mm_per_m": "Leave empty to use the soil type value (FAO-56 Table 19). Required for a custom soil.",
+            "max_block_mm": "Most water a single block should apply before a soak pause. Leave empty to use the soil type value. Required for a custom soil.",
+            "depletion_fraction": "Fraction of the available water that can be used before the lawn is stressed (FAO-56 Table 22: 0.40 for cool-season turf).",
+            "rate_mains_mm_per_min": "Millimeters per minute measured with a catch-cup test using this source. Leave empty if this zone is never watered from it.",
+            "rate_tank_mm_per_min": "Millimeters per minute measured with a catch-cup test using this source. Leave empty if this zone is never watered from it.",
+            "soil_moisture_entity": "Device-relative reading, not volumetric water content. Used only as a soft confirmation.",
+            "soil_moisture_dry": "Your own threshold, read from the sensor's history (see the documentation).",
+            "soil_moisture_wet": "Your own threshold, read from the sensor's history (see the documentation)."
+          }
+        },
+        "kc": {
+          "title": "Custom monthly Kc",
+          "description": "Crop coefficient for each month (FAO-56 single Kc).",
+          "data": {
+            "kc_01": "January",
+            "kc_02": "February",
+            "kc_03": "March",
+            "kc_04": "April",
+            "kc_05": "May",
+            "kc_06": "June",
+            "kc_07": "July",
+            "kc_08": "August",
+            "kc_09": "September",
+            "kc_10": "October",
+            "kc_11": "November",
+            "kc_12": "December"
+          }
+        }
+      },
+      "error": {
+        "entity_not_found": "Entity not found.",
+        "wrong_unit": "Unsupported or missing unit of measurement.",
+        "wrong_state_class": "The sensor has no suitable state class, so Home Assistant keeps no statistics for it.",
+        "not_numeric": "The sensor state is not numeric.",
+        "name_required": "Enter a name.",
+        "name_exists": "A zone with this name already exists.",
+        "required_for_custom_soil": "Required when the soil type is custom.",
+        "no_rate": "Enter the application rate of at least one water source.",
+        "thresholds_without_sensor": "Thresholds need a soil moisture sensor.",
+        "dry_not_below_wet": "The 'dry' threshold must be lower than the 'wet' threshold."
+      },
+      "abort": {
+        "reconfigure_successful": "Configuration updated."
+      }
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "Garden Irrigation options",
-        "description": "The full set of operational options (Kc, thresholds, caps, ...) is added in later milestones."
-      }
-    }
-  },
-  "entity": {
-    "sensor": {
-      "data_quality": {
-        "name": "Data quality",
-        "state": {
-          "initializing": "Initializing",
-          "not_configured": "Not configured"
-        }
-      },
-      "et0_daily": {
-        "name": "ET0 (daily)"
-      },
-      "etc": {
-        "name": "ETc {zone_name}"
-      },
-      "deficit": {
-        "name": "Deficit {zone_name}"
-      },
-      "taw": {
-        "name": "TAW {zone_name}"
-      },
-      "raw": {
-        "name": "RAW {zone_name}"
-      },
-      "effective_rain": {
-        "name": "Effective rain {zone_name}"
-      },
-      "irrigation_7d": {
-        "name": "Irrigation (7d) {zone_name}"
-      }
-    },
-    "binary_sensor": {
-      "needs_irrigation": {
-        "name": "Needs irrigation {zone_name}"
-      },
-      "weekly_cap_reached": {
-        "name": "Weekly cap reached {zone_name}"
-      },
-      "irrigation_in_progress": {
-        "name": "Irrigation in progress"
-      }
-    },
-    "select": {
-      "mode": {
-        "name": "Mode",
-        "state": {
-          "calibration": "Calibration",
-          "monitoring": "Monitoring"
-        }
-      },
-      "active_cycle_zone": {
-        "name": "Active cycle zone",
-        "state": {
-          "zone_1": "Zone 1",
-          "zone_2": "Zone 2"
-        }
-      }
-    },
-    "button": {
-      "start_cycle": {
-        "name": "Start cycle"
-      },
-      "end_cycle": {
-        "name": "End cycle"
-      },
-      "start_calibration": {
-        "name": "Start calibration {zone_name}"
-      },
-      "finish_calibration": {
-        "name": "Finish calibration {zone_name}"
-      }
-    }
-  },
-  "services": {
-    "record_irrigation": {
-      "name": "Record irrigation cycle",
-      "description": "Record a manually executed irrigation cycle for a zone. Uses the current timestamp only (no backdating); the water-balance deficit is updated only if the chosen source is calibrated for that zone.",
-      "fields": {
-        "zone": {
-          "name": "Zone",
-          "description": "The zone the cycle was run on."
+        "title": "Operating options",
+        "data": {
+          "rain_effective_factor": "Effective rain factor",
+          "rain_threshold_mm": "Minimum effective rain",
+          "daily_run_time": "Daily calculation time",
+          "hargreaves_fallback": "Hargreaves fallback",
+          "adjust_p_for_etc": "Adjust p for evapotranspiration",
+          "forecast_entity": "Weather forecast entity (optional)",
+          "min_interval_hours": "Minimum interval warning",
+          "weekly_cap_mm": "Weekly irrigation warning (optional)",
+          "block_pause_minutes": "Pause between blocks"
         },
-        "source": {
-          "name": "Source",
-          "description": "The water source used for the cycle."
-        },
-        "duration_minutes": {
-          "name": "Duration (minutes)",
-          "description": "Cycle duration in minutes, greater than 0 and at most 15 per call."
-        },
-        "notes": {
-          "name": "Notes",
-          "description": "Optional free-text notes."
-        },
-        "idempotency_key": {
-          "name": "Idempotency key",
-          "description": "Optional: repeating a call with the same key is a no-op (protects against accidental double submission)."
+        "data_description": {
+          "rain_effective_factor": "Share of the rain that counts towards the soil (0–1).",
+          "rain_threshold_mm": "Daily rain below this value is ignored.",
+          "daily_run_time": "When the previous day is finalized and the recommendation is updated.",
+          "hargreaves_fallback": "If solar radiation or wind are missing, estimate ET0 with Hargreaves (less accurate, flagged as estimate).",
+          "adjust_p_for_etc": "FAO-56: p = p + 0.04 × (5 − ETc).",
+          "forecast_entity": "Informational only: forecast rain is shown next to the recommendation, it never changes it.",
+          "weekly_cap_mm": "Warn when recorded irrigation in the last 7 days exceeds this value. Leave empty to disable."
         }
       }
     }
   },
-  "issues": {
-    "wh51_stale": {
-      "title": "Soil moisture sensor not updating ({zone_id})",
-      "description": "The WH51 soil moisture sensor for {zone_id} has not reported a new value within the expected time. Check the sensor's battery, signal, and connectivity."
+  "selector": {
+    "crop_profile": {
+      "options": {
+        "cool_season_turf": "Cool-season turf (e.g. tall fescue)",
+        "custom": "Custom"
+      }
     },
-    "weather_stale": {
-      "title": "Weather data not updating",
-      "description": "One or more of the weather entities used to compute ET0 have not reported a new value within the expected time. ET0 and the recommendation may be unavailable until this is resolved."
+    "soil_type": {
+      "options": {
+        "sand": "Sand",
+        "loamy_sand": "Loamy sand",
+        "sandy_loam": "Sandy loam",
+        "loam": "Loam",
+        "silt_loam": "Silt loam",
+        "silt": "Silt",
+        "silty_clay_loam": "Silty clay loam",
+        "silty_clay": "Silty clay",
+        "clay": "Clay",
+        "custom": "Custom"
+      }
     }
   }
 }

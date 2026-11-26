@@ -1,4 +1,4 @@
-# Test/dev toolchain for garden_irrigation (Milestone 1).
+# Test/dev toolchain for garden_irrigation.
 # Kept in sync with the `test`/`dev` optional-dependency groups in pyproject.toml
 # so both `pip install -r requirements_test.txt` and `uv sync --extra test --extra dev`
 # resolve to the same toolchain.

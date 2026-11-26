@@ -2,185 +2,205 @@
   "config": {
     "step": {
       "user": {
-        "title": "Posizione e dati meteo (FAO-56)",
-        "description": "Parametri globali ed entità meteo usate per calcolare l'ET0 giornaliera. La raffica di vento è opzionale e non è richiesta per il calcolo dell'ET0.",
+        "title": "Sorgenti meteo e sito",
+        "description": "Scegli i sensori della stazione meteo usati per il calcolo giornaliero FAO-56. Devono avere un'unità di misura e una state class (vengono letti dalle statistiche a lungo termine di Home Assistant). Le zone si aggiungono dopo, dalla pagina dell'integrazione.",
         "data": {
-          "altitude": "Altitudine (m)",
-          "anemometer_height": "Altezza anemometro (m)",
-          "temperature_entity": "Entità temperatura esterna",
-          "humidity_entity": "Entità umidità esterna",
-          "pressure_entity": "Entità pressione assoluta",
-          "solar_radiation_entity": "Entità radiazione solare",
-          "wind_speed_entity": "Entità velocità vento",
-          "wind_gust_entity": "Entità raffica di vento (opzionale)"
+          "temperature_entity": "Temperatura dell'aria",
+          "humidity_entity": "Umidità relativa",
+          "solar_radiation_entity": "Radiazione solare (W/m²)",
+          "wind_speed_entity": "Velocità del vento",
+          "rain_entity": "Pioggia giornaliera",
+          "pressure_entity": "Pressione atmosferica (opzionale)",
+          "anemometer_height_m": "Altezza anemometro",
+          "latitude": "Latitudine",
+          "elevation": "Quota"
+        },
+        "data_description": {
+          "rain_entity": "Un sensore di pioggia cumulata (state class total o total increasing), es. la pioggia giornaliera della stazione.",
+          "pressure_entity": "Se assente, la pressione è stimata dalla quota (FAO-56 eq. 7).",
+          "anemometer_height_m": "Altezza del sensore del vento dal suolo: il vento viene riportato a 2 m (FAO-56 eq. 47)."
         }
       },
-      "rain": {
-        "title": "Pioggia",
-        "description": "Pioggia giornaliera e intensità di pioggia sono obbligatorie. Pioggia 24h ed evento pioggia sono opzionali/solo diagnostici.",
+      "reconfigure": {
+        "title": "Modifica sorgenti meteo e sito",
         "data": {
-          "daily_rainfall_entity": "Entità pioggia giornaliera",
-          "rain_rate_entity": "Entità intensità di pioggia",
-          "rain_24h_entity": "Entità pioggia 24 ore (opzionale, diagnostica)",
-          "rain_event_entity": "Entità evento pioggia (opzionale, diagnostica)"
-        }
-      },
-      "soil": {
-        "title": "Umidità del suolo WH51 (per zona)",
-        "description": "Le entità di batteria e segnale sono opzionali.",
-        "data": {
-          "zone1_soil_moisture_entity": "Entità umidità suolo zona 1",
-          "zone1_battery_entity": "Entità batteria WH51 zona 1 (opzionale)",
-          "zone1_signal_entity": "Entità segnale WH51 zona 1 (opzionale)",
-          "zone2_soil_moisture_entity": "Entità umidità suolo zona 2",
-          "zone2_battery_entity": "Entità batteria WH51 zona 2 (opzionale)",
-          "zone2_signal_entity": "Entità segnale WH51 zona 2 (opzionale)"
-        }
-      },
-      "zones": {
-        "title": "Zone e distribuzione",
-        "description": "Il valore mm/minuto per la vasca può essere lasciato vuoto se non ancora calibrato.",
-        "data": {
-          "zone1_name": "Nome zona 1",
-          "zone1_area_m2": "Superficie zona 1 (m²)",
-          "zone1_mm_per_minute_mains": "Zona 1, acquedotto: mm al minuto",
-          "zone1_mm_per_minute_tank": "Zona 1, vasca: mm al minuto (lascia vuoto se non calibrato)",
-          "zone1_flow_rate_mains_lpm": "Zona 1, acquedotto: portata stimata (L/min)",
-          "zone2_name": "Nome zona 2",
-          "zone2_area_m2": "Superficie zona 2 (m²)",
-          "zone2_mm_per_minute_mains": "Zona 2, acquedotto: mm al minuto",
-          "zone2_mm_per_minute_tank": "Zona 2, vasca: mm al minuto (lascia vuoto se non calibrato)",
-          "zone2_flow_rate_mains_lpm": "Zona 2, acquedotto: portata stimata (L/min)"
+          "temperature_entity": "Temperatura dell'aria",
+          "humidity_entity": "Umidità relativa",
+          "solar_radiation_entity": "Radiazione solare (W/m²)",
+          "wind_speed_entity": "Velocità del vento",
+          "rain_entity": "Pioggia giornaliera",
+          "pressure_entity": "Pressione atmosferica (opzionale)",
+          "anemometer_height_m": "Altezza anemometro",
+          "latitude": "Latitudine",
+          "elevation": "Quota"
+        },
+        "data_description": {
+          "rain_entity": "Un sensore di pioggia cumulata (state class total o total increasing), es. la pioggia giornaliera della stazione.",
+          "pressure_entity": "Se assente, la pressione è stimata dalla quota (FAO-56 eq. 7).",
+          "anemometer_height_m": "Altezza del sensore del vento dal suolo: il vento viene riportato a 2 m (FAO-56 eq. 47)."
         }
       }
     },
     "error": {
-      "entity_not_found": "Questa entità non esiste.",
-      "entity_wrong_domain": "Questa entità deve essere un'entità sensor.",
-      "entity_wrong_unit": "L'unità di misura di questa entità non è compatibile.",
-      "entity_not_numeric": "Lo stato attuale di questa entità non è un valore numerico."
+      "entity_not_found": "Entità non trovata.",
+      "wrong_unit": "Unità di misura non supportata o assente.",
+      "wrong_state_class": "Il sensore non ha una state class adatta, quindi Home Assistant non ne conserva le statistiche.",
+      "not_numeric": "Lo stato del sensore non è numerico."
     },
     "abort": {
-      "single_instance_allowed": "Garden Irrigation è già configurato; è consentita una sola istanza."
+      "single_instance_allowed": "Garden Irrigation è già configurata. Aggiungi le zone dalla pagina dell'integrazione.",
+      "reconfigure_successful": "Configurazione aggiornata."
+    }
+  },
+  "config_subentries": {
+    "zone": {
+      "entry_type": "Zona",
+      "initiate_flow": {
+        "user": "Aggiungi zona",
+        "reconfigure": "Modifica zona"
+      },
+      "step": {
+        "user": {
+          "title": "Zona irrigua",
+          "description": "Dati agronomici della zona. Millimetri e litri sono stime.",
+          "data": {
+            "name": "Nome",
+            "area_m2": "Superficie",
+            "crop_profile": "Coltura (profilo Kc)",
+            "soil_type": "Tipo di terreno",
+            "awc_mm_per_m": "Acqua disponibile (valore personalizzato)",
+            "max_block_mm": "Acqua massima per blocco (valore personalizzato)",
+            "root_depth_mm": "Profondità radicale",
+            "depletion_fraction": "Frazione di esaurimento ammessa (p)",
+            "rate_mains_mm_per_min": "Intensità di irrigazione – rete",
+            "rate_tank_mm_per_min": "Intensità di irrigazione – cisterna",
+            "soil_moisture_entity": "Sensore umidità suolo (opzionale)",
+            "soil_moisture_dry": "Soglia umidità suolo 'secco'",
+            "soil_moisture_wet": "Soglia umidità suolo 'umido'"
+          },
+          "data_description": {
+            "awc_mm_per_m": "Lascia vuoto per usare il valore del tipo di terreno (FAO-56 tab. 19). Obbligatorio per un terreno personalizzato.",
+            "max_block_mm": "Acqua massima da dare in un singolo blocco prima di una pausa. Lascia vuoto per usare il valore del tipo di terreno. Obbligatorio per un terreno personalizzato.",
+            "depletion_fraction": "Frazione dell'acqua disponibile che il prato può usare prima di andare in stress (FAO-56 tab. 22: 0,40 per prato microtermo).",
+            "rate_mains_mm_per_min": "Millimetri al minuto misurati con la prova dei barattoli usando questa fonte. Lascia vuoto se la zona non viene mai irrigata con questa fonte.",
+            "rate_tank_mm_per_min": "Millimetri al minuto misurati con la prova dei barattoli usando questa fonte. Lascia vuoto se la zona non viene mai irrigata con questa fonte.",
+            "soil_moisture_entity": "Lettura relativa al dispositivo, non umidità volumetrica. Usata solo come conferma.",
+            "soil_moisture_dry": "Soglia tua, ricavata dallo storico del sensore (vedi documentazione).",
+            "soil_moisture_wet": "Soglia tua, ricavata dallo storico del sensore (vedi documentazione)."
+          }
+        },
+        "reconfigure": {
+          "title": "Modifica zona",
+          "description": "Dati agronomici della zona. Millimetri e litri sono stime.",
+          "data": {
+            "name": "Nome",
+            "area_m2": "Superficie",
+            "crop_profile": "Coltura (profilo Kc)",
+            "soil_type": "Tipo di terreno",
+            "awc_mm_per_m": "Acqua disponibile (valore personalizzato)",
+            "max_block_mm": "Acqua massima per blocco (valore personalizzato)",
+            "root_depth_mm": "Profondità radicale",
+            "depletion_fraction": "Frazione di esaurimento ammessa (p)",
+            "rate_mains_mm_per_min": "Intensità di irrigazione – rete",
+            "rate_tank_mm_per_min": "Intensità di irrigazione – cisterna",
+            "soil_moisture_entity": "Sensore umidità suolo (opzionale)",
+            "soil_moisture_dry": "Soglia umidità suolo 'secco'",
+            "soil_moisture_wet": "Soglia umidità suolo 'umido'"
+          },
+          "data_description": {
+            "awc_mm_per_m": "Lascia vuoto per usare il valore del tipo di terreno (FAO-56 tab. 19). Obbligatorio per un terreno personalizzato.",
+            "max_block_mm": "Acqua massima da dare in un singolo blocco prima di una pausa. Lascia vuoto per usare il valore del tipo di terreno. Obbligatorio per un terreno personalizzato.",
+            "depletion_fraction": "Frazione dell'acqua disponibile che il prato può usare prima di andare in stress (FAO-56 tab. 22: 0,40 per prato microtermo).",
+            "rate_mains_mm_per_min": "Millimetri al minuto misurati con la prova dei barattoli usando questa fonte. Lascia vuoto se la zona non viene mai irrigata con questa fonte.",
+            "rate_tank_mm_per_min": "Millimetri al minuto misurati con la prova dei barattoli usando questa fonte. Lascia vuoto se la zona non viene mai irrigata con questa fonte.",
+            "soil_moisture_entity": "Lettura relativa al dispositivo, non umidità volumetrica. Usata solo come conferma.",
+            "soil_moisture_dry": "Soglia tua, ricavata dallo storico del sensore (vedi documentazione).",
+            "soil_moisture_wet": "Soglia tua, ricavata dallo storico del sensore (vedi documentazione)."
+          }
+        },
+        "kc": {
+          "title": "Kc mensile personalizzato",
+          "description": "Coefficiente colturale per ogni mese (Kc singolo FAO-56).",
+          "data": {
+            "kc_01": "Gennaio",
+            "kc_02": "Febbraio",
+            "kc_03": "Marzo",
+            "kc_04": "Aprile",
+            "kc_05": "Maggio",
+            "kc_06": "Giugno",
+            "kc_07": "Luglio",
+            "kc_08": "Agosto",
+            "kc_09": "Settembre",
+            "kc_10": "Ottobre",
+            "kc_11": "Novembre",
+            "kc_12": "Dicembre"
+          }
+        }
+      },
+      "error": {
+        "entity_not_found": "Entità non trovata.",
+        "wrong_unit": "Unità di misura non supportata o assente.",
+        "wrong_state_class": "Il sensore non ha una state class adatta, quindi Home Assistant non ne conserva le statistiche.",
+        "not_numeric": "Lo stato del sensore non è numerico.",
+        "name_required": "Inserisci un nome.",
+        "name_exists": "Esiste già una zona con questo nome.",
+        "required_for_custom_soil": "Obbligatorio con un terreno personalizzato.",
+        "no_rate": "Inserisci l'intensità di irrigazione di almeno una fonte.",
+        "thresholds_without_sensor": "Le soglie richiedono un sensore di umidità del suolo.",
+        "dry_not_below_wet": "La soglia 'secco' deve essere inferiore alla soglia 'umido'."
+      },
+      "abort": {
+        "reconfigure_successful": "Configurazione aggiornata."
+      }
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "Opzioni di Garden Irrigation",
-        "description": "L'insieme completo delle opzioni operative (Kc, soglie, tetti, ...) viene aggiunto nelle milestone successive."
-      }
-    }
-  },
-  "entity": {
-    "sensor": {
-      "data_quality": {
-        "name": "Qualità dati",
-        "state": {
-          "initializing": "Inizializzazione",
-          "not_configured": "Non configurato"
-        }
-      },
-      "et0_daily": {
-        "name": "ET0 (giornaliera)"
-      },
-      "etc": {
-        "name": "ETc {zone_name}"
-      },
-      "deficit": {
-        "name": "Deficit {zone_name}"
-      },
-      "taw": {
-        "name": "TAW {zone_name}"
-      },
-      "raw": {
-        "name": "RAW {zone_name}"
-      },
-      "effective_rain": {
-        "name": "Pioggia efficace {zone_name}"
-      },
-      "irrigation_7d": {
-        "name": "Irrigazione (7g) {zone_name}"
-      }
-    },
-    "binary_sensor": {
-      "needs_irrigation": {
-        "name": "Necessita irrigazione {zone_name}"
-      },
-      "weekly_cap_reached": {
-        "name": "Tetto settimanale raggiunto {zone_name}"
-      },
-      "irrigation_in_progress": {
-        "name": "Irrigazione in corso"
-      }
-    },
-    "select": {
-      "mode": {
-        "name": "Modalità",
-        "state": {
-          "calibration": "Calibrazione",
-          "monitoring": "Monitoraggio"
-        }
-      },
-      "active_cycle_zone": {
-        "name": "Zona ciclo attivo",
-        "state": {
-          "zone_1": "Zona 1",
-          "zone_2": "Zona 2"
-        }
-      }
-    },
-    "button": {
-      "start_cycle": {
-        "name": "Avvia ciclo"
-      },
-      "end_cycle": {
-        "name": "Termina ciclo"
-      },
-      "start_calibration": {
-        "name": "Avvia calibrazione {zone_name}"
-      },
-      "finish_calibration": {
-        "name": "Completa calibrazione {zone_name}"
-      }
-    }
-  },
-  "services": {
-    "record_irrigation": {
-      "name": "Registra ciclo di irrigazione",
-      "description": "Registra un ciclo di irrigazione eseguito manualmente per una zona. Usa solo l'ora corrente (nessuna retrodatazione); il deficit del bilancio idrico viene aggiornato solo se la sorgente scelta è calibrata per quella zona.",
-      "fields": {
-        "zone": {
-          "name": "Zona",
-          "description": "La zona su cui è stato eseguito il ciclo."
+        "title": "Opzioni di funzionamento",
+        "data": {
+          "rain_effective_factor": "Fattore pioggia efficace",
+          "rain_threshold_mm": "Pioggia efficace minima",
+          "daily_run_time": "Ora del calcolo giornaliero",
+          "hargreaves_fallback": "Fallback Hargreaves",
+          "adjust_p_for_etc": "Correggi p in base all'evapotraspirazione",
+          "forecast_entity": "Entità previsioni meteo (opzionale)",
+          "min_interval_hours": "Avviso intervallo minimo",
+          "weekly_cap_mm": "Avviso irrigazione settimanale (opzionale)",
+          "block_pause_minutes": "Pausa tra i blocchi"
         },
-        "source": {
-          "name": "Sorgente",
-          "description": "La sorgente d'acqua usata per il ciclo."
-        },
-        "duration_minutes": {
-          "name": "Durata (minuti)",
-          "description": "Durata del ciclo in minuti, maggiore di 0 e al massimo 15 per chiamata."
-        },
-        "notes": {
-          "name": "Note",
-          "description": "Note testuali opzionali."
-        },
-        "idempotency_key": {
-          "name": "Chiave di idempotenza",
-          "description": "Opzionale: ripetere una chiamata con la stessa chiave non ha effetto (protegge da un doppio invio accidentale)."
+        "data_description": {
+          "rain_effective_factor": "Quota della pioggia che va a vantaggio del terreno (0–1).",
+          "rain_threshold_mm": "La pioggia giornaliera sotto questo valore viene ignorata.",
+          "daily_run_time": "Quando viene chiuso il giorno precedente e aggiornato il consiglio.",
+          "hargreaves_fallback": "Se mancano radiazione solare o vento, stima ET0 con Hargreaves (meno precisa, segnalata come stima).",
+          "adjust_p_for_etc": "FAO-56: p = p + 0,04 × (5 − ETc).",
+          "forecast_entity": "Solo informativo: la pioggia prevista è mostrata accanto al consiglio, non lo modifica mai.",
+          "weekly_cap_mm": "Avvisa quando l'irrigazione registrata negli ultimi 7 giorni supera questo valore. Lascia vuoto per disattivare."
         }
       }
     }
   },
-  "issues": {
-    "wh51_stale": {
-      "title": "Sensore umidità del suolo non aggiornato ({zone_id})",
-      "description": "Il sensore di umidità del suolo WH51 per {zone_id} non riporta un nuovo valore entro il tempo atteso. Verifica batteria, segnale e connettività del sensore."
+  "selector": {
+    "crop_profile": {
+      "options": {
+        "cool_season_turf": "Prato microtermo (es. festuca arundinacea)",
+        "custom": "Personalizzato"
+      }
     },
-    "weather_stale": {
-      "title": "Dati meteo non aggiornati",
-      "description": "Una o più entità meteo usate per calcolare l'ET0 non riportano un nuovo valore entro il tempo atteso. L'ET0 e la raccomandazione potrebbero risultare non disponibili finché il problema non viene risolto."
+    "soil_type": {
+      "options": {
+        "sand": "Sabbioso",
+        "loamy_sand": "Sabbioso-franco",
+        "sandy_loam": "Franco-sabbioso",
+        "loam": "Franco",
+        "silt_loam": "Franco-limoso",
+        "silt": "Limoso",
+        "silty_clay_loam": "Franco-limoso-argilloso",
+        "silty_clay": "Limoso-argilloso",
+        "clay": "Argilloso",
+        "custom": "Personalizzato"
+      }
     }
   }
 }
