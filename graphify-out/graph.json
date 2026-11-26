@@ -7945,14 +7945,14 @@
       "norm_label": "changelog"
     },
     {
-      "label": "[2.0.0] - Unreleased",
+      "label": "[2.0.0] - 2026-11-26",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "changelog_2_0_0_unreleased",
+      "id": "changelog_2_0_0_2026_11_26",
       "community": 46,
-      "norm_label": "[2.0.0] - unreleased"
+      "norm_label": "[2.0.0] - 2026-11-26"
     },
     {
       "label": "Added",
@@ -7978,7 +7978,7 @@
       "label": "Removed",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L36",
+      "source_location": "L37",
       "_origin": "ast",
       "id": "changelog_removed",
       "community": 46,
@@ -7988,7 +7988,7 @@
       "label": "[v1, unreleased changes]",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L40",
+      "source_location": "L41",
       "_origin": "ast",
       "id": "changelog_v1_unreleased_changes",
       "community": 46,
@@ -7998,9 +7998,9 @@
       "label": "Removed",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L42",
+      "source_location": "L43",
       "_origin": "ast",
-      "id": "changelog_removed_42",
+      "id": "changelog_removed_43",
       "community": 46,
       "norm_label": "removed"
     },
@@ -8008,9 +8008,9 @@
       "label": "Changed",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L52",
+      "source_location": "L53",
       "_origin": "ast",
-      "id": "changelog_changed_52",
+      "id": "changelog_changed_53",
       "community": 46,
       "norm_label": "changed"
     },
@@ -8018,7 +8018,7 @@
       "label": "[0.1.0] - 2026-07-13",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L60",
+      "source_location": "L61",
       "_origin": "ast",
       "id": "changelog_0_1_0_2026_07_13",
       "community": 46,
@@ -8028,9 +8028,9 @@
       "label": "Added",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L67",
+      "source_location": "L68",
       "_origin": "ast",
-      "id": "changelog_added_67",
+      "id": "changelog_added_68",
       "community": 46,
       "norm_label": "added"
     },
@@ -8311,7 +8311,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "docs_agronomy",
-      "community": 39,
+      "community": 44,
       "norm_label": "agronomy.md"
     },
     {
@@ -8321,7 +8321,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "docs_agronomy_water_balance_and_recommendation",
-      "community": 39,
+      "community": 44,
       "norm_label": "water balance and recommendation"
     },
     {
@@ -8361,7 +8361,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "docs_agronomy_daily_step",
-      "community": 39,
+      "community": 44,
       "norm_label": "daily step"
     },
     {
@@ -8371,7 +8371,7 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "docs_agronomy_recommendation",
-      "community": 39,
+      "community": 44,
       "norm_label": "recommendation"
     },
     {
@@ -8381,7 +8381,7 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "docs_agronomy_warnings_never_change_the_amount",
-      "community": 39,
+      "community": 44,
       "norm_label": "warnings (never change the amount)"
     },
     {
@@ -8401,7 +8401,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "docs_calibration_application_rate_mm_min_per_water_source",
-      "community": 10,
+      "community": 39,
       "norm_label": "application rate (mm/min) per water source"
     },
     {
@@ -8411,7 +8411,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "docs_calibration_starting_deficit",
-      "community": 10,
+      "community": 39,
       "norm_label": "starting deficit"
     },
     {
@@ -8421,7 +8421,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "docs_calibration_soil_moisture_sensor_thresholds_e_g_wh51",
-      "community": 10,
+      "community": 39,
       "norm_label": "soil moisture sensor thresholds (e.g. wh51)"
     },
     {
@@ -8939,7 +8939,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 39,
       "norm_label": "wh51 calibration documentation",
       "id": "docs_calibration_calibration_doc"
     },
@@ -28983,7 +28983,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L60",
+      "source_location": "L61",
       "weight": 1.0,
       "source": "changelog_changelog",
       "target": "changelog_0_1_0_2026_07_13",
@@ -28996,14 +28996,14 @@
       "source_location": "L6",
       "weight": 1.0,
       "source": "changelog_changelog",
-      "target": "changelog_2_0_0_unreleased",
+      "target": "changelog_2_0_0_2026_11_26",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L40",
+      "source_location": "L41",
       "weight": 1.0,
       "source": "changelog_changelog",
       "target": "changelog_v1_unreleased_changes",
@@ -29015,7 +29015,7 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L11",
       "weight": 1.0,
-      "source": "changelog_2_0_0_unreleased",
+      "source": "changelog_2_0_0_2026_11_26",
       "target": "changelog_added",
       "confidence_score": 1.0
     },
@@ -29025,7 +29025,7 @@
       "source_file": "CHANGELOG.md",
       "source_location": "L28",
       "weight": 1.0,
-      "source": "changelog_2_0_0_unreleased",
+      "source": "changelog_2_0_0_2026_11_26",
       "target": "changelog_changed",
       "confidence_score": 1.0
     },
@@ -29033,9 +29033,9 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L36",
+      "source_location": "L37",
       "weight": 1.0,
-      "source": "changelog_2_0_0_unreleased",
+      "source": "changelog_2_0_0_2026_11_26",
       "target": "changelog_removed",
       "confidence_score": 1.0
     },
@@ -29043,30 +29043,30 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L52",
+      "source_location": "L53",
       "weight": 1.0,
       "source": "changelog_v1_unreleased_changes",
-      "target": "changelog_changed_52",
+      "target": "changelog_changed_53",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L42",
+      "source_location": "L43",
       "weight": 1.0,
       "source": "changelog_v1_unreleased_changes",
-      "target": "changelog_removed_42",
+      "target": "changelog_removed_43",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L67",
+      "source_location": "L68",
       "weight": 1.0,
       "source": "changelog_0_1_0_2026_07_13",
-      "target": "changelog_added_67",
+      "target": "changelog_added_68",
       "confidence_score": 1.0
     },
     {
@@ -30007,5 +30007,5 @@
       "source_file": "CHANGELOG.md"
     }
   ],
-  "built_at_commit": "b5a39b789f48ddf2c399a80e5579bfdf69b0d1b1"
+  "built_at_commit": "7a5578327fc3e7d687fa872a83c14dfaf3fb15e8"
 }

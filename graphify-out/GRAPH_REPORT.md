@@ -1,7 +1,7 @@
 # Graph Report - garden-irrigation  (2026-11-26)
 
 ## Corpus Check
-- 65 files · ~36,070 words
+- 65 files · ~36,085 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b5a39b78`
+- Built from commit: `7a557832`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -149,8 +149,8 @@ Cohesion: 0.07
 Nodes (36): ConfigFlow, ConfigFlowResult, ConfigSubentryFlow, GardenIrrigationConfigFlow, GardenIrrigationOptionsFlow, _kc_schema(), _number(), Any (+28 more)
 
 ### Community 10 - "Project Governance & Milestones"
-Cohesion: 0.15
-Nodes (13): Declared Manual Cycle In Progress, Rationale: Estimates vs Measurements Labeling, Modes: calibration / monitoring (select.mode), Golden Rule: v1 Never Actuates Hardware, record_irrigation Action, services.yaml (record_irrigation schema), Garden Irrigation Lovelace Dashboard, Weekly Irrigation Cap (30mm default) (+5 more)
+Cohesion: 0.22
+Nodes (9): Declared Manual Cycle In Progress, Rationale: Estimates vs Measurements Labeling, Modes: calibration / monitoring (select.mode), Golden Rule: v1 Never Actuates Hardware, record_irrigation Action, services.yaml (record_irrigation schema), Garden Irrigation Lovelace Dashboard, Weekly Irrigation Cap (30mm default) (+1 more)
 
 ### Community 11 - "Scheduler: Advisory Monitors"
 Cohesion: 0.13
@@ -246,7 +246,7 @@ Nodes (4): 5.1 Entry principale (config flow), 5.2 Subentry "zona", 5.3 Opzioni 
 
 ### Community 39 - "Agronomy: water balance, TAW/RAW, effective rain, weekly cap"
 Cohesion: 0.24
-Nodes (5): Daily step, Recommendation, Warnings (never change the amount), Water balance and recommendation, Documentation
+Nodes (5): Application rate (mm/min) per water source, WH51 Calibration Documentation, Soil moisture sensor thresholds (e.g. WH51), Starting deficit, Documentation
 
 ### Community 40 - "GardenIrrigationStore"
 Cohesion: 0.38
@@ -265,8 +265,8 @@ Cohesion: 0.25
 Nodes (7): Architecture invariants, CLAUDE.md — garden_irrigation (v2), Conventions, Golden rules (never violate), graphify — STANDBY during the v2 rewrite, Water/agronomy model (do not "simplify" away), Workflow guardrails
 
 ### Community 44 - "Root-zone water"
-Cohesion: 0.67
-Nodes (3): Crop coefficient (Kc), Root-zone water, Soils (FAO-56 Table 19, midpoint of θFC − θWP)
+Cohesion: 0.25
+Nodes (7): Crop coefficient (Kc), Daily step, Recommendation, Root-zone water, Soils (FAO-56 Table 19, midpoint of θFC − θWP), Warnings (never change the amount), Water balance and recommendation
 
 ### Community 45 - "Pre-commit Configuration"
 Cohesion: 0.40
@@ -274,7 +274,7 @@ Nodes (5): Lint Workflow (CI), Test Workflow (CI), Validate Workflow (hassfest/H
 
 ### Community 46 - "[0.1.0] - 2026-07-13"
 Cohesion: 0.18
-Nodes (10): [0.1.0] - 2026-07-13, [2.0.0] - Unreleased, Added, Added, Changed, Changed, Changelog, Removed (+2 more)
+Nodes (10): [0.1.0] - 2026-07-13, [2.0.0] - 2026-11-26, Added, Added, Changed, Changed, Changelog, Removed (+2 more)
 
 ## Knowledge Gaps
 - **104 isolated node(s):** `domain`, `name`, `@mbonny95`, `config_flow`, `recorder` (+99 more)

@@ -3,7 +3,7 @@
 All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [2.0.0] - Unreleased
+## [2.0.0] - 2026-11-26
 
 Complete rewrite. v1 configuration and data are not migrated: remove the v1
 integration before installing. Design: `docs/v2-spec.md`.
@@ -31,7 +31,8 @@ integration before installing. Design: `docs/v2-spec.md`.
 - A day without ET0 is applied with ETc = 0 (rain and irrigation only) and
   flagged incomplete.
 - One storage file per installation (365-day history).
-- Minimum Home Assistant version 2026.2.
+- Minimum Home Assistant version 2026.2; compatible with the single-entry
+  device registry of Home Assistant 2026.10+ (tested on 2026.2 and 2026.10).
 
 ### Removed
 - Local weather accumulators, calibration/monitoring modes, the 14-day
