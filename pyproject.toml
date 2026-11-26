@@ -45,6 +45,8 @@ select = [
 ignore = [
     "E501",            # line length handled by formatter
 ]
+# FAO-56 formulas are written with their own symbols in docstrings/comments.
+allowed-confusables = ["×", "−", "–", "γ"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["custom_components.garden_irrigation"]

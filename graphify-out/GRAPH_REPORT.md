@@ -1,16 +1,16 @@
 # Graph Report - garden-irrigation  (2026-11-26)
 
 ## Corpus Check
-- 40 files · ~24,142 words
+- 46 files · ~27,756 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 432 nodes · 687 edges · 43 communities (22 shown, 21 thin omitted)
-- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 14 edges (avg confidence: 0.64)
+- 566 nodes · 956 edges · 46 communities (25 shown, 21 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 13 edges (avg confidence: 0.62)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `786fb92c`
+- Built from commit: `a8ca297c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -19,12 +19,15 @@
 - Button Platform (Cycle & Calibration)
 - Water Balance Engine
 - Binary Sensor Platform
+- test_fao56.py
 - Zone Sensors (Deficit & Rain)
 - Coordinator: Operational State
 - Scheduler Tests
+- test_recommendation.py
 - Config Flow
 - Project Governance & Milestones
 - Scheduler: Advisory Monitors
+- test_balance.py
 - Repair Issues
 - Irrigation Log: Aggregates
 - Integration Manifest
@@ -57,28 +60,28 @@
 - Bug Report Template
 
 ## God Nodes (most connected - your core abstractions)
-1. `GardenIrrigationStore` - 22 edges
-2. `GardenIrrigationZoneCard` - 22 edges
-3. `escapeHtml()` - 17 edges
-4. `garden_irrigation v2 — specifica (bozza da approvare)` - 17 edges
-5. `GardenIrrigationOverviewCard` - 15 edges
-6. `garden-irrigation` - 14 edges
-7. `ZoneSubentryFlow` - 13 edges
-8. `attr()` - 12 edges
-9. `set_sensor()` - 11 edges
-10. `_configure()` - 11 edges
+1. `recommend()` - 26 edges
+2. `penman_monteith()` - 25 edges
+3. `GardenIrrigationStore` - 22 edges
+4. `GardenIrrigationZoneCard` - 22 edges
+5. `DailyWeather` - 18 edges
+6. `escapeHtml()` - 17 edges
+7. `garden_irrigation v2 — specifica (bozza da approvare)` - 17 edges
+8. `GardenIrrigationOverviewCard` - 15 edges
+9. `garden-irrigation` - 14 edges
+10. `ZoneSubentryFlow` - 13 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Validate Workflow (hassfest/HACS)` --semantically_similar_to--> `Pre-commit Configuration`  [INFERRED] [semantically similar]
   .github/workflows/validate.yaml → .pre-commit-config.yaml
-- `test_cool_season_turf_profile()` --calls--> `kc_for_month()`  [EXTRACTED]
-  tests/test_model_tables.py → custom_components/garden_irrigation/model/crops.py
-- `test_kc_for_month_rejects_invalid_month()` --calls--> `kc_for_month()`  [EXTRACTED]
-  tests/test_model_tables.py → custom_components/garden_irrigation/model/crops.py
-- `test_kc_for_month_rejects_short_profile()` --calls--> `kc_for_month()`  [EXTRACTED]
-  tests/test_model_tables.py → custom_components/garden_irrigation/model/crops.py
-- `Lint Workflow (CI)` --shares_data_with--> `Pre-commit Configuration`  [INFERRED]
-  .github/workflows/lint.yaml → .pre-commit-config.yaml
+- `test_depletion_fraction_adjusted_for_etc()` --calls--> `depletion_fraction()`  [EXTRACTED]
+  tests/test_balance.py → custom_components/garden_irrigation/model/balance.py
+- `test_depletion_fraction_without_adjustment()` --calls--> `depletion_fraction()`  [EXTRACTED]
+  tests/test_balance.py → custom_components/garden_irrigation/model/balance.py
+- `test_effective_rain()` --calls--> `effective_rain()`  [EXTRACTED]
+  tests/test_balance.py → custom_components/garden_irrigation/model/balance.py
+- `test_dry_day_increases_deficit_by_etc()` --calls--> `apply_day()`  [EXTRACTED]
+  tests/test_balance.py → custom_components/garden_irrigation/model/balance.py
 
 ## Import Cycles
 - None detected.
@@ -88,7 +91,7 @@
 - **Cross-linked Project Documentation Set** — readme_readme, docs_readme_docs_readme, docs_agronomy_agronomy_doc, docs_calibration_calibration_doc, docs_fao56_fao56_doc, claude_claude_md [EXTRACTED 1.00]
 - **Milestone 9 Feature Set (modes, calibration override, declared cycle)** — claude_modes_calibration_monitoring, claude_declared_manual_cycle, docs_calibration_wh51_manual_override, changelog_milestone_9_modes_calibration [EXTRACTED 1.00]
 
-## Communities (43 total, 21 thin omitted)
+## Communities (46 total, 21 thin omitted)
 
 ### Community 0 - "Diagnostics & Test Fixtures"
 Cohesion: 0.11
@@ -106,6 +109,10 @@ Nodes (17): _configure(), loaded_entry(), Any, HomeAssistant, MockConfigEntry, T
 Cohesion: 0.19
 Nodes (10): kc_for_month(), Crop reference data: monthly Kc profiles and depletion fraction p.  Cool-season, Return the Kc of `month` (1 = January) from a 12-value profile., Soil reference data.  Available water capacity (AWC) is the midpoint of the θFC, Reference properties of a soil texture class., SoilType, Sanity tests for the agronomic reference tables., test_cool_season_turf_profile() (+2 more)
 
+### Community 4 - "test_fao56.py"
+Cohesion: 0.07
+Nodes (57): actual_vapour_pressure(), clear_sky_radiation(), compute_et0(), DailyWeather, Et0Method, Et0Result, extraterrestrial_radiation(), hargreaves() (+49 more)
+
 ### Community 5 - "Zone Sensors (Deficit & Rain)"
 Cohesion: 0.38
 Nodes (11): Any, HomeAssistant, MockConfigEntry, Tests for entry setup, unload, reload and removal., _stored_zone(), test_options_change_reloads_entry(), test_remove_entry_deletes_store(), test_setup_and_unload() (+3 more)
@@ -113,6 +120,10 @@ Nodes (11): Any, HomeAssistant, MockConfigEntry, Tests for entry setup, unload, 
 ### Community 6 - "Coordinator: Operational State"
 Cohesion: 0.47
 Nodes (5): HomeAssistant, MockConfigEntry, Tests for the options flow., test_options_defaults_and_save(), test_weekly_cap_can_be_disabled()
+
+### Community 8 - "test_recommendation.py"
+Cohesion: 0.10
+Nodes (41): Advisory, Message, StrEnum, Explainable irrigation recommendation for one zone.  Pure function of the zone's, Build the recommendation for one zone., Why the decision is what it is., Advisory conditions shown next to the recommendation., A reason or warning code with the values that explain it. (+33 more)
 
 ### Community 9 - "Config Flow"
 Cohesion: 0.07
@@ -125,6 +136,10 @@ Nodes (10): Declared Manual Cycle In Progress, Rationale: Estimates vs Measureme
 ### Community 11 - "Scheduler: Advisory Monitors"
 Cohesion: 0.05
 Nodes (47): GardenIrrigationRuntimeData, Runtime data attached to the config entry., Objects that live as long as the config entry is loaded., _async_reload_on_update(), async_remove_entry(), async_setup_entry(), async_unload_entry(), ConfigEntry (+39 more)
+
+### Community 12 - "test_balance.py"
+Cohesion: 0.11
+Nodes (29): apply_day(), current_deficit(), DayBalance, depletion_fraction(), effective_rain(), FAO-56 root-zone soil water balance, single crop coefficient (chapter 8).  Deple, Deficit right now: last closed day minus irrigation recorded today., Water holding capacity of a zone's root zone (mm). (+21 more)
 
 ### Community 17 - "Repair Issues"
 Cohesion: 0.08
@@ -156,7 +171,7 @@ Nodes (3): GardenIrrigationZoneCardEditor, LABELS, SCHEMA
 
 ### Community 43 - "CLAUDE.md — garden_irrigation"
 Cohesion: 0.25
-Nodes (7): Architecture invariants, CLAUDE.md — garden_irrigation (v2), Conventions, Golden rules (never violate), graphify, Water/agronomy model (do not "simplify" away), Workflow guardrails
+Nodes (7): Architecture invariants, CLAUDE.md — garden_irrigation (v2), Conventions, Golden rules (never violate), graphify — STANDBY during the v2 rewrite, Water/agronomy model (do not "simplify" away), Workflow guardrails
 
 ### Community 45 - "Pre-commit Configuration"
 Cohesion: 0.40
@@ -180,11 +195,11 @@ _Questions this graph is uniquely positioned to answer:_
   _Cohesion score 0.10873440285204991 - nodes in this community are weakly interconnected._
 - **Should `Button Platform (Cycle & Calibration)` be split into smaller, more focused modules?**
   _Cohesion score 0.07692307692307693 - nodes in this community are weakly interconnected._
+- **Should `test_fao56.py` be split into smaller, more focused modules?**
+  _Cohesion score 0.07344632768361582 - nodes in this community are weakly interconnected._
+- **Should `test_recommendation.py` be split into smaller, more focused modules?**
+  _Cohesion score 0.09745293466223699 - nodes in this community are weakly interconnected._
 - **Should `Config Flow` be split into smaller, more focused modules?**
   _Cohesion score 0.07239819004524888 - nodes in this community are weakly interconnected._
 - **Should `Scheduler: Advisory Monitors` be split into smaller, more focused modules?**
-  _Cohesion score 0.053551912568306013 - nodes in this community are weakly interconnected._
-- **Should `Repair Issues` be split into smaller, more focused modules?**
-  _Cohesion score 0.08298368298368299 - nodes in this community are weakly interconnected._
-- **Should `Integration Manifest` be split into smaller, more focused modules?**
-  _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.053005464480874315 - nodes in this community are weakly interconnected._
