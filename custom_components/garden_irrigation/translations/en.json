@@ -202,5 +202,11 @@
         "custom": "Custom"
       }
     }
+  },
+  "issues": {
+    "source_incomplete": {
+      "title": "Weather source with missing data",
+      "description": "The sensor `{entity_id}` has statistics for only {hours} of 24 hours on {day}, so that day was marked incomplete. Check that the sensor is reporting and that the recorder keeps its statistics (it needs a state class)."
+    }
   }
 }

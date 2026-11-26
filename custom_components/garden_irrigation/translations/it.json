@@ -202,5 +202,11 @@
         "custom": "Personalizzato"
       }
     }
+  },
+  "issues": {
+    "source_incomplete": {
+      "title": "Sorgente meteo con dati mancanti",
+      "description": "Il sensore `{entity_id}` ha statistiche solo per {hours} ore su 24 il giorno {day}, quindi quel giorno è stato marcato come incompleto. Verifica che il sensore stia trasmettendo e che il recorder ne conservi le statistiche (serve una state class)."
+    }
   }
 }

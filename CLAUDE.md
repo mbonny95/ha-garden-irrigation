@@ -24,9 +24,10 @@ behavior; if code and spec disagree, stop and ask.
   queries.
 - Daily weather comes from recorder **long-term hourly statistics** of the
   source sensors (mean/min/max, `change` for rain), read once per day for the
-  closed day; missed days are caught up in order. A day with < 20 h of
-  statistics is incomplete: ET0 `unknown`, balance not applied, no invented
-  values.
+  closed day; missed days are caught up in order. A source with < 20 h of
+  statistics makes the day incomplete (Repair + flag, no invented values):
+  without ET0 the day is applied with ETc = 0 (rain and irrigation only);
+  with incomplete rain, the available hours are used.
 - **One** versioned `Store` per config entry (`store.py`), 365-day retention.
 - Zones are **config subentries** (`SUBENTRY_TYPE_ZONE`), any number. Entity
   `unique_id`s are derived from the subentry id.

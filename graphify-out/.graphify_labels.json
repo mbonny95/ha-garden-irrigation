@@ -12,6 +12,8 @@
   "10": "Project Governance & Milestones",
   "11": "Scheduler: Advisory Monitors",
   "12": "test_balance.py",
+  "13": "test_daily_weather.py",
+  "14": "test_repairs.py",
   "17": "Repair Issues",
   "22": "Irrigation Log: Aggregates",
   "26": "Integration Manifest",

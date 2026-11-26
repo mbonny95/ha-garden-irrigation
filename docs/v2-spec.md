@@ -80,14 +80,17 @@ converte il recorder (`units=`).
 Requisiti/limiti:
 - i sensori devono avere `state_class` (`measurement`, pioggia
   `total_increasing`/`total`). Il config flow lo verifica.
-- se un giorno ha meno di 20 ore di statistiche → giorno **incompleto**:
-  ET0 `unknown`, il bilancio di quel giorno non viene applicato e compare un
-  avviso (nessun valore inventato).
+- se una sorgente ha meno di 20 ore di statistiche nel giorno → giorno
+  **incompleto** (Repair + avviso, nessun valore inventato):
+  - mancano dati per l'ET0 → ET0 `unknown`; il bilancio del giorno viene
+    applicato **senza ETc** (solo pioggia efficace e irrigazione) e il giorno
+    è marcato incompleto (deciso il 26/11/2026);
+  - pioggia incompleta → si usa la pioggia delle ore disponibili, giorno
+    marcato incompleto.
 - dipende dalla retention delle statistiche a lungo termine (illimitata di
   default in HA).
 
-Questo cambia una regola del CLAUDE.md attuale ("accumulatori locali per
-primi"): va approvato.
+Approvato il 26/11/2026 (sostituisce gli accumulatori locali della v1).
 
 ## 5. Configurazione
 

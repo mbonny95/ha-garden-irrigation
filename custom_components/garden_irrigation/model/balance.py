@@ -65,7 +65,7 @@ def effective_rain(
 class DayBalance:
     """Outcome of one day of the water balance (mm)."""
 
-    etc_mm: float
+    etc_mm: float | None  # None when ET0 was unknown
     effective_rain_mm: float
     irrigation_mm: float
     deficit_mm: float
@@ -74,7 +74,7 @@ class DayBalance:
 def apply_day(
     prev_deficit_mm: float,
     *,
-    et0_mm: float,
+    et0_mm: float | None,
     kc: float,
     rain_mm: float,
     irrigation_mm: float,
@@ -85,16 +85,20 @@ def apply_day(
     """Advance the deficit by one closed day (eq. 85, single Kc).
 
     deficit = clamp(prev + ETc − effective rain − irrigation, 0, TAW)
+
+    With ET0 unknown the day is still applied with ETc = 0, so the rain and
+    irrigation of that day are not lost; the caller flags it as incomplete.
     """
-    etc = et0_mm * kc
+    etc = et0_mm * kc if et0_mm is not None else None
+    water_use = etc if etc is not None else 0.0
     eff_rain = effective_rain(
         rain_mm,
         factor=rain_factor,
         threshold_mm=rain_threshold_mm,
         prev_deficit_mm=prev_deficit_mm,
-        etc_mm=etc,
+        etc_mm=water_use,
     )
-    deficit = prev_deficit_mm + etc - eff_rain - irrigation_mm
+    deficit = prev_deficit_mm + water_use - eff_rain - irrigation_mm
     return DayBalance(
         etc_mm=etc,
         effective_rain_mm=eff_rain,

@@ -16,7 +16,7 @@ from custom_components.garden_irrigation.model.balance import (
 TAW = 23.25  # 150 mm roots × 155 mm/m (loam)
 
 
-def _day(prev: float, **kwargs: float) -> float:
+def _day(prev: float, **kwargs: float | None) -> float:
     params = {
         "et0_mm": 4.0,
         "kc": 0.95,
@@ -110,6 +110,26 @@ def test_consecutive_dry_days_from_field_capacity() -> None:
     for _ in range(3):
         deficit = _day(deficit, et0_mm=4.0, kc=1.0)
     assert deficit == pytest.approx(12.0)
+
+
+def test_unknown_et0_still_applies_rain_and_irrigation() -> None:
+    result = apply_day(
+        10.0,
+        et0_mm=None,
+        kc=0.95,
+        rain_mm=5.0,
+        irrigation_mm=2.0,
+        taw_mm=TAW,
+        rain_factor=0.8,
+        rain_threshold_mm=2.0,
+    )
+    assert result.etc_mm is None
+    assert result.effective_rain_mm == pytest.approx(4.0)
+    assert result.deficit_mm == pytest.approx(4.0)
+
+
+def test_unknown_et0_caps_effective_rain_at_deficit() -> None:
+    assert _day(3.0, et0_mm=None, rain_mm=20.0) == 0.0
 
 
 def test_current_deficit() -> None:

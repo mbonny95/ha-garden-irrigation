@@ -8,6 +8,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.util import dt as dt_util
 
 from .data import GardenIrrigationConfigEntry, GardenIrrigationRuntimeData
+from .repairs import async_clear_issues
 from .store import GardenIrrigationStore
 
 PLATFORMS: list[Platform] = []
@@ -46,6 +47,7 @@ async def async_unload_entry(
 async def async_remove_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Delete persisted data when the integration is removed."""
     await GardenIrrigationStore(hass, entry.entry_id).async_remove()
+    async_clear_issues(hass)
 
 
 async def _async_reload_on_update(
