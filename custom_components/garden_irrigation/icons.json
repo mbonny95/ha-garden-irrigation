@@ -46,6 +46,18 @@
       },
       "effective_rain_yesterday": {
         "default": "mdi:weather-pouring"
+      },
+      "forecast_rain": {
+        "default": "mdi:weather-cloudy-clock"
+      },
+      "soil_moisture_status": {
+        "default": "mdi:water-percent",
+        "state": {
+          "dry": "mdi:water-off",
+          "wet": "mdi:water",
+          "stale": "mdi:timer-sand",
+          "unavailable": "mdi:water-alert"
+        }
       }
     },
     "binary_sensor": {

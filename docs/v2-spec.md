@@ -196,7 +196,10 @@ Come stimarlo:
 
 La percentuale di questi sensori **non** è umidità volumetrica: dipende dal
 sensore e da come è interrato. Uso in v2:
-- **Diagnostico:** valore, batteria, segnale, ultimo aggiornamento.
+- **Diagnostico:** entità "Sensore umidità suolo" per zona con stato
+  secco / tra le soglie / umido / soglie non impostate / non aggiornato
+  (> 6 h senza letture) / non disponibile; valore e ultimo aggiornamento
+  negli attributi. Batteria e segnale restano sul dispositivo del sensore.
 - **Conferma (soft):** l'utente imposta per zona due soglie *sue* (secco /
   umido) guardando il sensore nel tempo. Se il modello dice "irriga" ma il
   sensore è sopra "umido" → avviso "il sensore indica terreno umido,

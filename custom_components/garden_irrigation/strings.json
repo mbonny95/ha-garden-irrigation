@@ -322,6 +322,20 @@
       },
       "effective_rain_yesterday": {
         "name": "Effective rain yesterday"
+      },
+      "forecast_rain": {
+        "name": "Forecast rain (24 h)"
+      },
+      "soil_moisture_status": {
+        "name": "Soil moisture sensor",
+        "state": {
+          "dry": "Dry",
+          "ok": "Between thresholds",
+          "wet": "Wet",
+          "no_thresholds": "No thresholds set",
+          "stale": "Not updated",
+          "unavailable": "Unavailable"
+        }
       }
     },
     "binary_sensor": {

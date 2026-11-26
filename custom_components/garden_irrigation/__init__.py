@@ -49,7 +49,7 @@ async def async_setup_entry(
     )
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
-    for unsubscribe in coordinator.async_schedule_daily_run():
+    for unsubscribe in coordinator.async_start():
         entry.async_on_unload(unsubscribe)
     # Options and zone (subentry) changes both go through an entry update:
     # reload so every zone's entities and the daily job pick them up.

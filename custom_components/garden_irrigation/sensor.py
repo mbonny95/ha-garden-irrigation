@@ -29,6 +29,7 @@ from .entity import (
     messages_as_attributes,
     round_or_none,
 )
+from .soil_sensor import SoilStatus
 
 MM = UnitOfPrecipitationDepth.MILLIMETERS
 
@@ -46,6 +47,7 @@ class InstallationSensorDescription(SensorEntityDescription):
 
     value_fn: Callable[[CoordinatorData], Any]
     attributes_fn: Callable[[CoordinatorData], Mapping[str, Any]] = lambda _: {}
+    requires_forecast: bool = False
 
 
 def _weather_attributes(data: CoordinatorData) -> dict[str, Any]:
@@ -67,6 +69,18 @@ def _data_quality(data: CoordinatorData) -> str:
     return (
         DATA_QUALITY_INCOMPLETE if data.weather_day["incomplete"] else DATA_QUALITY_OK
     )
+
+
+def _forecast_attributes(data: CoordinatorData) -> dict[str, Any]:
+    forecast = data.forecast
+    if forecast is None:
+        return {}
+    return {
+        "entity_id": forecast.entity_id,
+        "kind": forecast.kind,
+        "fetched_at": forecast.fetched_at.isoformat(),
+        "informational_only": True,
+    }
 
 
 INSTALLATION_SENSORS: tuple[InstallationSensorDescription, ...] = (
@@ -98,6 +112,16 @@ INSTALLATION_SENSORS: tuple[InstallationSensorDescription, ...] = (
         value_fn=_data_quality,
         attributes_fn=_weather_attributes,
     ),
+    InstallationSensorDescription(
+        key="forecast_rain",
+        translation_key="forecast_rain",
+        device_class=SensorDeviceClass.PRECIPITATION,
+        native_unit_of_measurement=MM,
+        suggested_display_precision=1,
+        requires_forecast=True,
+        value_fn=lambda d: round_or_none(d.forecast.rain_mm, 1) if d.forecast else None,
+        attributes_fn=_forecast_attributes,
+    ),
 )
 
 
@@ -127,6 +151,7 @@ class ZoneSensorDescription(SensorEntityDescription):
     value_fn: Callable[[ZoneSnapshot], Any]
     attributes_fn: Callable[[ZoneSnapshot], Mapping[str, Any]] = lambda _: {}
     source: str | None = None  # only created when the zone has this source
+    requires_soil_sensor: bool = False
 
 
 def _deficit_attributes(zone: ZoneSnapshot) -> dict[str, Any]:
@@ -192,6 +217,26 @@ def _last_day_attributes(zone: ZoneSnapshot) -> dict[str, Any]:
     return {
         "date": zone.last_day["date"],
         "incomplete_sources": zone.last_day["incomplete"],
+    }
+
+
+def _soil_status(zone: ZoneSnapshot) -> str | None:
+    return zone.soil_sensor.status.value if zone.soil_sensor else None
+
+
+def _soil_attributes(zone: ZoneSnapshot) -> dict[str, Any]:
+    sensor = zone.soil_sensor
+    if sensor is None:
+        return {}
+    return {
+        "entity_id": sensor.entity_id,
+        "value_pct": sensor.value_pct,
+        "dry_pct": sensor.dry_pct,
+        "wet_pct": sensor.wet_pct,
+        "last_reported": (
+            sensor.last_reported.isoformat() if sensor.last_reported else None
+        ),
+        "device_relative": True,
     }
 
 
@@ -291,6 +336,16 @@ ZONE_SENSORS: tuple[ZoneSensorDescription, ...] = (
         value_fn=_last_day("effective_rain_mm"),
         attributes_fn=_last_day_attributes,
     ),
+    ZoneSensorDescription(
+        key="soil_moisture_status",
+        translation_key="soil_moisture_status",
+        device_class=SensorDeviceClass.ENUM,
+        options=[status.value for status in SoilStatus],
+        entity_category=EntityCategory.DIAGNOSTIC,
+        requires_soil_sensor=True,
+        value_fn=_soil_status,
+        attributes_fn=_soil_attributes,
+    ),
 )
 
 
@@ -321,13 +376,18 @@ async def async_setup_entry(
     async_add_entities(
         InstallationSensor(coordinator, description)
         for description in INSTALLATION_SENSORS
+        if not description.requires_forecast or coordinator.options.forecast_entity
     )
     for zone_id, zone in coordinator.zones.items():
         async_add_entities(
             (
                 ZoneSensor(coordinator, zone_id, description)
                 for description in ZONE_SENSORS
-                if description.source is None or description.source in zone.source_rates
+                if (
+                    description.source is None
+                    or description.source in zone.source_rates
+                )
+                and (not description.requires_soil_sensor or zone.soil_moisture_entity)
             ),
             config_subentry_id=zone_id,
         )

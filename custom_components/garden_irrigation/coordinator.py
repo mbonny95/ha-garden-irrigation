@@ -15,9 +15,13 @@ from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import CALLBACK_TYPE, HomeAssistant, callback
+from homeassistant.core import CALLBACK_TYPE, Event, HomeAssistant, callback
 from homeassistant.exceptions import ServiceValidationError
-from homeassistant.helpers.event import async_track_time_change
+from homeassistant.helpers.event import (
+    EventStateChangedData,
+    async_track_state_change_event,
+    async_track_time_change,
+)
 from homeassistant.helpers.start import async_at_started
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.util import dt as dt_util
@@ -25,6 +29,7 @@ from homeassistant.util import dt as dt_util
 from . import repairs
 from .const import DOMAIN, RETENTION_DAYS
 from .daily_weather import DayWeather, async_read_day
+from .forecast import ForecastRain, async_fetch_forecast_rain
 from .model.balance import (
     SoilWater,
     apply_day,
@@ -43,6 +48,7 @@ from .settings import (
     weather_sources,
     zones_from_entry,
 )
+from .soil_sensor import SoilSensorState, read_soil_sensor
 from .store import (
     DayRecord,
     GardenIrrigationStore,
@@ -55,6 +61,7 @@ _LOGGER = logging.getLogger(__name__)
 REFRESH_INTERVAL = timedelta(minutes=15)
 MAX_IRRIGATION_MINUTES = 240.0
 MAX_IRRIGATION_MM = 100.0
+FORECAST_MAX_AGE = timedelta(hours=1)
 
 
 @dataclass(frozen=True, slots=True)
@@ -71,6 +78,7 @@ class ZoneSnapshot:
     pending_irrigation_mm: float
     irrigation_7d_mm: float
     last_irrigation: datetime | None
+    soil_sensor: SoilSensorState | None
     recommendation: Recommendation
 
 
@@ -80,6 +88,7 @@ class CoordinatorData:
 
     zones: dict[str, ZoneSnapshot]
     weather_day: WeatherDayRecord | None
+    forecast: ForecastRain | None
 
 
 class GardenIrrigationCoordinator(DataUpdateCoordinator[CoordinatorData]):
@@ -106,14 +115,15 @@ class GardenIrrigationCoordinator(DataUpdateCoordinator[CoordinatorData]):
         self.options = OperatingOptions.from_entry(entry)
         self.zones = zones_from_entry(entry)
         self._run_lock = asyncio.Lock()
+        self._forecast: ForecastRain | None = None
 
     # --- Scheduling ---------------------------------------------------------
 
     @callback
-    def async_schedule_daily_run(self) -> list[CALLBACK_TYPE]:
-        """Run at the configured time every day, and once after startup."""
+    def async_start(self) -> list[CALLBACK_TYPE]:
+        """Run daily and after startup; follow the soil moisture sensors."""
         run_time = self.options.run_time
-        return [
+        listeners = [
             async_track_time_change(
                 self.hass,
                 self._async_handle_run_time,
@@ -123,6 +133,23 @@ class GardenIrrigationCoordinator(DataUpdateCoordinator[CoordinatorData]):
             ),
             async_at_started(self.hass, self._async_handle_started),
         ]
+        soil_entities = [
+            zone.soil_moisture_entity
+            for zone in self.zones.values()
+            if zone.soil_moisture_entity
+        ]
+        if soil_entities:
+            listeners.append(
+                async_track_state_change_event(
+                    self.hass, soil_entities, self._async_handle_soil_change
+                )
+            )
+        return listeners
+
+    async def _async_handle_soil_change(
+        self, event: Event[EventStateChangedData]
+    ) -> None:
+        await self.async_request_refresh()
 
     async def _async_handle_run_time(self, now: datetime) -> None:
         await self.async_run_daily(now)
@@ -236,13 +263,24 @@ class GardenIrrigationCoordinator(DataUpdateCoordinator[CoordinatorData]):
 
     async def _async_update_data(self) -> CoordinatorData:
         now = dt_util.now()
+        await self._async_update_forecast(now)
         return CoordinatorData(
             zones={
                 zone_id: self._snapshot(zone, now)
                 for zone_id, zone in self.zones.items()
             },
             weather_day=self.store.last_weather_day,
+            forecast=self._forecast,
         )
+
+    async def _async_update_forecast(self, now: datetime) -> None:
+        entity_id = self.options.forecast_entity
+        if entity_id is None:
+            return
+        if self._forecast is None or now - self._forecast.fetched_at >= (
+            FORECAST_MAX_AGE
+        ):
+            self._forecast = await async_fetch_forecast_rain(self.hass, entity_id, now)
 
     def _snapshot(self, zone: ZoneConfig, now: datetime) -> ZoneSnapshot:
         state = self.store.zone(zone.zone_id)
@@ -272,6 +310,7 @@ class GardenIrrigationCoordinator(DataUpdateCoordinator[CoordinatorData]):
         week_ago = now - timedelta(days=7)
         irrigation_7d = sum(mm for when, mm in irrigations if when > week_ago)
         last_irrigation = max((when for when, _ in irrigations), default=None)
+        soil_sensor = read_soil_sensor(self.hass, zone, now)
 
         recommendation = recommend(
             ZoneState(
@@ -286,6 +325,9 @@ class GardenIrrigationCoordinator(DataUpdateCoordinator[CoordinatorData]):
                 min_interval_h=self.options.min_interval_h,
                 irrigation_7d_mm=irrigation_7d,
                 weekly_cap_mm=self.options.weekly_cap_mm,
+                soil_sensor=soil_sensor.reading if soil_sensor else None,
+                forecast_rain_mm=self._forecast.rain_mm if self._forecast else None,
+                forecast_threshold_mm=self.options.rain_threshold_mm,
             )
         )
         return ZoneSnapshot(
@@ -299,6 +341,7 @@ class GardenIrrigationCoordinator(DataUpdateCoordinator[CoordinatorData]):
             pending_irrigation_mm=pending,
             irrigation_7d_mm=irrigation_7d,
             last_irrigation=last_irrigation,
+            soil_sensor=soil_sensor,
             recommendation=recommendation,
         )
 

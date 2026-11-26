@@ -322,6 +322,20 @@
       },
       "effective_rain_yesterday": {
         "name": "Pioggia efficace ieri"
+      },
+      "forecast_rain": {
+        "name": "Pioggia prevista (24 h)"
+      },
+      "soil_moisture_status": {
+        "name": "Sensore umidità suolo",
+        "state": {
+          "dry": "Secco",
+          "ok": "Tra le soglie",
+          "wet": "Umido",
+          "no_thresholds": "Soglie non impostate",
+          "stale": "Non aggiornato",
+          "unavailable": "Non disponibile"
+        }
       }
     },
     "binary_sensor": {
