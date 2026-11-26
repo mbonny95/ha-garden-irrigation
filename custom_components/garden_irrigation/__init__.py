@@ -19,7 +19,7 @@ from .store import GardenIrrigationStore
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
-PLATFORMS: list[Platform] = []
+PLATFORMS: list[Platform] = [Platform.BINARY_SENSOR, Platform.SENSOR]
 
 MAIN_DEVICE_NAME = "Garden Irrigation"
 

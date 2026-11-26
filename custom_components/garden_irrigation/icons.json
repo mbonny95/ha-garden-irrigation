@@ -1,0 +1,68 @@
+{
+  "entity": {
+    "sensor": {
+      "et0_yesterday": {
+        "default": "mdi:weather-sunny"
+      },
+      "rain_yesterday": {
+        "default": "mdi:weather-rainy"
+      },
+      "data_quality": {
+        "default": "mdi:database-check",
+        "state": {
+          "incomplete": "mdi:database-alert",
+          "waiting": "mdi:database-clock"
+        }
+      },
+      "deficit": {
+        "default": "mdi:water-minus"
+      },
+      "recommended_irrigation": {
+        "default": "mdi:sprinkler-variant"
+      },
+      "recommended_minutes_mains": {
+        "default": "mdi:water-pump"
+      },
+      "recommended_minutes_tank": {
+        "default": "mdi:storage-tank"
+      },
+      "irrigation_7d": {
+        "default": "mdi:calendar-week"
+      },
+      "last_irrigation": {
+        "default": "mdi:history"
+      },
+      "taw": {
+        "default": "mdi:cup-water"
+      },
+      "raw": {
+        "default": "mdi:cup-water"
+      },
+      "kc": {
+        "default": "mdi:grass"
+      },
+      "etc_yesterday": {
+        "default": "mdi:sprout"
+      },
+      "effective_rain_yesterday": {
+        "default": "mdi:weather-pouring"
+      }
+    },
+    "binary_sensor": {
+      "needs_irrigation": {
+        "default": "mdi:sprinkler",
+        "state": {
+          "off": "mdi:sprinkler-variant"
+        }
+      }
+    }
+  },
+  "services": {
+    "record_irrigation": {
+      "service": "mdi:water-check"
+    },
+    "set_deficit": {
+      "service": "mdi:water-sync"
+    }
+  }
+}

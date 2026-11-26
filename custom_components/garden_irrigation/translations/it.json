@@ -273,5 +273,61 @@
     "deficit_above_taw": {
       "message": "Il deficit non può superare l'acqua totale disponibile della zona ({taw} mm)."
     }
+  },
+  "entity": {
+    "sensor": {
+      "et0_yesterday": {
+        "name": "Evapotraspirazione di riferimento ieri"
+      },
+      "rain_yesterday": {
+        "name": "Pioggia ieri"
+      },
+      "data_quality": {
+        "name": "Qualità dati meteo",
+        "state": {
+          "ok": "OK",
+          "incomplete": "Incompleti",
+          "waiting": "In attesa del primo giorno"
+        }
+      },
+      "deficit": {
+        "name": "Deficit idrico del suolo"
+      },
+      "recommended_irrigation": {
+        "name": "Irrigazione consigliata"
+      },
+      "recommended_minutes_mains": {
+        "name": "Minuti consigliati (rete)"
+      },
+      "recommended_minutes_tank": {
+        "name": "Minuti consigliati (cisterna)"
+      },
+      "irrigation_7d": {
+        "name": "Irrigazione ultimi 7 giorni"
+      },
+      "last_irrigation": {
+        "name": "Ultima irrigazione"
+      },
+      "taw": {
+        "name": "Acqua totale disponibile"
+      },
+      "raw": {
+        "name": "Acqua facilmente disponibile"
+      },
+      "kc": {
+        "name": "Coefficiente colturale"
+      },
+      "etc_yesterday": {
+        "name": "Evapotraspirazione colturale ieri"
+      },
+      "effective_rain_yesterday": {
+        "name": "Pioggia efficace ieri"
+      }
+    },
+    "binary_sensor": {
+      "needs_irrigation": {
+        "name": "Da irrigare"
+      }
+    }
   }
 }

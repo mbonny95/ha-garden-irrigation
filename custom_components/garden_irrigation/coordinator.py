@@ -99,6 +99,7 @@ class GardenIrrigationCoordinator(DataUpdateCoordinator[CoordinatorData]):
             name=DOMAIN,
             update_interval=REFRESH_INTERVAL,
         )
+        self.entry = entry
         self.store = store
         self.site = site_from_entry(entry)
         self.sources = weather_sources(entry)
