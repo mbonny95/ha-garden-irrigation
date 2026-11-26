@@ -201,12 +201,77 @@
         "clay": "Argilloso",
         "custom": "Personalizzato"
       }
+    },
+    "source": {
+      "options": {
+        "mains": "Rete",
+        "tank": "Cisterna"
+      }
     }
   },
   "issues": {
     "source_incomplete": {
       "title": "Sorgente meteo con dati mancanti",
       "description": "Il sensore `{entity_id}` ha statistiche solo per {hours} ore su 24 il giorno {day}, quindi quel giorno è stato marcato come incompleto. Verifica che il sensore stia trasmettendo e che il recorder ne conservi le statistiche (serve una state class)."
+    }
+  },
+  "services": {
+    "record_irrigation": {
+      "name": "Registra irrigazione",
+      "description": "Registra un'irrigazione appena fatta su una zona (ora attuale). Indica i minuti oppure i millimetri.",
+      "fields": {
+        "zone": {
+          "name": "Zona",
+          "description": "Il dispositivo della zona."
+        },
+        "source": {
+          "name": "Fonte d'acqua",
+          "description": "Da dove arrivava l'acqua."
+        },
+        "minutes": {
+          "name": "Minuti",
+          "description": "Per quanto hai irrigato. Convertiti in mm con l'intensità della zona per questa fonte (stima)."
+        },
+        "mm": {
+          "name": "Millimetri",
+          "description": "Acqua data, se la conosci direttamente."
+        },
+        "note": {
+          "name": "Nota",
+          "description": "Testo libero facoltativo."
+        }
+      }
+    },
+    "set_deficit": {
+      "name": "Imposta deficit",
+      "description": "Imposta il deficit idrico attuale di una zona, es. 0 il giorno dopo una pioggia abbondante.",
+      "fields": {
+        "zone": {
+          "name": "Zona",
+          "description": "Il dispositivo della zona."
+        },
+        "deficit_mm": {
+          "name": "Deficit",
+          "description": "Acqua che manca adesso per arrivare alla capacità di campo (0 = capacità di campo). Al massimo la TAW della zona."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "invalid_zone": {
+      "message": "Il dispositivo scelto non è una zona di Garden Irrigation."
+    },
+    "not_loaded": {
+      "message": "Garden Irrigation non è caricata."
+    },
+    "minutes_or_mm": {
+      "message": "Indica i minuti oppure i millimetri, non entrambi."
+    },
+    "source_rate_missing": {
+      "message": "La zona {zone} non ha un'intensità di irrigazione per la fonte {source}: indica i millimetri, oppure imposta l'intensità nelle impostazioni della zona."
+    },
+    "deficit_above_taw": {
+      "message": "Il deficit non può superare l'acqua totale disponibile della zona ({taw} mm)."
     }
   }
 }

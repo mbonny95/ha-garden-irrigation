@@ -29,7 +29,19 @@ class DayRecord(TypedDict):
     effective_rain_mm: float | None
     irrigation_mm: float
     deficit_mm: float | None
-    note: NotRequired[str]
+    et0_estimate: bool  # ET0 from the Hargreaves fallback
+    incomplete: list[str]  # weather source fields that did not cover the day
+
+
+class WeatherDayRecord(TypedDict):
+    """Installation-wide weather outcome of the last closed day."""
+
+    date: str
+    et0_mm: float | None
+    et0_method: str | None
+    rain_mm: float
+    incomplete: list[str]
+    missing: list[str]  # Penman-Monteith inputs that were missing
 
 
 class IrrigationRecord(TypedDict):
@@ -55,6 +67,7 @@ class StoredData(TypedDict):
     """Top-level persisted document."""
 
     zones: dict[str, ZoneState]
+    last_weather_day: NotRequired[WeatherDayRecord | None]
 
 
 def _empty_zone() -> ZoneState:
@@ -84,6 +97,15 @@ class GardenIrrigationStore:
     def zone(self, zone_id: str) -> ZoneState:
         """Return the state of `zone_id`, creating it if needed."""
         return self._data["zones"].setdefault(zone_id, _empty_zone())
+
+    @property
+    def last_weather_day(self) -> WeatherDayRecord | None:
+        """Weather of the last closed day that was processed."""
+        return self._data.get("last_weather_day")
+
+    @last_weather_day.setter
+    def last_weather_day(self, record: WeatherDayRecord) -> None:
+        self._data["last_weather_day"] = record
 
     def zone_ids(self) -> list[str]:
         """Return the ids of all zones with persisted state."""

@@ -201,12 +201,77 @@
         "clay": "Clay",
         "custom": "Custom"
       }
+    },
+    "source": {
+      "options": {
+        "mains": "Mains water",
+        "tank": "Rainwater tank"
+      }
     }
   },
   "issues": {
     "source_incomplete": {
       "title": "Weather source with missing data",
       "description": "The sensor `{entity_id}` has statistics for only {hours} of 24 hours on {day}, so that day was marked incomplete. Check that the sensor is reporting and that the recorder keeps its statistics (it needs a state class)."
+    }
+  },
+  "services": {
+    "record_irrigation": {
+      "name": "Record irrigation",
+      "description": "Record an irrigation you just did on a zone (timestamp: now). Give either the minutes or the millimeters.",
+      "fields": {
+        "zone": {
+          "name": "Zone",
+          "description": "The zone device."
+        },
+        "source": {
+          "name": "Water source",
+          "description": "Where the water came from."
+        },
+        "minutes": {
+          "name": "Minutes",
+          "description": "How long you watered. Converted to mm with the zone's application rate for this source (estimate)."
+        },
+        "mm": {
+          "name": "Millimeters",
+          "description": "Water applied, if you know it directly."
+        },
+        "note": {
+          "name": "Note",
+          "description": "Optional free text."
+        }
+      }
+    },
+    "set_deficit": {
+      "name": "Set deficit",
+      "description": "Set the current soil water deficit of a zone, e.g. 0 the day after a soaking rain.",
+      "fields": {
+        "zone": {
+          "name": "Zone",
+          "description": "The zone device."
+        },
+        "deficit_mm": {
+          "name": "Deficit",
+          "description": "Water missing to field capacity right now (0 = field capacity). At most the zone's TAW."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "invalid_zone": {
+      "message": "The selected device is not a Garden Irrigation zone."
+    },
+    "not_loaded": {
+      "message": "Garden Irrigation is not loaded."
+    },
+    "minutes_or_mm": {
+      "message": "Give either the minutes or the millimeters, not both."
+    },
+    "source_rate_missing": {
+      "message": "Zone {zone} has no application rate for source {source}: give the millimeters instead, or set the rate in the zone settings."
+    },
+    "deficit_above_taw": {
+      "message": "The deficit cannot exceed the zone's total available water ({taw} mm)."
     }
   }
 }

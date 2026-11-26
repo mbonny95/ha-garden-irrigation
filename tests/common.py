@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
+from datetime import date, timedelta
 from typing import Any
 
+from homeassistant.components.recorder.models import StatisticMeanType
+from homeassistant.components.recorder.statistics import async_import_statistics
 from homeassistant.core import HomeAssistant
+from homeassistant.util import dt as dt_util
 
 TEMPERATURE = "sensor.outdoor_temperature"
 HUMIDITY = "sensor.outdoor_humidity"
@@ -64,3 +68,77 @@ def set_weather_states(hass: HomeAssistant) -> None:
     set_sensor(hass, RAIN, "1.2", "mm", "total_increasing")
     set_sensor(hass, PRESSURE, "1012.4", "hPa")
     set_sensor(hass, SOIL, "48", "%", None)
+
+
+# --- Recorder statistics ------------------------------------------------------------
+
+
+def import_day_statistics(
+    hass: HomeAssistant,
+    day: date,
+    *,
+    rain_mm: float = 0.0,
+    hours: int = 24,
+    sources: tuple[str, ...] = (TEMPERATURE, HUMIDITY, SOLAR, WIND, RAIN),
+) -> None:
+    """Import one local day of hourly statistics shaped like FAO-56 Example 18.
+
+    Rain falls in the last hour of the day; the rain counter restarts at 0 at
+    the beginning of each day (statistics `sum` keeps growing).
+    """
+    start = dt_util.start_of_local_day(day)
+    slots = [start + timedelta(hours=h) for h in range(hours)]
+    rows: dict[str, list[dict[str, Any]]] = {
+        TEMPERATURE: [
+            {"start": h, "mean": 17.0, "min": 12.3, "max": 21.5} for h in slots
+        ],
+        HUMIDITY: [{"start": h, "mean": 72.0, "min": 63.0, "max": 84.0} for h in slots],
+        SOLAR: [{"start": h, "mean": 255.44, "min": 0.0, "max": 800.0} for h in slots],
+        WIND: [{"start": h, "mean": 2.078, "min": 0.0, "max": 6.0} for h in slots],
+    }
+    units = {
+        TEMPERATURE: ("°C", "temperature"),
+        HUMIDITY: ("%", None),
+        SOLAR: ("W/m²", None),
+        WIND: ("m/s", "speed"),
+    }
+    for entity_id, (unit, unit_class) in units.items():
+        if entity_id in sources:
+            _import(hass, entity_id, unit, unit_class, rows[entity_id], has_sum=False)
+    if RAIN in sources:
+        base = _RAIN_SUM.get(hass, 0.0)
+        rain_rows = [{"start": start - timedelta(hours=1), "state": base, "sum": base}]
+        for index, slot in enumerate(slots):
+            total = base + (rain_mm if index == hours - 1 else 0.0)
+            rain_rows.append({"start": slot, "state": total, "sum": total})
+        _RAIN_SUM[hass] = base + rain_mm
+        _import(hass, RAIN, "mm", "distance", rain_rows, has_sum=True)
+
+
+_RAIN_SUM: dict[HomeAssistant, float] = {}
+
+
+def _import(
+    hass: HomeAssistant,
+    entity_id: str,
+    unit: str,
+    unit_class: str | None,
+    rows: list[dict[str, Any]],
+    *,
+    has_sum: bool,
+) -> None:
+    async_import_statistics(
+        hass,
+        {
+            "mean_type": (
+                StatisticMeanType.NONE if has_sum else StatisticMeanType.ARITHMETIC
+            ),
+            "has_sum": has_sum,
+            "name": None,
+            "source": "recorder",
+            "statistic_id": entity_id,
+            "unit_class": unit_class,
+            "unit_of_measurement": unit,
+        },
+        rows,  # type: ignore[arg-type]
+    )

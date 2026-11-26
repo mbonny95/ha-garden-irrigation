@@ -23,6 +23,8 @@ def _day(day: str) -> DayRecord:
         "effective_rain_mm": 0.0,
         "irrigation_mm": 0.0,
         "deficit_mm": 5.0,
+        "et0_estimate": False,
+        "incomplete": [],
     }
 
 
