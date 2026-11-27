@@ -26,11 +26,17 @@ the duration typed by you. Nothing operates hardware.
    `config/www/garden-irrigation-cards/`).
 2. Settings → Dashboards → ⋮ → Resources → **Add resource**, type
    **JavaScript module**:
-   - `/local/garden-irrigation-cards/garden-irrigation-zone-card.js`
-   - `/local/garden-irrigation-cards/garden-irrigation-overview-card.js`
+   - `/local/garden-irrigation-cards/garden-irrigation-zone-card.js?v=2.0.1`
+   - `/local/garden-irrigation-cards/garden-irrigation-overview-card.js?v=2.0.1`
 
    The shared module and the editors are imported by these two files and
    must stay in the same folder.
+
+   Home Assistant lets browsers cache `/local` files for 31 days: after
+   copying a new version, change `?v=` in both resources to the new version
+   (the cards' internal imports already carry it). If a card still says
+   "Custom element doesn't exist", force-reload the page (Cmd/Ctrl+Shift+R)
+   or, in the companion app, reset the frontend cache.
 3. Add the cards from the dashboard card picker and choose the zone in the
    editor, or write YAML.
 

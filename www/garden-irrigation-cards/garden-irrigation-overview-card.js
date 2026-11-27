@@ -28,9 +28,10 @@ import {
   renderBadge,
   STATUS,
   texts,
-} from "./garden-irrigation-cards-shared.js";
-// Registers <garden-irrigation-overview-card-editor> as a side effect.
-import "./garden-irrigation-overview-card-editor.js";
+} from "./garden-irrigation-cards-shared.js?v=2.0.1";
+// The ?v= query busts the browser cache (HA serves /local for 31 days):
+// keep it equal to the integration version. Registers <garden-irrigation-overview-card-editor> as a side effect.
+import "./garden-irrigation-overview-card-editor.js?v=2.0.1";
 
 class GardenIrrigationOverviewCard extends HTMLElement {
   static getConfigElement() {

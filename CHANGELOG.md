@@ -3,6 +3,14 @@
 All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2.0.1] - 2026-11-27
+
+### Fixed
+- Custom cards failing with "Custom element doesn't exist" after upgrading
+  from v1: Home Assistant serves `/local` files with a 31-day browser cache,
+  so the cards' internal imports (shared module and editors) could load the
+  cached v1 files. Internal imports now carry the version (`?v=2.0.1`).
+
 ## [2.0.0] - 2026-11-26
 
 Complete rewrite. v1 configuration and data are not migrated: remove the v1

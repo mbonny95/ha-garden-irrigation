@@ -39,9 +39,10 @@ import {
   renderBadge,
   STATUS,
   texts,
-} from "./garden-irrigation-cards-shared.js";
-// Registers <garden-irrigation-zone-card-editor> as a side effect.
-import "./garden-irrigation-zone-card-editor.js";
+} from "./garden-irrigation-cards-shared.js?v=2.0.1";
+// The ?v= query busts the browser cache (HA serves /local for 31 days):
+// keep it equal to the integration version. Registers <garden-irrigation-zone-card-editor> as a side effect.
+import "./garden-irrigation-zone-card-editor.js?v=2.0.1";
 
 const SOURCES = [
   { key: "mains", minutes: "recommended_minutes_mains", label: "minutes_mains" },
